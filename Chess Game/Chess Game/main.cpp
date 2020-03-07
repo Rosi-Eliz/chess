@@ -1,27 +1,15 @@
 // Chess Game.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include <SFML/Graphics.hpp>
+#include "SFMLGraphicsEngine.h"
+
+// We are emulating an interface based structure, which is not supported in C++
+// so as to achieve a cross-platform application, therefore only GraphicsEngine members
+// should be accessed/modified from here.
+static SFMLGraphicsEngine graphicsEngine = SFMLGraphicsEngine();
 
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
-
-	while (window.isOpen())
-	{
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-		}
-
-		window.clear();
-		window.draw(shape);
-		window.display();
-	}
-
+	graphicsEngine.initiateRender();
 	return 0;
 }
