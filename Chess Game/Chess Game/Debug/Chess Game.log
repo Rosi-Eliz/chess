@@ -1,72 +1,129 @@
 ﻿  SFMLGraphicsEngine.cpp
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(10,40): warning C4305: 'argument': truncation from 'const double' to 'T'
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(10,40): warning C4305:         with
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(10,40): warning C4305:         [
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(10,40): warning C4305:             T=float
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(10,40): warning C4305:         ]
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(25,43): warning C4244: 'argument': conversion from 'const double' to 'unsigned int', possible loss of data
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(25,32): warning C4244: 'argument': conversion from 'const double' to 'unsigned int', possible loss of data
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(33,45): warning C4244: '=': conversion from 'T' to 'float', possible loss of data
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(33,45): warning C4244:         with
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(33,45): warning C4244:         [
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(33,45): warning C4244:             T=unsigned int
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(33,45): warning C4244:         ]
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(38,81): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(38,33): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(58,83): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(58,83): warning C4244:         with
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(58,83): warning C4244:         [
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(58,83): warning C4244:             T=float
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(58,83): warning C4244:         ]
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(58,83): warning C4244:         and
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(58,83): warning C4244:         [
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(58,83): warning C4244:             T=int
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(58,83): warning C4244:         ]
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(58,73): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(58,73): warning C4244:         with
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(58,73): warning C4244:         [
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(58,73): warning C4244:             T=float
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(58,73): warning C4244:         ]
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(58,73): warning C4244:         and
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(58,73): warning C4244:         [
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(58,73): warning C4244:             T=int
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(58,73): warning C4244:         ]
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,79): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,79): warning C4244:         with
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,79): warning C4244:         [
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,79): warning C4244:             T=int
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,79): warning C4244:         ]
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,79): warning C4244:         and
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,79): warning C4244:         [
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,79): warning C4244:             T=float
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,79): warning C4244:         ]
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,62): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,62): warning C4244:         with
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,62): warning C4244:         [
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,62): warning C4244:             T=int
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,62): warning C4244:         ]
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,62): warning C4244:         and
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,62): warning C4244:         [
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,62): warning C4244:             T=float
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,62): warning C4244:         ]
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(133,91): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(133,91): warning C4244:         with
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(133,91): warning C4244:         [
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(133,91): warning C4244:             T=int
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(133,91): warning C4244:         ]
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(133,76): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(133,76): warning C4244:         with
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(133,76): warning C4244:         [
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(133,76): warning C4244:             T=int
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(133,76): warning C4244:         ]
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(133,71): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(133,71): warning C4244:         with
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(133,71): warning C4244:         [
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(133,71): warning C4244:             T=int
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(133,71): warning C4244:         ]
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(133,52): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(133,52): warning C4244:         with
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(133,52): warning C4244:         [
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(133,52): warning C4244:             T=int
-D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(133,52): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(13,40): warning C4305: 'argument': truncation from 'const double' to 'T'
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(13,40): warning C4305:         with
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(13,40): warning C4305:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(13,40): warning C4305:             T=float
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(13,40): warning C4305:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(14,42): warning C4244: 'argument': conversion from 'const double' to 'unsigned int', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(14,31): warning C4244: 'argument': conversion from 'const double' to 'unsigned int', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(20,8): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(21,8): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(22,34): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(22,34): warning C4244:         with
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(22,34): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(22,34): warning C4244:             T=float
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(22,34): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(22,34): warning C4244:         and
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(22,34): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(22,34): warning C4244:             T=int
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(22,34): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(22,20): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(22,20): warning C4244:         with
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(22,20): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(22,20): warning C4244:             T=float
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(22,20): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(22,20): warning C4244:         and
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(22,20): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(22,20): warning C4244:             T=int
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(22,20): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(48,81): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(48,33): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,83): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,83): warning C4244:         with
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,83): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,83): warning C4244:             T=float
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,83): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,83): warning C4244:         and
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,83): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,83): warning C4244:             T=int
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,83): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,73): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,73): warning C4244:         with
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,73): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,73): warning C4244:             T=float
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,73): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,73): warning C4244:         and
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,73): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,73): warning C4244:             T=int
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(68,73): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(78,79): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(78,79): warning C4244:         with
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(78,79): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(78,79): warning C4244:             T=int
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(78,79): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(78,79): warning C4244:         and
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(78,79): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(78,79): warning C4244:             T=float
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(78,79): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(78,62): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(78,62): warning C4244:         with
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(78,62): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(78,62): warning C4244:             T=int
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(78,62): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(78,62): warning C4244:         and
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(78,62): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(78,62): warning C4244:             T=float
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(78,62): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(94,136): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(94,136): warning C4244:         with
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(94,136): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(94,136): warning C4244:             T=float
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(94,136): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(94,106): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(94,106): warning C4244:         with
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(94,106): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(94,106): warning C4244:             T=float
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(94,106): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(96,70): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(96,70): warning C4244:         with
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(96,70): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(96,70): warning C4244:             T=float
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(96,70): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(95,85): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(95,85): warning C4244:         with
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(95,85): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(95,85): warning C4244:             T=float
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(95,85): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,91): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,91): warning C4244:         with
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,91): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,91): warning C4244:             T=int
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,91): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,76): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,76): warning C4244:         with
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,76): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,76): warning C4244:             T=int
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,76): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,71): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,71): warning C4244:         with
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,71): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,71): warning C4244:             T=int
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,71): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,52): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,52): warning C4244:         with
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,52): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,52): warning C4244:             T=int
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,52): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(145,75): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(145,45): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(160,33): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(160,33): warning C4244:         with
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(160,33): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(160,33): warning C4244:             T=float
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(160,33): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(159,63): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(159,63): warning C4244:         with
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(159,63): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(159,63): warning C4244:             T=float
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(159,63): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(171,57): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(171,57): warning C4244:         with
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(171,57): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(171,57): warning C4244:             T=int
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(171,57): warning C4244:         ]
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(171,40): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(171,40): warning C4244:         with
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(171,40): warning C4244:         [
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(171,40): warning C4244:             T=int
+D:\Projects\C++\Chess\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(171,40): warning C4244:         ]
   Chess Game.vcxproj -> D:\Projects\C++\Chess\Chess Game\Debug\Chess Game.exe

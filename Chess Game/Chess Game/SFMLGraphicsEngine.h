@@ -4,8 +4,9 @@
 
 class SFMLGraphicsEngine : public GraphicsEngine
 {
-	float figureBoxSize;
+	double figureBoxSize;
 	void populateFigures();
 public:
 	void initiateRender();
+	bool move(int fromRow, int fromColumn, int toRow, int toColumn, bool shouldAnimate = true);
 };
