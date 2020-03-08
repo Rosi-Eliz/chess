@@ -13,7 +13,6 @@ const double offsetSize = boardSize * 0.033;
 Vector2f offset(offsetSize, offsetSize);
 RenderWindow window(VideoMode(boardSize, boardSize), "Chess", Style::Close | Style::Titlebar);
 
-Sprite figures[FIGURES_SIZE];
 Sprite boardSprite;
 
 Vector2i getCentralCoordinates(int row, int column, double size) {
@@ -33,7 +32,6 @@ int board[8][8] =
   1, 2, 3, 4, 5, 3, 2, 1 };
 
 void SFMLGraphicsEngine::initiateRender() {
-
 	Image icon;
 	icon.loadFromFile("icons/icon.png");
 	window.setIcon(32, 32, icon.getPixelsPtr());
@@ -47,13 +45,13 @@ void SFMLGraphicsEngine::initiateRender() {
 	boardSprite = Sprite(boardTexture);
 	boardSprite.setScale(boardSize / boardSprite.getLocalBounds().width, boardSize / boardSprite.getLocalBounds().height);
 
-	for (int i = 0; i < FIGURES_SIZE; i++)
-	{
-		figures[i].setTexture(figuresTexture);
+	for (int i = 0; i < FIGURES_SIZE; i++) {
+		Sprite figure;
+		figure.setTexture(figuresTexture);
+		figures.push_back(figure);
 	}
 
 	populateFigures();
-
 
 	bool isMove = false;
 	float dx = 0, dy = 0;
@@ -73,7 +71,7 @@ void SFMLGraphicsEngine::initiateRender() {
 			case Event::MouseButtonPressed:
 				if (event.key.code == Mouse::Left)
 				{
-					for (int i = 0; i < FIGURES_SIZE; i++)
+					for (size_t i = 0; i < figures.size(); i++)
 					{
 						if (figures[i].getGlobalBounds().contains(mousePosition.x, mousePosition.y))
 						{
@@ -91,7 +89,8 @@ void SFMLGraphicsEngine::initiateRender() {
 				if (event.key.code == Mouse::Left)
 				{
 					isMove = false;
-					Vector2f selectedPosition = figures[selectedFigureIndex].getPosition() + Vector2f(figureBoxSize / 2 - offset.x, figureBoxSize / 2 - offset.y);
+					Vector2f selectedPosition = figures[selectedFigureIndex].getPosition() + Vector2f(figureBoxSize / 2 - offset.x,
+						                                                                              figureBoxSize / 2 - offset.y);
 					newPosition = Vector2f(figureBoxSize * int(selectedPosition.x / figureBoxSize) + offset.x,
 										   figureBoxSize * int(selectedPosition.y / figureBoxSize) + offset.y);
 					figures[selectedFigureIndex].setPosition(newPosition);
@@ -101,6 +100,7 @@ void SFMLGraphicsEngine::initiateRender() {
 			case Event::KeyPressed:
 				if (event.key.code == Keyboard::Space) {
 					//std::cout << "now";
+					//removeFigure(1,1);      
 					move(1, 1, 3, 3);
 				}
 				break;
@@ -113,16 +113,7 @@ void SFMLGraphicsEngine::initiateRender() {
 			}
 		}
 
-		window.clear();
-		window.draw(boardSprite);
-		
-		for (int i = 0; i < FIGURES_SIZE; i++) {
-			window.draw(figures[i]);
-		};
-		if (selectedFigureIndex >= 0) {
-			window.draw(figures[selectedFigureIndex]);
-		}
-		window.display();
+		redrawBoard(selectedFigureIndex);
 	}
 }
 
@@ -152,7 +143,7 @@ bool SFMLGraphicsEngine::move(int fromRow, int fromColumn, int toRow, int toColu
 	Vector2i toCoordinates = getCentralCoordinates(toRow, toColumn, figureBoxSize);
 	int animationCycle = shouldAnimate ? ANIMATION_COMPLEXITY : 0;
 
-	for (int i = 0; i < FIGURES_SIZE; i++)
+	for (size_t i = 0; i < figures.size(); i++)
 	{
 		Vector2i fromCoordinates = getCentralCoordinates(fromRow, fromColumn, figureBoxSize);
 		// The addition of size/2 is so that we can refer to the field's center
@@ -163,9 +154,7 @@ bool SFMLGraphicsEngine::move(int fromRow, int fromColumn, int toRow, int toColu
 			{
 				Vector2f p = Vector2f(toCoordinates) - Vector2f(fromCoordinates);
 				figures[i].move(p.x / animationCycle, p.y / animationCycle);
-				window.draw(boardSprite);
-				for(int j = 0; j<32; j++) window.draw(figures[j]);
-				window.display();
+				redrawBoard();
 			}
 
 			figures[i].setPosition(toCoordinates.x, toCoordinates.y);
@@ -175,3 +164,43 @@ bool SFMLGraphicsEngine::move(int fromRow, int fromColumn, int toRow, int toColu
 	return false;
 }
 
+bool SFMLGraphicsEngine::removeFigure(int row, int column) {
+	Sprite *figureReference = figureForPosition(row, column);
+	for (size_t i{ 0 }; i < figures.size(); i++) {
+		if (&figures[i] == figureReference) {
+			figures.erase(figures.begin() + i);
+			return true;
+		}
+	}
+
+	return false;
+}
+
+Sprite* SFMLGraphicsEngine::figureForPosition(int row, int column) {
+	Vector2i coordinates = getCentralCoordinates(row, column, figureBoxSize);
+	return figureForLocation(coordinates.x, coordinates.y, true);
+}
+
+Sprite* SFMLGraphicsEngine::figureForLocation(int x, int y, bool selectCenter) {
+	float shiftValue = selectCenter ? figureBoxSize / 2 : 0;
+	for (size_t i = 0; i < figures.size(); i++)
+	{
+		if (figures[i].getGlobalBounds().contains(x + shiftValue, y + shiftValue)) {
+			Sprite* figureReference = &(figures[i]);
+			return figureReference;
+		}
+	}
+	return nullptr;
+}
+
+void SFMLGraphicsEngine::redrawBoard(int indexForZElevation) {
+	window.clear();
+	window.draw(boardSprite);
+	for (size_t j = 0; j < figures.size(); j++) {
+		window.draw(figures[j]);
+	}
+	if (indexForZElevation >= 0) {
+		window.draw(figures[indexForZElevation]);
+	}
+	window.display();
+}
