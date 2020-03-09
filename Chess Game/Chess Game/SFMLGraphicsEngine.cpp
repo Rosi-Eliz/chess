@@ -1,12 +1,14 @@
 #include <SFML/Graphics.hpp>
 #include "SFMLGraphicsEngine.h"
 #include <iostream>
+#include <math.h>
 using namespace std;
 using namespace sf;
 
 #define FIGURES_SIZE 32
 #define FIGURES_IN_ROW 8
 #define ANIMATION_COMPLEXITY 1000
+#define FAST_ANIMATION_COMPLEXITY 300
 
 const double boardSize = 900;
 const double offsetSize = boardSize * 0.033;
@@ -14,12 +16,6 @@ Vector2f offset(offsetSize, offsetSize);
 RenderWindow window(VideoMode(boardSize, boardSize), "Chess", Style::Close | Style::Titlebar);
 
 Sprite boardSprite;
-
-Vector2i getCentralCoordinates(int row, int column, double size) {
-	int x = column * size;
-	int y = (FIGURES_IN_ROW - 1 - row) * size;
-	return Vector2i(x + offset.x, y + offset.y);
-}
 
 int board[8][8] =
 { -1,-2,-3,-4,-5,-3,-2,-1,
@@ -73,7 +69,10 @@ void SFMLGraphicsEngine::initiateRender() {
 				{
 					for (size_t i = 0; i < figures.size(); i++)
 					{
-						if (figures[i].getGlobalBounds().contains(mousePosition.x, mousePosition.y))
+						FloatRect figureBounds = figures[i].getGlobalBounds();
+						figureBounds.top -= offset.y;
+						figureBounds.left -= offset.x;
+						if (figureBounds.contains(mousePosition.x, mousePosition.y))
 						{
 							isMove = true;
 							selectedFigureIndex = i;
@@ -91,9 +90,13 @@ void SFMLGraphicsEngine::initiateRender() {
 					isMove = false;
 					Vector2f selectedPosition = figures[selectedFigureIndex].getPosition() + Vector2f(figureBoxSize / 2 - offset.x,
 						                                                                              figureBoxSize / 2 - offset.y);
+					selectedPosition.x = fmin(selectedPosition.x, boardSize - figureBoxSize);
+					selectedPosition.y = fmin(selectedPosition.y, boardSize - figureBoxSize);
+
 					newPosition = Vector2f(figureBoxSize * int(selectedPosition.x / figureBoxSize) + offset.x,
 										   figureBoxSize * int(selectedPosition.y / figureBoxSize) + offset.y);
-					figures[selectedFigureIndex].setPosition(newPosition);
+					move(selectedFigureIndex, newPosition, FAST_ANIMATION_COMPLEXITY);
+					removeFigureIgnoringSelection(newPosition, selectedFigureIndex);
 				}
 
 				break;
@@ -139,22 +142,33 @@ void SFMLGraphicsEngine::populateFigures()
 	}
 }
 
+void SFMLGraphicsEngine::move(int selectedIndex, Vector2f toCoordinates, int animationComplexity) {
+	for (int k = 0; k < animationComplexity; k++)
+	{
+		Vector2f scalar = Vector2f(toCoordinates) - Vector2f(figures[selectedIndex].getPosition());
+		figures[selectedIndex].move(scalar.x / animationComplexity, scalar.y / animationComplexity);
+		redrawBoard(selectedIndex);
+	}
+
+	figures[selectedIndex].setPosition(toCoordinates.x, toCoordinates.y);
+}
+
 bool SFMLGraphicsEngine::move(int fromRow, int fromColumn, int toRow, int toColumn, bool shouldAnimate) {
-	Vector2i toCoordinates = getCentralCoordinates(toRow, toColumn, figureBoxSize);
-	int animationCycle = shouldAnimate ? ANIMATION_COMPLEXITY : 0;
+	Vector2f toCoordinates = getCoordinates(toRow, toColumn);
+	int animationComplexity = shouldAnimate ? ANIMATION_COMPLEXITY : 0;
 
 	for (size_t i = 0; i < figures.size(); i++)
 	{
-		Vector2i fromCoordinates = getCentralCoordinates(fromRow, fromColumn, figureBoxSize);
+		Vector2f fromCoordinates = getCoordinates(fromRow, fromColumn);
 		// The addition of size/2 is so that we can refer to the field's center
 		if (figures[i].getGlobalBounds().contains(fromCoordinates.x + figureBoxSize / 2,
-												  fromCoordinates.y + figureBoxSize / 2))
+			fromCoordinates.y + figureBoxSize / 2))
 		{
-			for (int k = 0; k < animationCycle; k++)
+			for (int k = 0; k < animationComplexity; k++)
 			{
-				Vector2f p = Vector2f(toCoordinates) - Vector2f(fromCoordinates);
-				figures[i].move(p.x / animationCycle, p.y / animationCycle);
-				redrawBoard();
+				Vector2f scalar = Vector2f(toCoordinates) - Vector2f(fromCoordinates);
+				figures[i].move(scalar.x / animationComplexity, scalar.y / animationComplexity);
+				redrawBoard(i);
 			}
 
 			figures[i].setPosition(toCoordinates.x, toCoordinates.y);
@@ -164,20 +178,48 @@ bool SFMLGraphicsEngine::move(int fromRow, int fromColumn, int toRow, int toColu
 	return false;
 }
 
-bool SFMLGraphicsEngine::removeFigure(int row, int column) {
-	Sprite *figureReference = figureForPosition(row, column);
+bool SFMLGraphicsEngine::removeFigureIgnoringSelection(Vector2f coordinates, int selectedIndex) {
+	for (size_t i{ 0 }; i < figures.size(); i++) {
+		if (i == selectedIndex) {
+			continue;
+		}
+	
+		if (figures[i].getGlobalBounds().contains(coordinates.x + figureBoxSize / 2,
+			coordinates.y + figureBoxSize / 2)) {
+			return removeFigure(&figures[i]);
+		}
+	}
+	return false;
+}
+
+bool SFMLGraphicsEngine::removeFigure(Sprite* figureReference) {
 	for (size_t i{ 0 }; i < figures.size(); i++) {
 		if (&figures[i] == figureReference) {
 			figures.erase(figures.begin() + i);
 			return true;
 		}
 	}
-
 	return false;
 }
 
+bool SFMLGraphicsEngine::removeFigure(int row, int column) {
+	Sprite *figureReference = figureForPosition(row, column);
+	return removeFigure(figureReference);
+}
+
+Vector2f SFMLGraphicsEngine::getCoordinates(int row, int column) {
+	int x = column * figureBoxSize;
+	int y = (FIGURES_IN_ROW - 1 - row) * figureBoxSize;
+	return Vector2f(x + offset.x, y + offset.y);
+}
+
+void SFMLGraphicsEngine::getLocation(sf::Vector2f coordinates, int& row, int& column) {
+	column = (coordinates.x - offset.x) / figureBoxSize;
+	row = FIGURES_IN_ROW - 1 - floor(coordinates.y / figureBoxSize );
+}
+
 Sprite* SFMLGraphicsEngine::figureForPosition(int row, int column) {
-	Vector2i coordinates = getCentralCoordinates(row, column, figureBoxSize);
+	Vector2f coordinates = getCoordinates(row, column);
 	return figureForLocation(coordinates.x, coordinates.y, true);
 }
 
@@ -199,8 +241,16 @@ void SFMLGraphicsEngine::redrawBoard(int indexForZElevation) {
 	for (size_t j = 0; j < figures.size(); j++) {
 		window.draw(figures[j]);
 	}
-	if (indexForZElevation >= 0) {
+	if (indexForZElevation >= 0 && indexForZElevation < figures.size()) {
 		window.draw(figures[indexForZElevation]);
 	}
 	window.display();
+}
+
+void SFMLGraphicsEngine::addPossibleMoveSquare(int row, int column) {
+
+}
+
+void SFMLGraphicsEngine::removePossibleMoves() {
+
 }
