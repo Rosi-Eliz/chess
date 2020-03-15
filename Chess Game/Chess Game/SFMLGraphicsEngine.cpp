@@ -7,8 +7,8 @@ using namespace sf;
 
 #define FIGURES_SIZE 32
 #define FIGURES_IN_ROW 8
-#define ANIMATION_COMPLEXITY 1000
-#define FAST_ANIMATION_COMPLEXITY 300
+#define ANIMATION_COMPLEXITY 100
+#define ANIMATION_DURTATION_SECONDS 0.3
 
 #define FIELD_SELECTION_OUTLINE 0
 #define FIELD_SELECTION_COLOR Color(46,114,153,178) //178 alpha corresponding to 0.7 in a [0,1] range
@@ -115,6 +115,9 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 			case Event::MouseButtonReleased:
 				if (event.key.code == Mouse::Left)
 				{
+					if (selectedFigureIndex == -1) {
+						break;
+					}
 					if (isMoveValid == nullptr || didMove == nullptr) {
 						throw runtime_error("isMoveValid or didMove are not supplied");
 					}
@@ -137,10 +140,11 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 						move(selectedFigureIndex, oldPosition, ANIMATION_COMPLEXITY);
 					}
 					else {
-						move(selectedFigureIndex, newPosition, FAST_ANIMATION_COMPLEXITY);
+						move(selectedFigureIndex, newPosition, ANIMATION_COMPLEXITY);
 						removeFigureIgnoringSelection(newPosition, selectedFigureIndex);
 						didMove(oRow, oColumn, nRow, nColumn);
 					}
+					selectedFigureIndex = -1;
 				}
 
 				break;
@@ -148,7 +152,7 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 				if (event.key.code == Keyboard::Space) {
 					//std::cout << "now";
 					//removeFigure(1,1);      
-					//move(1, 1, 3, 3);
+					move(1, 1, 3, 3);
 					//addPossibleMoveSquare(4, 4);
 				}
 				if (event.key.code == Keyboard::T) {
@@ -214,6 +218,10 @@ void SFMLGraphicsEngine::populateFigures(BoardLayout boardLayout)
 }
 
 void SFMLGraphicsEngine::move(int selectedIndex, Vector2f toCoordinates, int animationComplexity) {
+	if (animationComplexity == 0) {
+		figures[selectedIndex].sprite.setPosition(toCoordinates.x, toCoordinates.y);
+		return;
+	}
 	Vector2f selectedFigureCoordinates = figures[selectedIndex].sprite.getPosition();
 
 	float horizontalDistance = toCoordinates.x - selectedFigureCoordinates.x;
@@ -224,11 +232,28 @@ void SFMLGraphicsEngine::move(int selectedIndex, Vector2f toCoordinates, int ani
 	float xRelativeMove = connectingVector.x / animationComplexity;
 	float yRelativeMove = connectingVector.y / animationComplexity;
 
-	for (int k = 0; k < animationComplexity; k++)
-	{	
-		figures[selectedIndex].sprite.move(xRelativeMove, yRelativeMove);
-		redrawBoard(selectedIndex);
+	Clock clockElapsed;
+	Clock clockTotal;
+
+	double animationSeconds = ANIMATION_DURTATION_SECONDS;
+	double frameSplit = animationSeconds / animationComplexity;
+
+	if (distance < 100) {
+		animationSeconds /= 3;
+		frameSplit /= 3;
 	}
+
+	while (clockTotal.getElapsedTime().asSeconds() <= animationSeconds) {
+		if (clockElapsed.getElapsedTime().asSeconds() >= frameSplit) {
+			Clock clock;
+			figures[selectedIndex].sprite.move(xRelativeMove, yRelativeMove);
+			redrawBoard(selectedIndex);
+			animationSeconds += clock.getElapsedTime().asSeconds();
+			clock.restart();
+			clockElapsed.restart();
+		}
+	}
+
 
 	figures[selectedIndex].sprite.setPosition(toCoordinates.x, toCoordinates.y);
 }
@@ -244,14 +269,7 @@ bool SFMLGraphicsEngine::move(int fromRow, int fromColumn, int toRow, int toColu
 		if (figures[i].sprite.getGlobalBounds().contains(fromCoordinates.x + figureBoxSize / 2,
 			fromCoordinates.y + figureBoxSize / 2))
 		{
-			for (int k = 0; k < animationComplexity; k++)
-			{
-				Vector2f scalar = Vector2f(toCoordinates) - Vector2f(fromCoordinates);
-				figures[i].sprite.move(scalar.x / animationComplexity, scalar.y / animationComplexity);
-				redrawBoard(i);
-			}
-
-			figures[i].sprite.setPosition(toCoordinates.x, toCoordinates.y);
+			move(i, toCoordinates, animationComplexity);
 			return true;
 		}
 	}
