@@ -96,7 +96,6 @@ void List<T>::rangeDestructor(int from, int to)
         }
         back = back->next;
         count++;
-
     }
     Element<T>* backCopy = rear;
     while (backCopy != nullptr)
@@ -351,7 +350,7 @@ void List<T>::operator= (const List& list)
     if (!isEmpty()) //pri purvata iteraciq triem null mai nie veche sme promenili first da e first->next, no kogato imame
         //samo 1 element tova shte e nullptr
     {
-        while (first != nullptr) 
+        while (first != nullptr)
         {
             Element<T>* elementForDeletion = first;
             first = first->next;
@@ -402,16 +401,16 @@ void List<T>::sort()
 template <typename T>
 void List<T>::operator += (const List& list)
 {
-        Element<T>* ptr = list.rear;
-        Element<T>* ptrFront = list.front;
-        while (ptr != ptrFront->next)
-        {
-            T value = ptr->value;
-            pushFront(value);
-            ptr = ptr->next;
-        }
-        return;
-   
+    Element<T>* ptr = list.rear;
+    Element<T>* ptrFront = list.front;
+    while (ptr != ptrFront->next)
+    {
+        T value = ptr->value;
+        pushFront(value);
+        ptr = ptr->next;
+    }
+    return;
+
 }
 
 template <typename T>
@@ -510,16 +509,12 @@ List<T> split(List<T> list)
     newLeft += pivotList;
     newLeft += newRight;
     return newLeft;
-
-
-
 }
 
 
 
 
 /*
-
 329 6 14
 return l + p + r //[123469]
 l 3 2 14
@@ -530,14 +525,6 @@ l 3 2 14
         l: 3
         p: 4
         r: -
-
-
-
-
 p 6
-
-
-
 r 9
-
 */
