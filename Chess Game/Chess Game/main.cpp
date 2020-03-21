@@ -3,6 +3,7 @@
 
 #include "SFMLGraphicsEngine.h"
 #include <iostream>
+#include "Game.h"
 
 // We are emulating an interface based structure, which is not supported in C++
 // so as to achieve a cross-platform application, therefore only GraphicsEngine members
@@ -34,6 +35,7 @@ void didMove(int fromRow, int fromColumn, int toRow, int toColumn) {
 
 int main()
 {
+	Game g;
 	graphicsEngine.availableMovesForFigure = availableMovesForFigure;
 	graphicsEngine.didRemoveFigure = didRemoveFigure;
 	graphicsEngine.isMoveValid = isMoveValid;

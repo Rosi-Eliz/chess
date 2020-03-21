@@ -33,7 +33,7 @@ int board[8][8] =
   6, 6, 6, 6, 6, 6, 6, 6,
   1, 2, 3, 4, 5, 3, 2, 1 };
 
-void SFMLGraphicsEngine::addFigure(Figure figure, FigureType figureType, int row, int column) {
+void SFMLGraphicsEngine::addFigure(FigureDesignation figure, FigureType figureType, int row, int column) {
 	Vector2f coordinates = getCoordinates(row, column);
 
 	int horizontalScale = figure;
@@ -83,6 +83,9 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 			case Event::MouseButtonPressed:
 				if (event.key.code == Mouse::Left)
 				{
+					if (isMove) {
+						continue;
+					}
 					if (availableMovesForFigure == nullptr) {
 						throw runtime_error("availableMovesForFigure is not supplied");
 					}
