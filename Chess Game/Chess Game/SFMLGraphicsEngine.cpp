@@ -90,6 +90,10 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 						throw runtime_error("availableMovesForFigure is not supplied");
 					}
 
+					if (isPlayerActive == nullptr) {
+						throw runtime_error("isPlayerActive is not supplied");
+					}
+
 					for (size_t i = 0; i < figures.size(); i++)
 					{
 						FloatRect figureBounds = figures[i].sprite.getGlobalBounds();
@@ -97,9 +101,14 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 						figureBounds.left -= offset.x;
 						if (figureBounds.contains(mousePosition.x, mousePosition.y))
 						{
+							FigureSprite figure = figures[i];
+							if (!isPlayerActive(figure.figureType)) {
+								continue;
+							}
+
 							isMove = true;
 							selectedFigureIndex = i;
-							Vector2f figurePosition = figures[i].sprite.getPosition();
+							Vector2f figurePosition = figure.sprite.getPosition();
 							dx = mousePosition.x - figurePosition.x;
 							dy = mousePosition.y - figurePosition.y;
 							oldPosition = figurePosition;

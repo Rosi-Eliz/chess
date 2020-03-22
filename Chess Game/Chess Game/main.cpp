@@ -33,6 +33,10 @@ void didMove(int fromRow, int fromColumn, int toRow, int toColumn) {
 	cout << toRow << ", column: " << toColumn << endl;
 }
 
+bool isPlayerActive(FigureType figureType) {
+	return figureType == White;
+}
+
 int main()
 {
 	Game g;
@@ -40,6 +44,7 @@ int main()
 	graphicsEngine.didRemoveFigure = didRemoveFigure;
 	graphicsEngine.isMoveValid = isMoveValid;
 	graphicsEngine.didMove = didMove;
+	graphicsEngine.isPlayerActive = isPlayerActive;
 	graphicsEngine.initiateRender();
 	return 0;
 }

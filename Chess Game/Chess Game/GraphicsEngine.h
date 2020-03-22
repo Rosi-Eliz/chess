@@ -27,4 +27,5 @@ public:
 	bool (*isMoveValid)(int fromRow, int fromColumn, int toRow, int toColumn);
 	void (*didRemoveFigure)(int row, int column);
 	void (*didMove)(int fromRow, int fromColumn, int toRow, int toColumn);
+	bool (*isPlayerActive)(FigureType figureType);
 };

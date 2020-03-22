@@ -385,9 +385,40 @@ healthchecksdb
 MigrationBackup/
 
 # SFML generated files
-*.log
-*.tlog
+*_i.c
+*_p.c
+*_i.h
 *.ilk
+*.meta
+*.obj
+*.pch
 *.pdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.log
+*.vspscc
+*.vssscc
+obj/
+lib/
+*.exe
+*.manifest
+*.pdb
+*.suo
+*.csproj.user
+*.VC.db
 
+.builds
+
+*.pidb
+
+*.svclog
+
+*.scc
 # End of https://www.gitignore.io/api/c++,visualstudio
