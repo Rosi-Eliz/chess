@@ -33,7 +33,7 @@ int board[8][8] =
   6, 6, 6, 6, 6, 6, 6, 6,
   1, 2, 3, 4, 5, 3, 2, 1 };
 
-void SFMLGraphicsEngine::addFigure(Figure figure, FigureType figureType, int row, int column) {
+void SFMLGraphicsEngine::addFigure(FigureDesignation figure, FigureType figureType, int row, int column) {
 	Vector2f coordinates = getCoordinates(row, column);
 
 	int horizontalScale = figure;
@@ -83,8 +83,15 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 			case Event::MouseButtonPressed:
 				if (event.key.code == Mouse::Left)
 				{
+					if (isMove) {
+						continue;
+					}
 					if (availableMovesForFigure == nullptr) {
 						throw runtime_error("availableMovesForFigure is not supplied");
+					}
+
+					if (isPlayerActive == nullptr) {
+						throw runtime_error("isPlayerActive is not supplied");
 					}
 
 					for (size_t i = 0; i < figures.size(); i++)
@@ -94,9 +101,14 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 						figureBounds.left -= offset.x;
 						if (figureBounds.contains(mousePosition.x, mousePosition.y))
 						{
+							FigureSprite figure = figures[i];
+							if (!isPlayerActive(figure.figureType)) {
+								continue;
+							}
+
 							isMove = true;
 							selectedFigureIndex = i;
-							Vector2f figurePosition = figures[i].sprite.getPosition();
+							Vector2f figurePosition = figure.sprite.getPosition();
 							dx = mousePosition.x - figurePosition.x;
 							dy = mousePosition.y - figurePosition.y;
 							oldPosition = figurePosition;
