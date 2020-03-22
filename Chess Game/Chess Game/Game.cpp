@@ -9,4 +9,6 @@ Game::Game() {
 	l.row = 1;
 	l.column = 0;
 	List<List<Location>> list = p.possibleMoves(l);
+
+	Location::printNestedLocations(list);
 }
