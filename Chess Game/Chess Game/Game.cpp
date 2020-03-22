@@ -1,12 +1,13 @@
 #include "Game.h"
-#include "Pawn.h"
+#include "Bishop.h"
+#include "King.h"
 
 
 Game::Game() {
-	Pawn p(ChessFigureColor::White, ChessFigureDirection::Up);
+	King p(ChessFigureColor::White, ChessFigureDirection::Up);
 
 	Location l;
-	l.row = 1;
+	l.row = 0;
 	l.column = 0;
 	List<List<Location>> list = p.possibleMoves(l);
 

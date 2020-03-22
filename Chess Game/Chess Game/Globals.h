@@ -1,8 +1,8 @@
 #pragma once
 #include "List.h"
 
-#define ChessBoardRows 8;
-#define ChessBoardColumns 8;
+static const int ChessBoardRows = 8;
+static const int ChessBoardColumns = 8;
 
 enum class ChessFigureColor {Black, White};
 

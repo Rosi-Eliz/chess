@@ -157,21 +157,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bishop.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Figure.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="King.cpp" />
+    <ClCompile Include="Knight.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pawn.cpp" />
+    <ClCompile Include="Queen.cpp" />
+    <ClCompile Include="Rook.cpp" />
     <ClCompile Include="SFMLGraphicsEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bishop.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="Figure.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="GraphicsEngine.h" />
+    <ClInclude Include="King.h" />
+    <ClInclude Include="Knight.h" />
     <ClInclude Include="List.h" />
     <ClInclude Include="Pawn.h" />
+    <ClInclude Include="Queen.h" />
+    <ClInclude Include="Rook.h" />
     <ClInclude Include="SFMLGraphicsEngine.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
