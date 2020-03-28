@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <functional>
 using namespace std;
 
 
@@ -37,6 +38,10 @@ public:
     bool contains(int value) const;
     void reverse();
     void filter(int value);
+    List map(const function<T(T)>& mutator);
+    List filter(const function<bool(T)>& condition);
+    T reduce(T first, const function<T(T, T)>& operation);
+    List sort(const function<bool(T, T)>& sorting);
 };
 
 template <typename T>
@@ -511,6 +516,68 @@ List<T> split(List<T> list)
     return newLeft;
 }
 
+template <typename T>
+List<T> List<T>::map(const function<T(T)>& mutator)
+{
+    List<T> list;
+    Element<T>* begin = rear;
+    while (begin != nullptr)
+    {
+        list.pushFront(mutator(begin->value));
+        begin = begin->next;
+    }
+    return list;
+}
+
+template <typename T>
+List<T> List<T>::filter(const function<bool(T)>& condition)
+{
+    List<T> list;
+    Element<T>* begin = rear;
+    while (begin != nullptr)
+    {
+        if (condition(begin->value))
+        {
+            list.pushFront(begin->value);
+        }
+        begin = begin->next;
+    }
+    return list;
+}
+
+template <typename T>
+T List<T>::reduce(T first, const function<T(T, T)>& operation)
+{
+    T result;
+    Element<T>* begin = rear;
+    while (begin != nullptr)
+    {
+        if (begin == rear)
+        {
+            result = operation(first, begin->value);
+        }
+        else {
+            result = operation(result, begin->value);
+        }
+        begin = begin->next;
+    }
+    return result;
+}
+
+template <typename T>
+List<T> List<T>::sort(const function<bool(T, T)>& sorting)
+{
+    List<T> sorted = *this;
+    for (int i{ 0 }; i < size(); i++)
+    {
+        for (int j{ i + 1 }; j < size(); j++)
+        {
+            if (!sorting((sorted)[i], (sorted)[j]))
+                swap(i, j);
+        }
+    }
+    return sorted;
+}
 
 
 

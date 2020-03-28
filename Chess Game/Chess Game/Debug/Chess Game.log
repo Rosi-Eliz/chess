@@ -1,2 +1,154 @@
-﻿  Game.cpp
+﻿  Bishop.cpp
+  Board.cpp
+  Figure.cpp
+  Game.cpp
+  King.cpp
+  Knight.cpp
+  Pawn.cpp
+  Queen.cpp
+  Rook.cpp
+  SFMLGraphicsEngine.cpp
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(19,40): warning C4305: 'argument': truncation from 'const double' to 'T'
+          with
+          [
+              T=float
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(20,42): warning C4244: 'argument': conversion from 'const double' to 'unsigned int', possible loss of data
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(20,31): warning C4244: 'argument': conversion from 'const double' to 'unsigned int', possible loss of data
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(44,111): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(44,96): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(44,79): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(44,46): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(64,81): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(64,33): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(78,83): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(78,73): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+          and
+          [
+              T=int
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(102,63): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(102,46): warning C4244: 'argument': conversion from 'T' to 'T', possible loss of data
+          with
+          [
+              T=int
+          ]
+          and
+          [
+              T=float
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(140,103): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(139,113): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(141,31): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(142,31): warning C4244: '=': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(145,70): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(144,85): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(282,22): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(281,70): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(298,18): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(297,66): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(327,8): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(328,8): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(333,38): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(334,27): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(339,53): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(339,38): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(343,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(363,52): warning C4018: '<': signed/unsigned mismatch
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(383,25): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+D:\Programming\Git repositories\Chess Game\Chess Game\SFMLGraphicsEngine.cpp(382,43): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+  main.cpp
+  Generating Code...
   Chess Game.vcxproj -> D:\Programming\Git repositories\Chess Game\Debug\Chess Game.exe
