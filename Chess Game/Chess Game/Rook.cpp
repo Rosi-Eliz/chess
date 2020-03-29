@@ -2,7 +2,7 @@
 using namespace std;
 
 
-Rook::Rook(ChessFigureColor color, ChessFigureDirection direction) : Figure(color, direction) {}
+Rook::Rook(ChessFigureColor color, ChessFigureDirection direction) : Figure(color, direction, "Rook") {}
 
 List<Location> moves(const Location& location, int horizontalScale, int verticalScale)
 {

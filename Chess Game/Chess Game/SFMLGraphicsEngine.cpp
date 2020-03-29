@@ -2,6 +2,7 @@
 #include "SFMLGraphicsEngine.h"
 #include <iostream>
 #include <math.h>
+#include "List.h"
 using namespace std;
 using namespace sf;
 
@@ -22,6 +23,15 @@ RenderWindow window(VideoMode(boardSize, boardSize), "Chess", Style::Close | Sty
 Texture boardTexture, figuresTexture;
 
 Sprite boardSprite;
+
+SFMLGraphicsEngine::SFMLGraphicsEngine() {
+	Image icon;
+	icon.loadFromFile("icons/icon.png");
+	window.setIcon(32, 32, icon.getPixelsPtr());
+
+	figuresTexture.loadFromFile("Textures/chessPieces.png");
+	figureBoxSize = figuresTexture.getSize().y / 2;
+}
 
 int board[8][8] =
 { -1,-2,-3,-4,-5,-3,-2,-1,
@@ -51,19 +61,13 @@ void SFMLGraphicsEngine::addFigure(FigureDesignation figure, FigureType figureTy
 }
 
 void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
-	Image icon;
-	icon.loadFromFile("icons/icon.png");
-	window.setIcon(32, 32, icon.getPixelsPtr());
-
-	figuresTexture.loadFromFile("Textures/chessPieces.png");
-	figureBoxSize = figuresTexture.getSize().y / 2;
 
 	boardTexture.loadFromFile(boardLayout == LeadingWhites ? "Textures/chessBoard.png" : "Textures/chessBoardInverted.png");
 
 	boardSprite = Sprite(boardTexture);
 	boardSprite.setScale(boardSize / boardSprite.getLocalBounds().width, boardSize / boardSprite.getLocalBounds().height);
 
-	populateFigures(boardLayout);
+	//populateFigures(boardLayout);
 
 	bool isMove = false;
 	float dx = 0, dy = 0;
@@ -115,8 +119,10 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 
 							int row, column;
 							getLocation(figurePosition, row, column);
-							vector<Location> possibleMoves = availableMovesForFigure(row, column);
-							for (Location location : possibleMoves) {
+							List<Location> possibleMoves = availableMovesForFigure(row, column);
+							for (int i{ 0 }; i < possibleMoves.size(); i++) 
+							{
+								Location location = possibleMoves[i];
 								addPossibleMoveSquare(location.row, location.column);
 							}
 						}
@@ -200,33 +206,33 @@ void SFMLGraphicsEngine::populateFigures(BoardLayout boardLayout)
 
 	//Leading figures pawns
 	for (int i{ 0 }; i < FIGURES_IN_ROW; i++) {
-		addFigure(Pawn, leadingFigureType, leadingPlayerPawnRow, i);
+		addFigure(PawnDesignation, leadingFigureType, leadingPlayerPawnRow, i);
 	}
 
 	//Leading other figures
-	addFigure(Rook, leadingFigureType, leadingPlayerOthersRow, 0);
-	addFigure(Knight, leadingFigureType, leadingPlayerOthersRow, 1);
-	addFigure(Bishop, leadingFigureType, leadingPlayerOthersRow, 2);
-	addFigure(Queen, leadingFigureType, leadingPlayerOthersRow, 3);
-	addFigure(King, leadingFigureType, leadingPlayerOthersRow, 4);
-	addFigure(Bishop, leadingFigureType, leadingPlayerOthersRow, 5);
-	addFigure(Knight, leadingFigureType, leadingPlayerOthersRow, 6);
-	addFigure(Rook, leadingFigureType, leadingPlayerOthersRow, 7);
+	addFigure(RookDesignation, leadingFigureType, leadingPlayerOthersRow, 0);
+	addFigure(KnightDesignation, leadingFigureType, leadingPlayerOthersRow, 1);
+	addFigure(BishopDesignation, leadingFigureType, leadingPlayerOthersRow, 2);
+	addFigure(QueenDesignation, leadingFigureType, leadingPlayerOthersRow, 3);
+	addFigure(KingDesignation, leadingFigureType, leadingPlayerOthersRow, 4);
+	addFigure(BishopDesignation, leadingFigureType, leadingPlayerOthersRow, 5);
+	addFigure(KnightDesignation, leadingFigureType, leadingPlayerOthersRow, 6);
+	addFigure(RookDesignation, leadingFigureType, leadingPlayerOthersRow, 7);
 
 	//Trailing figures pawns
 	for (int i{ 0 }; i < FIGURES_IN_ROW; i++) {
-		addFigure(Pawn, trailingFigureType, trailingPlayerPawnRow, i);
+		addFigure(PawnDesignation, trailingFigureType, trailingPlayerPawnRow, i);
 	}
 
 	//Trailing other figures
-	addFigure(Rook, trailingFigureType, trailingPlayerOthersRow, 0);
-	addFigure(Knight, trailingFigureType, trailingPlayerOthersRow, 1);
-	addFigure(Bishop, trailingFigureType, trailingPlayerOthersRow, 2);
-	addFigure(Queen, trailingFigureType, trailingPlayerOthersRow, 3);
-	addFigure(King, trailingFigureType, trailingPlayerOthersRow, 4);
-	addFigure(Bishop, trailingFigureType, trailingPlayerOthersRow, 5);
-	addFigure(Knight, trailingFigureType, trailingPlayerOthersRow, 6);
-	addFigure(Rook, trailingFigureType, trailingPlayerOthersRow, 7);
+	addFigure(RookDesignation, trailingFigureType, trailingPlayerOthersRow, 0);
+	addFigure(KnightDesignation, trailingFigureType, trailingPlayerOthersRow, 1);
+	addFigure(BishopDesignation, trailingFigureType, trailingPlayerOthersRow, 2);
+	addFigure(QueenDesignation, trailingFigureType, trailingPlayerOthersRow, 3);
+	addFigure(KingDesignation, trailingFigureType, trailingPlayerOthersRow, 4);
+	addFigure(BishopDesignation, trailingFigureType, trailingPlayerOthersRow, 5);
+	addFigure(KnightDesignation, trailingFigureType, trailingPlayerOthersRow, 6);
+	addFigure(RookDesignation, trailingFigureType, trailingPlayerOthersRow, 7);
 }
 
 void SFMLGraphicsEngine::move(int selectedIndex, Vector2f toCoordinates, int animationComplexity) {

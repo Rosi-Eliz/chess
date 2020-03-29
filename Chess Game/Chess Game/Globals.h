@@ -4,13 +4,28 @@
 static const int ChessBoardRows = 8;
 static const int ChessBoardColumns = 8;
 
-enum class ChessFigureColor {Black, White};
+static const int SupplementaryRowDownDirection = 7;//za vsi4ki drygi figyri!!!!!!
+static const int SupplementaryRowUpDirection = 0;
+static const int InitialRowDownDirection = 6;//za peshkite 
+static const int InitialRowUpDirection = 1;
+static const int InitialColumn = 0;
+static const int EndColumn = 7;
 
+enum class ChessFigureColor { Black, White };
+enum class ChessBoardLayout { LeadingBlacks, LeadingWhites };
 enum class ChessFigureDirection { Up, Down };
 
 struct Location {
 	int row;
 	int column;
+
+	Location() {}
+	Location(const Location& location)
+	{
+		row = location.row;
+		column = location.column;
+	}
+	Location(int row, int column) : row(row), column(column) {}
 
 	static void printNestedLocations(List<List<Location>> list)
 	{

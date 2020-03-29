@@ -1,6 +1,6 @@
 #include "Queen.h"
 
-Queen::Queen(ChessFigureColor color, ChessFigureDirection direction) : Figure(color, direction) {}
+Queen::Queen(ChessFigureColor color, ChessFigureDirection direction) : Figure(color, direction, "Queen") {}
 
 List<Location> queenMoves(const Location& location, int horizontalScale, int verticalScale)
 {

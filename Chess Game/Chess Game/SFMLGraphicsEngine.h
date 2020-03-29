@@ -24,6 +24,7 @@ class SFMLGraphicsEngine : public GraphicsEngine
 	bool removeFigure(sf::Sprite* figureReference);
 
 public:
+	SFMLGraphicsEngine();
 	void addFigure(FigureDesignation figure, FigureType figureType, int row, int column);
 	void initiateRender(BoardLayout boardLayout = LeadingWhites);
 	bool move(int fromRow, int fromColumn, int toRow, int toColumn, bool shouldAnimate = true);

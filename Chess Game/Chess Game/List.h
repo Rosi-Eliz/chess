@@ -35,11 +35,12 @@ public:
     void operator += (const List& list);
     void swap(int first, int second);
     void sort();
-    bool contains(int value) const;
+    
     void reverse();
     void filter(int value);
     List map(const function<T(T)>& mutator);
     List filter(const function<bool(T)>& condition);
+    bool contains(const function<bool(T)>& condition);
     T reduce(T first, const function<T(T, T)>& operation);
     List sort(const function<bool(T, T)>& sorting);
 };
@@ -419,22 +420,6 @@ void List<T>::operator += (const List& list)
 }
 
 template <typename T>
-bool List<T>::contains(int value) const
-{
-    Element<T>* ptr = rear;
-    while (ptr != nullptr)
-    {
-        if (ptr->value == value)
-            return true;
-        ptr = ptr->next;
-
-    }
-    return false;
-}
-
-
-
-template <typename T>
 void List<T>::reverse()
 {
 
@@ -579,6 +564,20 @@ List<T> List<T>::sort(const function<bool(T, T)>& sorting)
     return sorted;
 }
 
+template <typename T>
+bool List<T>::contains(const function<bool(T)>& condition)
+{
+    Element<T>* begin = rear;
+    while (begin != nullptr)
+    {
+        if (condition(begin->value))
+        {
+            return true;
+        }
+        begin = begin->next;
+    }
+    return false;
+}
 
 
 /*

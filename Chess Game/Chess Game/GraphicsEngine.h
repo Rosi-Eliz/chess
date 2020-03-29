@@ -3,11 +3,12 @@
 #include <vector>
 #include <iostream>
 #include "Globals.h"
+#include "List.h"
 using namespace std;
 
 // Base interface definition
 
-enum FigureDesignation {Rook, Knight, Bishop, Queen, King, Pawn};
+enum FigureDesignation {RookDesignation, KnightDesignation, BishopDesignation, QueenDesignation, KingDesignation, PawnDesignation};
 enum FigureType {Black, White};
 enum BoardLayout {LeadingWhites, LeadingBlacks};
 
@@ -23,7 +24,7 @@ class GraphicsEngine {
 	virtual void removePossibleMoves() = 0;
 
 public:
-	vector<Location> (*availableMovesForFigure)(int row, int column);
+	List<Location> (*availableMovesForFigure)(int row, int column);
 	bool (*isMoveValid)(int fromRow, int fromColumn, int toRow, int toColumn);
 	void (*didRemoveFigure)(int row, int column);
 	void (*didMove)(int fromRow, int fromColumn, int toRow, int toColumn);

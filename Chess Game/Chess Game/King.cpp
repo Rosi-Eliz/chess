@@ -1,7 +1,7 @@
 #include "King.h"
 
 
-King::King(ChessFigureColor color, ChessFigureDirection direction) : Figure(color, direction) {}
+King::King(ChessFigureColor color, ChessFigureDirection direction) : Figure(color, direction, "King") {}
 
 List<Location> kingMoves(const Location& location, int horizontalScale, int verticalScale)
 {

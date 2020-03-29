@@ -1,7 +1,7 @@
 #pragma once
 #include "Figure.h"
 
-class Rook : Figure{
+class Rook : public Figure{
 
 public:
 	Rook(ChessFigureColor color, ChessFigureDirection direction);

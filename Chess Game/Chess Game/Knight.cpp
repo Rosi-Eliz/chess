@@ -2,7 +2,7 @@
 
 #define maxDeviation 2
 
-Knight::Knight(ChessFigureColor color, ChessFigureDirection direction) : Figure(color, direction) {}
+Knight::Knight(ChessFigureColor color, ChessFigureDirection direction) : Figure(color, direction, "Knight") {}
 
 
 List<Location> findPositions(const Location& currentLocation, int rowIndex, int colIndex)
