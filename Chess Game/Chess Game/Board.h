@@ -21,8 +21,10 @@ class Board {
 public: 
 	Board(ChessBoardLayout layout);
 	Board();
+	void updateMove(const Location& oldLocation,const Location& newLocation);
 	ChessBoardLayout getLayout() const;
 	Figure* figureAt(const Location& location);
 	Field* getFieldAt(const Location& location);
 	List<Field*> getFields() const;
+	List<Figure*> remainingFigures(const ChessFigureColor& color);
 };

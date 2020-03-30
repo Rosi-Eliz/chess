@@ -17,4 +17,6 @@ public:
 	virtual List<List<Location>> possibleMoves(const Location& location);
 	virtual string getName();
 	ChessFigureColor getColor() const;
+	string getColorString() const;
+	ChessFigureDirection getDirection() const;
 };

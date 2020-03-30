@@ -19,8 +19,26 @@ ChessFigureColor Figure::getColor() const
 	return color;
 }
 
+string Figure::getColorString() const
+{
+	switch (color)
+	{
+	case ChessFigureColor::Black: 
+		return "Black"; 
+
+	case ChessFigureColor::White:
+		return "White"; 
+	}
+	return "";
+}
+
 string Figure::getName() {
 	return name;
+}
+
+ChessFigureDirection Figure::getDirection() const
+{
+	return direction;
 }
 
 List<Location> Figure::filteredLocations(List<Location>& unfiltered) const

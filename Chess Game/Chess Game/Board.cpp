@@ -7,6 +7,7 @@
 #include "Queen.h"
 #include "King.h"
 #include "Knight.h"
+#include <functional>
 
 Board::Board(ChessBoardLayout layout) : layout(layout)
 {
@@ -106,7 +107,7 @@ void Board::initialiseFigures()
 	knightFactory(SupplementaryRowDownDirection, 6, topFiguresColor, ChessFigureDirection::Down);
 	rookFactory(SupplementaryRowDownDirection, 7, topFiguresColor, ChessFigureDirection::Down);
 	//Initialize top pawns row 
-	for (int i{ 0 }; i < 8; i++)
+	for (int i{ 0 }; i < ChessBoardColumns; i++)
 	{
 		pawnFactory(InitialRowDownDirection, i, topFiguresColor, ChessFigureDirection::Down);
 	}
@@ -122,7 +123,7 @@ void Board::initialiseFigures()
 	knightFactory(SupplementaryRowUpDirection, 6, bottomFiguresColor, ChessFigureDirection::Up);
 	rookFactory(SupplementaryRowUpDirection, 7, bottomFiguresColor, ChessFigureDirection::Up);
 	//Initialize bottom pawns row 
-	for (int i{ 0 }; i < 8; i++)
+	for (int i{ 0 }; i < ChessBoardColumns; i++)
 	{
 		pawnFactory(InitialRowUpDirection, i, bottomFiguresColor, ChessFigureDirection::Up);
 	}
@@ -163,3 +164,34 @@ Field* Board::getFieldAt(const Location& location)
 	return nullptr;
 }
 
+void Board::updateMove(const Location& oldLocation, const Location& newLocation)
+{
+	Field* oldField = getFieldAt(oldLocation);
+	Field* newField = getFieldAt(newLocation);
+	if (oldField == nullptr || newField == nullptr)
+	{
+		return;
+	}
+	Figure* movedFigure = oldField->getFigure();
+	oldField->setFigure(nullptr);
+	newField->setFigure(movedFigure);
+}
+
+List<Figure*> Board::remainingFigures(const ChessFigureColor& color) 
+{
+	auto condition = [color](Field* field)
+	{
+		return field != nullptr &&
+			field->getFigure() != nullptr &&
+			field->getFigure()->getColor() == color;
+	};
+	auto mutator = [](Field* field)
+	{
+		return field->getFigure();
+	};
+
+	//List<Field*> list = fields.filter(condition);
+	//List<Figure*> figures = list.transformMap<Figure*>(mutator);
+
+	return fields.filter(condition).transformMap<Figure*>(mutator);
+}

@@ -39,10 +39,18 @@ public:
     void reverse();
     void filter(int value);
     List map(const function<T(T)>& mutator);
+
+    template<typename N>
+    List<N> transformMap(const function<N(T)>& mutator);
+
     List filter(const function<bool(T)>& condition);
     bool contains(const function<bool(T)>& condition);
     T reduce(T first, const function<T(T, T)>& operation);
     List sort(const function<bool(T, T)>& sorting);
+    bool allSatisfy(const function<bool(T)>& condition);
+    Element<T>* first(const function<bool(T)>& condition);
+    void forEach(const function<void(T)>& modifier);
+    List partitionBy(const function<bool(T)>& condition);
 };
 
 template <typename T>
@@ -57,7 +65,6 @@ List<T>::List(const List<T>& list) {
     rear = nullptr;
     *this = list;
 }
-
 
 template <typename T>
 List<T>::~List() {
@@ -514,6 +521,20 @@ List<T> List<T>::map(const function<T(T)>& mutator)
     return list;
 }
 
+template<typename T>
+template<typename N>
+List<N> List<T>::transformMap(const function<N(T)>& mutator)
+{
+    List<N> list;
+    Element<T>* begin = rear;
+    while (begin != nullptr)
+    {
+        list.pushFront(mutator(begin->value));
+        begin = begin->next;
+    }
+    return list;
+}
+
 template <typename T>
 List<T> List<T>::filter(const function<bool(T)>& condition)
 {
@@ -580,6 +601,72 @@ bool List<T>::contains(const function<bool(T)>& condition)
 }
 
 
+template <typename T>
+bool List<T>::allSatisfy(const function<bool(T)>& condition)
+{
+    Element<T>* begin = rear;
+    while (begin != nullptr)
+    {
+        if (!condition(begin->value))
+        {
+            return false;
+        }
+        begin = begin->next;
+    }
+    return true;
+}
+
+template <typename T>
+Element<T>* List<T>::first(const function<bool(T)>& condition)
+{
+    Element<T>* begin = rear;
+    while (begin != nullptr)
+    {
+        if (condition(begin->value))
+        {
+            return begin;
+        }
+        begin = begin->next;
+    }
+    return nullptr;
+}
+
+template <typename T>
+void List<T>::forEach(const function<void(T)>& modifier)
+{
+    Element<T>* begin = rear;
+    while (begin != nullptr)
+    {
+        modifier(begin->value);
+        begin = begin->next;
+    }
+    return;
+}
+
+template <typename T>
+List<T> List<T>::partitionBy(const function<bool(T)>& condition)
+{
+    List<T> list;
+    Element<T>* begin = rear;
+    while (begin != nullptr)
+    {
+        if (!condition(begin->value))
+        {
+            list.pushFront(begin->value);
+        }
+        begin = begin->next;
+    }
+    begin = rear;
+    while (begin != nullptr)
+    {
+        if (condition(begin->value))
+        {
+            list.pushFront(begin->value);
+        }
+        begin = begin->next;
+    }
+    return list;
+}
 /*
 329 6 14
 return l + p + r //[123469]
