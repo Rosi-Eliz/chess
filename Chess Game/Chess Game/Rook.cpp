@@ -11,7 +11,7 @@ List<Location> moves(const Location& location, int horizontalScale, int vertical
 	{
 		Location newLocation;
 		newLocation.row = location.row + verticalScale * i;
-		newLocation.column = location.row + horizontalScale * i;
+		newLocation.column = location.column + horizontalScale * i;
 		loc.pushFront(newLocation);
 	}
 	return loc;

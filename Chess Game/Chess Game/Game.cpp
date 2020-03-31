@@ -108,7 +108,10 @@ void didRemoveFigure(int row, int column) {
 }
 
 bool isMoveValid(int fromRow, int fromColumn, int toRow, int toColumn) {
-	return true;
+	List<Location> moves = availableMovesForFigure(fromRow, fromColumn);
+	return moves.contains([toRow, toColumn](Location location) {
+		return location.column == toColumn && location.row == toRow;
+	});
 }
 
 void didMove(int fromRow, int fromColumn, int toRow, int toColumn) {
@@ -147,10 +150,11 @@ List<List<Location>> pawnDiagonalPossibleMoves(Figure* pawn, Location& location,
 			{
 				return leftDiagonalRowOpponent;
 			}
-			if (currentLocation.column == rightD.column)
+			else if (currentLocation.column == rightD.column)
 			{
 				return rightDiagonalRowOpponent;
 			}
+			
 		}
 		return true;
 	};
@@ -190,27 +194,34 @@ List<Location> availableMovesForFigure(int row, int column) {
 	} 
 	else
 	{
-		//locations = moves;
+		locations = moves;
 	}
 
-	Location::printNestedLocations(locations);
-
-
-	/*Location a1, a2;
-	a1.row = 3;
-	a1.column = 3;
-	a2.row = 3;
-	a2.column = 4;
-
-	for (int row{ 0 }; row < ChessBoardRows; row++)
-	{
-		for (int col{ 0 }; col < ChessBoardColumns; col++)
-		{
-			Location loc(row, col);
-			locations.pushFront(loc);
-		}
-	}
-	*/
 	List<Location> result;
+	locations.forEach([&result, &figure, &givenLocation](List<Location> list) {
+		for (int j{ 0 }; j < list.size(); j++)
+		{
+			Location location = list[j];
+			Field* f = boardReference->getFieldAt(location);
+			if (f->getFigure() == nullptr)
+			{
+				result.pushFront(location);
+			}
+			else if (f->getFigure()->getColor() != figure->getColor())
+			{
+				//forbid forward pawn moves in case of opponent figure in front 
+				if (typeid(Pawn) != typeid(*figure) || location.column != givenLocation.column)
+				{
+					result.pushFront(location);
+				}
+				break;
+			}
+			else
+			{
+				break;
+			}
+		}
+	});
+
 	return result;
 }

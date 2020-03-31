@@ -9,7 +9,7 @@ List<Location> kingMoves(const Location& location, int horizontalScale, int vert
 	
 	Location newLocation;
 	newLocation.row = location.row + verticalScale;
-	newLocation.column = location.row + horizontalScale;
+	newLocation.column = location.column + horizontalScale;
 	loc.pushFront(newLocation);
 	return loc;
 }

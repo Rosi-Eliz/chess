@@ -9,7 +9,7 @@ List<Location> queenMoves(const Location& location, int horizontalScale, int ver
 	{
 		Location newLocation;
 		newLocation.row = location.row + verticalScale * i;
-		newLocation.column = location.row + horizontalScale * i;
+		newLocation.column = location.column + horizontalScale * i;
 		loc.pushFront(newLocation);
 	}
 	return loc;

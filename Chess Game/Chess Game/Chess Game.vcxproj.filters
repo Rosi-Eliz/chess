@@ -114,7 +114,7 @@
       <Filter>Header Files\Board</Filter>
     </ClInclude>
     <ClInclude Include="Field.h">
-      <Filter>Header Files\Board</Filter>
+      <Filter>Header Files\Figures</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
