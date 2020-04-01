@@ -3,6 +3,7 @@
 #include "Field.h"
 #include "Globals.h"
 #include "Figure.h"
+#include "GameInteraction.h"
 
 class Board {
 	List<Field*> fields;
@@ -18,8 +19,9 @@ class Board {
 	void initialiseFields();
 	void initialiseFigures();
 	void assignFigureToField(Location& location, Figure* figiure);
+	GameInteraction* gameInteraction;
 public: 
-	Board(ChessBoardLayout layout);
+	Board(ChessBoardLayout layout, GameInteraction* gameInteraction);
 	Board();
 	void updateMove(const Location& oldLocation,const Location& newLocation);
 	ChessBoardLayout getLayout() const;

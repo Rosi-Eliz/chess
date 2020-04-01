@@ -9,7 +9,7 @@
 #include "Knight.h"
 #include <functional>
 
-Board::Board(ChessBoardLayout layout) : layout(layout)
+Board::Board(ChessBoardLayout layout, GameInteraction* gameInteraction) : layout(layout), gameInteraction(gameInteraction)
 {
 	initialiseFields();
 	initialiseFigures();
@@ -173,6 +173,23 @@ void Board::updateMove(const Location& oldLocation, const Location& newLocation)
 		return;
 	}
 	Figure* movedFigure = oldField->getFigure();
+
+	if (typeid(*movedFigure) == typeid(Pawn) && 
+		(newLocation.row == SupplementaryRowDownDirection ||
+			newLocation.row == SupplementaryRowUpDirection))
+	{
+		
+		gameInteraction->removeFigureAt(newLocation.row, newLocation.column);
+
+		queenFactory(newLocation.row, newLocation.column, movedFigure->getColor(), movedFigure->getDirection());
+		movedFigure = figureAt(newLocation);
+		gameInteraction->addFigureAt(newLocation.row, newLocation.column);
+			
+		figures.removeFirstWhere([&](Figure* figureToDelete) {
+			return movedFigure == figureToDelete;
+		});
+	}
+
 	oldField->setFigure(nullptr);
 	newField->setFigure(movedFigure);
 }

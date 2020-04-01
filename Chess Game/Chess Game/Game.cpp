@@ -23,10 +23,10 @@ Game::Game() {
 
 Game::Game(ChessBoardLayout layout)
 {
-	board = Board(layout);
+	graphicsEngine = SFMLGraphicsEngine();
+	board = Board(layout, this);
 	boardReference = &board;
 
-	graphicsEngine = SFMLGraphicsEngine();
 	graphicsEngine.didMove = didMove;
 	graphicsEngine.availableMovesForFigure = availableMovesForFigure;
 	graphicsEngine.didRemoveFigure = didRemoveFigure;
@@ -71,35 +71,38 @@ void Game::populateFigures()
 		}
 		Figure* figure = currentField->getFigure();
 
-		FigureType figureType = figure->getColor() == ChessFigureColor::Black ? Black : White;
 		Location currentLocation = currentField->getLocation();
 		int row = currentLocation.row;
 		int col = currentLocation.column;
+		renderNewFigure(figure, row, col);
+	}
+}
 
-		if (typeid(*figure) == typeid(Pawn)) 
-		{
-			graphicsEngine.addFigure(PawnDesignation, figureType, row, col);
-		}
-		else if (typeid(*figure) == typeid(King))
-		{
-			graphicsEngine.addFigure(KingDesignation, figureType, row, col);
-		}
-		else if (typeid(*figure) == typeid(Queen))
-		{
-			graphicsEngine.addFigure(QueenDesignation, figureType, row, col);
-		}
-		else if (typeid(*figure) == typeid(Rook))
-		{
-			graphicsEngine.addFigure(RookDesignation, figureType, row, col);
-		}
-		else if (typeid(*figure) == typeid(Knight))
-		{
-			graphicsEngine.addFigure(KnightDesignation, figureType, row, col);
-		}
-		else if (typeid(*figure) == typeid(Bishop))
-		{
-			graphicsEngine.addFigure(BishopDesignation, figureType, row, col);
-		}
+void Game::renderNewFigure(Figure* figure, int row, int col) {
+	FigureType figureType = figure->getColor() == ChessFigureColor::Black ? Black : White;
+	if (typeid(*figure) == typeid(Pawn))
+	{
+		graphicsEngine.addFigure(PawnDesignation, figureType, row, col);
+	}
+	else if (typeid(*figure) == typeid(King))
+	{
+		graphicsEngine.addFigure(KingDesignation, figureType, row, col);
+	}
+	else if (typeid(*figure) == typeid(Queen))
+	{
+		graphicsEngine.addFigure(QueenDesignation, figureType, row, col);
+	}
+	else if (typeid(*figure) == typeid(Rook))
+	{
+		graphicsEngine.addFigure(RookDesignation, figureType, row, col);
+	}
+	else if (typeid(*figure) == typeid(Knight))
+	{
+		graphicsEngine.addFigure(KnightDesignation, figureType, row, col);
+	}
+	else if (typeid(*figure) == typeid(Bishop))
+	{
+		graphicsEngine.addFigure(BishopDesignation, figureType, row, col);
 	}
 }
 
@@ -224,4 +227,15 @@ List<Location> availableMovesForFigure(int row, int column) {
 	});
 
 	return result;
+}
+
+void Game::removeFigureAt(int row, int col)
+{
+	graphicsEngine.removeFigure(row, col);
+}
+void Game::addFigureAt(int row, int col)
+{
+	Location location(row, col);
+	Figure* figure = board.figureAt(location);
+	renderNewFigure(figure, row, col);
 }

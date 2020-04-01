@@ -28,6 +28,7 @@ public:
     void pushFront(const T& value);
     void pushRear(const T& value);
     void removeAt(int index);
+    void removeFirstWhere(const function<bool(T)>& condition);
     void print() const;
     void rangeDestructor(int from, int to);
     void operator= (const List& list);
@@ -35,7 +36,6 @@ public:
     void operator += (const List& list);
     void swap(int first, int second);
     void sort();
-    
     void reverse();
     void filter(int value);
     List map(const function<T(T)>& mutator);
@@ -349,6 +349,20 @@ void List<T>::removeAt(int index)
         elementToRemove->previous->next = elementToRemove->next;
         elementToRemove->next->previous = elementToRemove->previous;
         delete elementToRemove;
+    }
+}
+
+template <typename T>
+void List<T>::removeFirstWhere(const function<bool(T)>& condition)
+{
+    for (int i{ 0 }; i < size(); i++)
+    {
+        Element<T>* element = elementAt(i);
+        if (element != nullptr && condition(element->value))
+        {
+           removeAt(i);
+           return;
+        }
     }
 }
 

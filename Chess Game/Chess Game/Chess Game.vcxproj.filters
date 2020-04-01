@@ -116,5 +116,8 @@
     <ClInclude Include="Field.h">
       <Filter>Header Files\Figures</Filter>
     </ClInclude>
+    <ClInclude Include="GameInteraction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
