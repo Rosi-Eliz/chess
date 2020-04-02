@@ -24,7 +24,9 @@ Texture boardTexture, figuresTexture;
 
 Sprite boardSprite;
 
-SFMLGraphicsEngine::SFMLGraphicsEngine() {
+SFMLGraphicsEngine::SFMLGraphicsEngine() {}
+
+SFMLGraphicsEngine::SFMLGraphicsEngine(GraphicsEngineProvider* graphicsEngineProvider): graphicsEngineProvider(graphicsEngineProvider){
 	Image icon;
 	icon.loadFromFile("icons/icon.png");
 	window.setIcon(32, 32, icon.getPixelsPtr());
@@ -90,12 +92,8 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 					if (isMove) {
 						continue;
 					}
-					if (availableMovesForFigure == nullptr) {
-						throw runtime_error("availableMovesForFigure is not supplied");
-					}
-
-					if (isPlayerActive == nullptr) {
-						throw runtime_error("isPlayerActive is not supplied");
+					if (graphicsEngineProvider == nullptr) {
+						throw runtime_error("graphicsEngineProvider is not supplied");
 					}
 
 					for (size_t i = 0; i < figures.size(); i++)
@@ -106,7 +104,7 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 						if (figureBounds.contains(mousePosition.x, mousePosition.y))
 						{
 							FigureSprite figure = figures[i];
-							if (!isPlayerActive(figure.figureType)) {
+							if (!graphicsEngineProvider->isPlayerActive(figure.figureType)) {
 								continue;
 							}
 
@@ -119,7 +117,7 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 
 							int row, column;
 							getLocation(figurePosition, row, column);
-							List<Location> possibleMoves = availableMovesForFigure(row, column);
+							List<Location> possibleMoves = graphicsEngineProvider->availableMovesForFigure(row, column);
 							for (int i{ 0 }; i < possibleMoves.size(); i++) 
 							{
 								Location location = possibleMoves[i];
@@ -136,7 +134,7 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 					if (selectedFigureIndex == -1) {
 						break;
 					}
-					if (isMoveValid == nullptr || didMove == nullptr) {
+					if (graphicsEngineProvider == nullptr) {
 						throw runtime_error("isMoveValid or didMove are not supplied");
 					}
 
@@ -154,13 +152,13 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 					getLocation(oldPosition, oRow, oColumn);
 					getLocation(newPosition, nRow, nColumn);
 
-					if (!isMoveValid(oRow, oColumn, nRow, nColumn)) {
+					if (!graphicsEngineProvider->isMoveValid(oRow, oColumn, nRow, nColumn)) {
 						move(selectedFigureIndex, oldPosition, ANIMATION_COMPLEXITY);
 					}
 					else {
 						move(selectedFigureIndex, newPosition, ANIMATION_COMPLEXITY);
 						removeFigureIgnoringSelection(newPosition, selectedFigureIndex);
-						didMove(oRow, oColumn, nRow, nColumn);
+						graphicsEngineProvider->didMove(oRow, oColumn, nRow, nColumn);
 					}
 					selectedFigureIndex = -1;
 				}
@@ -304,10 +302,10 @@ bool SFMLGraphicsEngine::removeFigureIgnoringSelection(Vector2f coordinates, int
 			coordinates.y + figureBoxSize / 2)) {
 			int row, column;
 			getLocation(coordinates, row, column);
-			if (didRemoveFigure == nullptr) {
+			if (graphicsEngineProvider == nullptr) {
 				throw runtime_error("didRemoveFigure is not supplied");
 			}
-			didRemoveFigure(row, column);
+			graphicsEngineProvider->didRemoveFigure(row, column);
 			return removeFigure(&figures[i].sprite);
 		}
 	}

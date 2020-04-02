@@ -22,9 +22,10 @@ class SFMLGraphicsEngine : public GraphicsEngine
 	void move(int selectedIndex, sf::Vector2f toCoordinates, int animationComplexity = 1000);
 	bool removeFigureIgnoringSelection(sf::Vector2f coordinates, int selectedIndex);
 	bool removeFigure(sf::Sprite* figureReference);
-
+	GraphicsEngineProvider* graphicsEngineProvider;
 public:
 	SFMLGraphicsEngine();
+	SFMLGraphicsEngine(GraphicsEngineProvider* graphicsEngineProvider);
 	void addFigure(FigureDesignation figure, FigureType figureType, int row, int column);
 	void initiateRender(BoardLayout boardLayout = LeadingWhites);
 	bool move(int fromRow, int fromColumn, int toRow, int toColumn, bool shouldAnimate = true);

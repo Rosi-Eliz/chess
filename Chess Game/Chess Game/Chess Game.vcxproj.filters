@@ -119,5 +119,8 @@
     <ClInclude Include="GameInteraction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GraphicsEngineProvider.h">
+      <Filter>Header Files\GraphicsEngine</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

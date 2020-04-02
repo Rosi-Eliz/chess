@@ -11,6 +11,11 @@ static const int InitialRowUpDirection = 1;
 static const int InitialColumn = 0;
 static const int EndColumn = 7;
 
+static const int KingRowTop = 7;
+static const int KingRowBottom = 0;
+static const int KingColumn = 4;
+
+
 enum class ChessFigureColor { Black, White };
 enum class ChessBoardLayout { LeadingBlacks, LeadingWhites };
 enum class ChessFigureDirection { Up, Down };

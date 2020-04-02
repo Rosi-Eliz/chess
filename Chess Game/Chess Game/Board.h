@@ -20,6 +20,7 @@ class Board {
 	void initialiseFigures();
 	void assignFigureToField(Location& location, Figure* figiure);
 	GameInteraction* gameInteraction;
+
 public: 
 	Board(ChessBoardLayout layout, GameInteraction* gameInteraction);
 	Board();
@@ -29,4 +30,5 @@ public:
 	Field* getFieldAt(const Location& location);
 	List<Field*> getFields() const;
 	List<Figure*> remainingFigures(const ChessFigureColor& color);
+	Figure* getKing(ChessFigureColor color) const;
 };

@@ -101,8 +101,8 @@ void Board::initialiseFigures()
 	rookFactory(SupplementaryRowDownDirection, 0, topFiguresColor, ChessFigureDirection::Down);
 	knightFactory(SupplementaryRowDownDirection, 1, topFiguresColor, ChessFigureDirection::Down);
 	bishopFactory(SupplementaryRowDownDirection, 2, topFiguresColor, ChessFigureDirection::Down);
-	kingFactory(SupplementaryRowDownDirection, 3, topFiguresColor, ChessFigureDirection::Down);
-	queenFactory(SupplementaryRowDownDirection, 4, topFiguresColor, ChessFigureDirection::Down);
+	queenFactory(SupplementaryRowDownDirection, 3, topFiguresColor, ChessFigureDirection::Down);
+	kingFactory(SupplementaryRowDownDirection, 4, topFiguresColor, ChessFigureDirection::Down);
 	bishopFactory(SupplementaryRowDownDirection, 5, topFiguresColor, ChessFigureDirection::Down);
 	knightFactory(SupplementaryRowDownDirection, 6, topFiguresColor, ChessFigureDirection::Down);
 	rookFactory(SupplementaryRowDownDirection, 7, topFiguresColor, ChessFigureDirection::Down);
@@ -117,8 +117,8 @@ void Board::initialiseFigures()
 	rookFactory(SupplementaryRowUpDirection, 0, bottomFiguresColor, ChessFigureDirection::Up);
 	knightFactory(SupplementaryRowUpDirection, 1, bottomFiguresColor, ChessFigureDirection::Up);
 	bishopFactory(SupplementaryRowUpDirection, 2, bottomFiguresColor, ChessFigureDirection::Up);
-	kingFactory(SupplementaryRowUpDirection, 3, bottomFiguresColor, ChessFigureDirection::Up);
-	queenFactory(SupplementaryRowUpDirection, 4, bottomFiguresColor, ChessFigureDirection::Up);
+	queenFactory(SupplementaryRowUpDirection, 3, bottomFiguresColor, ChessFigureDirection::Up);
+	kingFactory(SupplementaryRowUpDirection, 4, bottomFiguresColor, ChessFigureDirection::Up);
 	bishopFactory(SupplementaryRowUpDirection, 5, bottomFiguresColor, ChessFigureDirection::Up);
 	knightFactory(SupplementaryRowUpDirection, 6, bottomFiguresColor, ChessFigureDirection::Up);
 	rookFactory(SupplementaryRowUpDirection, 7, bottomFiguresColor, ChessFigureDirection::Up);
@@ -192,6 +192,14 @@ void Board::updateMove(const Location& oldLocation, const Location& newLocation)
 
 	oldField->setFigure(nullptr);
 	newField->setFigure(movedFigure);
+}
+
+
+Figure* Board::getKing(ChessFigureColor color) const
+{
+	return figures.first([color](Figure* f) {
+		return typeid(*f) == typeid(King) && f->getColor() == color;
+	});
 }
 
 List<Figure*> Board::remainingFigures(const ChessFigureColor& color) 

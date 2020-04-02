@@ -179,6 +179,7 @@
     <ClInclude Include="GameInteraction.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="GraphicsEngine.h" />
+    <ClInclude Include="GraphicsEngineProvider.h" />
     <ClInclude Include="King.h" />
     <ClInclude Include="Knight.h" />
     <ClInclude Include="List.h" />

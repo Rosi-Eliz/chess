@@ -48,7 +48,7 @@ public:
     T reduce(T first, const function<T(T, T)>& operation);
     List sort(const function<bool(T, T)>& sorting);
     bool allSatisfy(const function<bool(T)>& condition);
-    Element<T>* first(const function<bool(T)>& condition);
+    T first(const function<bool(T)>& condition) const;
     void forEach(const function<void(T)>& modifier);
     List partitionBy(const function<bool(T)>& condition);
 };
@@ -631,18 +631,18 @@ bool List<T>::allSatisfy(const function<bool(T)>& condition)
 }
 
 template <typename T>
-Element<T>* List<T>::first(const function<bool(T)>& condition)
+T List<T>::first(const function<bool(T)>& condition) const
 {
     Element<T>* begin = rear;
     while (begin != nullptr)
     {
         if (condition(begin->value))
         {
-            return begin;
+            return begin->value;
         }
         begin = begin->next;
     }
-    return nullptr;
+    throw runtime_error("No such element!");
 }
 
 template <typename T>
