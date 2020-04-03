@@ -4,7 +4,7 @@
 #include "GameInteraction.h"
 
 
-class Game : public GameInteraction, public GraphicsEngineProvider
+class Game : public GameInteraction, public GraphicsEngineProvider 
 {
 	// We are emulating an interface based structure, which is not supported in C++
 	// so as to achieve a cross-platform application, therefore only GraphicsEngine members
@@ -13,10 +13,10 @@ class Game : public GameInteraction, public GraphicsEngineProvider
 
 	ChessFigureColor figuresTurn;
 
-	bool blackRightCaslingIsPossible = true;
-	bool blackLeftCaslingIsPossible = true;
-	bool whiteRightCaslingIsPossible = true;
-	bool whiteLeftCaslingIsPossible = true;
+	bool bottomRightCaslingIsPossible = true;
+	bool bottomLeftCaslingIsPossible = true;
+	bool topRightCaslingIsPossible = true;
+	bool topLeftCaslingIsPossible = true;
 
 	Board board;
 	void didRemoveFigure(int row, int column) override;
@@ -27,6 +27,9 @@ class Game : public GameInteraction, public GraphicsEngineProvider
 	List<List<Location>> pawnDiagonalPossibleMoves(Figure* pawn, Location& location, List<List<Location>>& allMoves);
 	void renderNewFigure(Figure* figure, int row, int col);
 	void switchTurn();
+	void castlingPossible(int fromRow, int fromColumn);
+	List<List<Location>> filteredKingCastlingMoves(int row, int column, List<List<Location>>& allMoves);
+	
 public:
 	Game();
 	Game(ChessBoardLayout layout);

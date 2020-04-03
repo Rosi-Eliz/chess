@@ -109,7 +109,7 @@ void Board::initialiseFigures()
 	//Initialize top pawns row 
 	for (int i{ 0 }; i < ChessBoardColumns; i++)
 	{
-		pawnFactory(InitialRowDownDirection, i, topFiguresColor, ChessFigureDirection::Down);
+		//pawnFactory(InitialRowDownDirection, i, topFiguresColor, ChessFigureDirection::Down);
 	}
 
 	//Intialize special figures row
@@ -125,7 +125,7 @@ void Board::initialiseFigures()
 	//Initialize bottom pawns row 
 	for (int i{ 0 }; i < ChessBoardColumns; i++)
 	{
-		pawnFactory(InitialRowUpDirection, i, bottomFiguresColor, ChessFigureDirection::Up);
+		//pawnFactory(InitialRowUpDirection, i, bottomFiguresColor, ChessFigureDirection::Up);
 	}
 }
 

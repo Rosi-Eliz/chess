@@ -16,6 +16,15 @@ static const int KingRowBottom = 0;
 static const int KingColumn = 4;
 
 
+static const int RookBottomLeftRow = 0;
+static const int RookBottomLeftCol = 0;
+static const int RookBottomRightRow = 0;
+static const int RookBottomRightCol = 7;
+static const int RookTopLeftRow = 7;
+static const int RookTopLeftCol = 0;
+static const int RookTopRightRow = 7;
+static const int RookTopRightCol = 7;
+
 enum class ChessFigureColor { Black, White };
 enum class ChessBoardLayout { LeadingBlacks, LeadingWhites };
 enum class ChessFigureDirection { Up, Down };

@@ -27,8 +27,8 @@ void Game::switchTurn()
 
 void Game::initiateGame()
 {
-	BoardLayout boardLayout = board.getLayout() == ChessBoardLayout::LeadingBlacks ? 
-	BoardLayout::LeadingBlacks : BoardLayout::LeadingWhites;
+	BoardLayout boardLayout = board.getLayout() == ChessBoardLayout::LeadingBlacks ?
+		BoardLayout::LeadingBlacks : BoardLayout::LeadingWhites;
 
 	populateFigures();
 
@@ -92,6 +92,8 @@ void Game::renderNewFigure(Figure* figure, int row, int col) {
 }
 
 void Game::didRemoveFigure(int row, int column) {
+
+
 	cout << "removed: row: " << row << ", column: " << column << endl;
 }
 
@@ -102,13 +104,44 @@ bool Game::isMoveValid(int fromRow, int fromColumn, int toRow, int toColumn) {
 	});
 }
 
+void Game::castlingPossible(int fromRow, int fromColumn)
+{
+	if (fromRow == RookBottomLeftRow && fromColumn == RookBottomLeftCol)
+	{
+		bottomLeftCaslingIsPossible = false;
+	}
+	else if (fromRow == RookBottomRightRow && fromColumn == RookBottomRightCol)
+	{
+		bottomRightCaslingIsPossible = false;
+	}
+	else if (fromRow == RookTopLeftRow && fromColumn == RookTopLeftCol)
+	{
+		topLeftCaslingIsPossible = false;
+	}
+	else if (fromRow == RookTopRightRow && fromColumn == RookTopRightCol)
+	{
+		topRightCaslingIsPossible = false;
+	}
+	else if (fromRow == KingRowBottom && fromColumn == KingColumn)
+	{
+		bottomLeftCaslingIsPossible = false;
+		bottomRightCaslingIsPossible = false;
+	}
+	else if (fromRow == KingRowTop && fromColumn == KingColumn)
+	{
+		topRightCaslingIsPossible = false;
+		topLeftCaslingIsPossible = false;
+	}
+}
+
 void Game::didMove(int fromRow, int fromColumn, int toRow, int toColumn) {
 	switchTurn();
 	Location oldLocation = Location(fromRow, fromColumn);
 	Location newLocation = Location(toRow, toColumn);
-	//Figure* movedFigure = boardReference->getFieldAt(newLocation)->getFigure;
+
 	//if(typeid(movedFigure) == typeid(Rook))
 	board.updateMove(oldLocation, newLocation);
+	castlingPossible(fromRow, fromColumn);
 	cout << "move from - row: " << fromRow << ", column: " << fromColumn << ". To - row: ";
 	cout << toRow << ", column: " << toColumn << endl;
 }
@@ -152,25 +185,27 @@ List<List<Location>> Game::pawnDiagonalPossibleMoves(Figure* pawn, Location& loc
 	return allMoves.filter(pawnFilter);
 }
 
-/*
+List<List<Location>> Game::filteredKingCastlingMoves(int row, int column, List<List<Location>>& allMoves)
+{
+	List<List<Location>> result;
 
-l = {{1},{2,3}}
-filter forEach{ el
-if(el>2) return false
+	allMoves.forEach([&](List<Location> list) {
+		List<Location> subLocations = list.filter([&](Location location) {
+			if (location.column - column == -2 && row == SupplementaryRowUpDirection)
+				return bottomLeftCaslingIsPossible;
+			if (location.column - column == 2 && row == SupplementaryRowUpDirection)
+				return bottomRightCaslingIsPossible;
+			if (location.column - column == 2 && row == SupplementaryRowDownDirection)
+				return topRightCaslingIsPossible;
+			if (location.column - column == -2 && row == SupplementaryRowDownDirection)
+				return topLeftCaslingIsPossible;
+			return true;
+		});
+		result.pushFront(subLocations);
+	});
+	return result;
 }
-l.filter(t) = 
 
-pawn: r:1, c:1
-{{(2,0)},
-{(2,1),(3,1)},
-{(2,2)}}
-
-{{(2,1),(3,1)},
-{2,2}}
-{(2,1),(3,1),(2,2)}
-
-
-*/
 
 List<Location> Game::availableMovesForFigure(int row, int column) {
 	List<List<Location>> locations;
@@ -182,6 +217,10 @@ List<Location> Game::availableMovesForFigure(int row, int column) {
 	{
 		locations = pawnDiagonalPossibleMoves(figure,givenLocation, moves);
 	} 
+	else if (typeid(*figure) == typeid(King))
+	{
+		locations = filteredKingCastlingMoves(row, column, moves);
+	}
 	else
 	{
 		locations = moves;
