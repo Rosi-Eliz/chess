@@ -1,7 +1,7 @@
 #include "Bishop.h"
 
 
-Bishop::Bishop(ChessFigureColor color, ChessFigureDirection direction) : Figure(color, direction) {}
+Bishop::Bishop(ChessFigureColor color, ChessFigureDirection direction) : Figure(color, direction, "Bishop") {}
 
 
 List<Location> diagonal(const Location& location, int horizontalScale, int verticalScale)
@@ -11,7 +11,7 @@ List<Location> diagonal(const Location& location, int horizontalScale, int verti
 	{
 		Location newLocation;
 		newLocation.row = location.row + horizontalScale * i;
-		newLocation.column = location.row + verticalScale * i;
+		newLocation.column = location.column + verticalScale * i;
 		locations.pushFront(newLocation);
 	}
 	return locations;

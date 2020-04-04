@@ -28,6 +28,7 @@ public:
     void pushFront(const T& value);
     void pushRear(const T& value);
     void removeAt(int index);
+    void removeFirstWhere(const function<bool(T)>& condition);
     void print() const;
     void rangeDestructor(int from, int to);
     void operator= (const List& list);
@@ -35,13 +36,21 @@ public:
     void operator += (const List& list);
     void swap(int first, int second);
     void sort();
-    bool contains(int value) const;
     void reverse();
     void filter(int value);
     List map(const function<T(T)>& mutator);
+
+    template<typename N>
+    List<N> transformMap(const function<N(T)>& mutator);
+
     List filter(const function<bool(T)>& condition);
+    bool contains(const function<bool(T)>& condition);
     T reduce(T first, const function<T(T, T)>& operation);
     List sort(const function<bool(T, T)>& sorting);
+    bool allSatisfy(const function<bool(T)>& condition);
+    T first(const function<bool(T)>& condition) const;
+    void forEach(const function<void(T)>& modifier);
+    List partitionBy(const function<bool(T)>& condition);
 };
 
 template <typename T>
@@ -56,7 +65,6 @@ List<T>::List(const List<T>& list) {
     rear = nullptr;
     *this = list;
 }
-
 
 template <typename T>
 List<T>::~List() {
@@ -345,6 +353,20 @@ void List<T>::removeAt(int index)
 }
 
 template <typename T>
+void List<T>::removeFirstWhere(const function<bool(T)>& condition)
+{
+    for (int i{ 0 }; i < size(); i++)
+    {
+        Element<T>* element = elementAt(i);
+        if (element != nullptr && condition(element->value))
+        {
+           removeAt(i);
+           return;
+        }
+    }
+}
+
+template <typename T>
 void List<T>::operator= (const List& list)
 {
     if (this == &list) {
@@ -417,22 +439,6 @@ void List<T>::operator += (const List& list)
     return;
 
 }
-
-template <typename T>
-bool List<T>::contains(int value) const
-{
-    Element<T>* ptr = rear;
-    while (ptr != nullptr)
-    {
-        if (ptr->value == value)
-            return true;
-        ptr = ptr->next;
-
-    }
-    return false;
-}
-
-
 
 template <typename T>
 void List<T>::reverse()
@@ -529,6 +535,20 @@ List<T> List<T>::map(const function<T(T)>& mutator)
     return list;
 }
 
+template<typename T>
+template<typename N>
+List<N> List<T>::transformMap(const function<N(T)>& mutator)
+{
+    List<N> list;
+    Element<T>* begin = rear;
+    while (begin != nullptr)
+    {
+        list.pushFront(mutator(begin->value));
+        begin = begin->next;
+    }
+    return list;
+}
+
 template <typename T>
 List<T> List<T>::filter(const function<bool(T)>& condition)
 {
@@ -579,8 +599,88 @@ List<T> List<T>::sort(const function<bool(T, T)>& sorting)
     return sorted;
 }
 
+template <typename T>
+bool List<T>::contains(const function<bool(T)>& condition)
+{
+    Element<T>* begin = rear;
+    while (begin != nullptr)
+    {
+        if (condition(begin->value))
+        {
+            return true;
+        }
+        begin = begin->next;
+    }
+    return false;
+}
 
 
+template <typename T>
+bool List<T>::allSatisfy(const function<bool(T)>& condition)
+{
+    Element<T>* begin = rear;
+    while (begin != nullptr)
+    {
+        if (!condition(begin->value))
+        {
+            return false;
+        }
+        begin = begin->next;
+    }
+    return true;
+}
+
+template <typename T>
+T List<T>::first(const function<bool(T)>& condition) const
+{
+    Element<T>* begin = rear;
+    while (begin != nullptr)
+    {
+        if (condition(begin->value))
+        {
+            return begin->value;
+        }
+        begin = begin->next;
+    }
+    throw runtime_error("No such element!");
+}
+
+template <typename T>
+void List<T>::forEach(const function<void(T)>& modifier)
+{
+    Element<T>* begin = rear;
+    while (begin != nullptr)
+    {
+        modifier(begin->value);
+        begin = begin->next;
+    }
+    return;
+}
+
+template <typename T>
+List<T> List<T>::partitionBy(const function<bool(T)>& condition)
+{
+    List<T> list;
+    Element<T>* begin = rear;
+    while (begin != nullptr)
+    {
+        if (!condition(begin->value))
+        {
+            list.pushFront(begin->value);
+        }
+        begin = begin->next;
+    }
+    begin = rear;
+    while (begin != nullptr)
+    {
+        if (condition(begin->value))
+        {
+            list.pushFront(begin->value);
+        }
+        begin = begin->next;
+    }
+    return list;
+}
 /*
 329 6 14
 return l + p + r //[123469]

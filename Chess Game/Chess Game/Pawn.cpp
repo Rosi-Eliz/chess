@@ -1,14 +1,7 @@
 #include "Pawn.h"
 #include <algorithm>
 
-#define InitialRowDownDirection 6
-#define InitialRowUpDirection 1
-#define InitialColumn 0
-#define EndColumn 7
-
-
-
-Pawn::Pawn(ChessFigureColor color, ChessFigureDirection direction) : Figure(color, direction) {}
+Pawn::Pawn(ChessFigureColor color, ChessFigureDirection direction) : Figure(color, direction, "Pawn") {}
 
 List<List<Location>> Pawn::possibleMoves(const Location& location) 
 {

@@ -1,7 +1,7 @@
 #pragma once
 #include "Figure.h"
 
-class Knight : Figure {
+class Knight : public Figure {
 
 
 public:
