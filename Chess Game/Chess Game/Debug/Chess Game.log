@@ -1,5 +1,4 @@
 ﻿  Game.cpp
-D:\Programming\Git repositories\Chess Game\Chess Game\Game.cpp(160,18): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-D:\Programming\Git repositories\Chess Game\Chess Game\Game.cpp(170,25): warning C4018: '<': signed/unsigned mismatch
-  LINK : D:\Programming\Git repositories\Chess Game\Debug\Chess Game.exe not found or not built by the last incremental link; performing full link
+D:\Programming\Git repositories\Chess Game\Chess Game\Game.cpp(197,18): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+D:\Programming\Git repositories\Chess Game\Chess Game\Game.cpp(207,25): warning C4018: '<': signed/unsigned mismatch
   Chess Game.vcxproj -> D:\Programming\Git repositories\Chess Game\Debug\Chess Game.exe

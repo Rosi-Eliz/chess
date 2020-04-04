@@ -31,4 +31,5 @@ public:
 	List<Field*> getFields() const;
 	List<Figure*> remainingFigures(const ChessFigureColor& color);
 	Figure* getKing(ChessFigureColor color) const;
+	Field* getField(Figure* figure) const;
 };

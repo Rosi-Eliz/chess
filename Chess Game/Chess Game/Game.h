@@ -23,6 +23,11 @@ class Game : public GameInteraction, public GraphicsEngineProvider
 	bool isMoveValid(int fromRow, int fromColumn, int toRow, int toColumn) override;
 	void didMove(int fromRow, int fromColumn, int toRow, int toColumn) override;
 	bool isPlayerActive(FigureType figureType) override;
+	bool fieldIsInConflict(ChessFigureColor opponentColor);
+	void moveRookInCastling(int fromRow, int fromColumn, int toRow, int toColumn);
+	bool movementIsPossibleInCastling(int fromRow, int fromCol, int toRow, int toCol);
+	List<Location> filteredMoves(int row, int column);
+	List<Location> filteredConflictMoves(List<Location> availableMoves, int row, int column);
 	List<Location> availableMovesForFigure(int row, int column) override;
 	List<List<Location>> pawnDiagonalPossibleMoves(Figure* pawn, Location& location, List<List<Location>>& allMoves);
 	void renderNewFigure(Figure* figure, int row, int col);

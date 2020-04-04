@@ -9,6 +9,12 @@
 #include "SFMLGraphicsEngine.h" 
 #include <functional>
 
+ChessFigureColor returnOpponentColor(ChessFigureColor color)
+{
+	ChessFigureColor oppositePlayerColor = color == ChessFigureColor::White ? ChessFigureColor::Black : ChessFigureColor::White;
+	return oppositePlayerColor;
+}
+
 Game::Game() {
 }
 
@@ -134,14 +140,45 @@ void Game::castlingPossible(int fromRow, int fromColumn)
 	}
 }
 
+void Game::moveRookInCastling(int fromRow, int fromColumn, int toRow, int toColumn) {
+	Location oldLocation = Location(fromRow, fromColumn);
+	Location newLocation = Location(toRow, toColumn);
+	Field* field = board.getFieldAt(oldLocation);
+	if (field == nullptr)
+		throw runtime_error("no such field");
+
+	Figure* figure = field->getFigure();
+
+	if (typeid(*figure) != typeid(King))
+		return;
+
+	int directionOfMovement = toColumn - fromColumn;
+	if (directionOfMovement == 2)
+	{
+		Location initialRookLocation = Location(toRow, RookBottomRightCol);
+		Location finalRookLocation = Location(toRow, RookBottomRightCol - ShortCastlingDistance);
+		board.updateMove(initialRookLocation, finalRookLocation);
+		graphicsEngine.move(toRow, RookBottomRightCol, toRow, RookBottomRightCol - ShortCastlingDistance);
+	}
+	else if (directionOfMovement == -2)
+	{
+		Location initialRookLocation = Location(toRow, RookBottomLeftCol);
+		Location finalRookLocation = Location(toRow, RookBottomLeftCol + LongCastlingDistance);
+		board.updateMove(initialRookLocation, finalRookLocation);
+		graphicsEngine.move(toRow, RookBottomLeftCol, toRow, RookBottomLeftCol + LongCastlingDistance);
+	}
+}
+
 void Game::didMove(int fromRow, int fromColumn, int toRow, int toColumn) {
 	switchTurn();
 	Location oldLocation = Location(fromRow, fromColumn);
 	Location newLocation = Location(toRow, toColumn);
 
 	//if(typeid(movedFigure) == typeid(Rook))
-	board.updateMove(oldLocation, newLocation);
+	moveRookInCastling(fromRow, fromColumn, toRow, toColumn);
 	castlingPossible(fromRow, fromColumn);
+	board.updateMove(oldLocation, newLocation);
+
 	cout << "move from - row: " << fromRow << ", column: " << fromColumn << ". To - row: ";
 	cout << toRow << ", column: " << toColumn << endl;
 }
@@ -185,6 +222,39 @@ List<List<Location>> Game::pawnDiagonalPossibleMoves(Figure* pawn, Location& loc
 	return allMoves.filter(pawnFilter);
 }
 
+bool Game::movementIsPossibleInCastling(int fromRow, int fromCol, int toRow, int toCol)
+{
+	Location oldLocation(fromRow, fromCol);
+	Field* field = board.getFieldAt(oldLocation);
+	if (field == nullptr)
+	{
+		return false;
+	}
+	Figure* movedFigure = field->getFigure();
+	if (movedFigure == nullptr)
+	{
+		return false;
+	}
+
+	Location newLocation(toRow, toCol);
+	Field* newField = board.getFieldAt(newLocation);
+	if (newField == nullptr)
+	{
+		return false;
+	}
+	Figure* otherFigure = newField->getFigure();
+
+	if (field == nullptr || movedFigure || newField == nullptr)
+
+	newField->setFigure(movedFigure);
+	field->setFigure(nullptr);
+
+	bool isInConflict = fieldIsInConflict(returnOpponentColor(movedFigure->getColor()));
+	newField->setFigure(otherFigure);
+	field->setFigure(movedFigure);
+	return !isInConflict;
+}
+
 List<List<Location>> Game::filteredKingCastlingMoves(int row, int column, List<List<Location>>& allMoves)
 {
 	List<List<Location>> result;
@@ -206,17 +276,17 @@ List<List<Location>> Game::filteredKingCastlingMoves(int row, int column, List<L
 	return result;
 }
 
-
-List<Location> Game::availableMovesForFigure(int row, int column) {
+List<Location> Game::filteredMoves(int row, int column)
+{
 	List<List<Location>> locations;
 
 	Location givenLocation = Location(row, column);
 	Figure* figure = board.figureAt(givenLocation);
 	List<List<Location>> moves = figure->possibleMoves(givenLocation);
-	if (typeid(*figure) == typeid(Pawn)) 
+	if (typeid(*figure) == typeid(Pawn))
 	{
-		locations = pawnDiagonalPossibleMoves(figure,givenLocation, moves);
-	} 
+		locations = pawnDiagonalPossibleMoves(figure, givenLocation, moves);
+	}
 	else if (typeid(*figure) == typeid(King))
 	{
 		locations = filteredKingCastlingMoves(row, column, moves);
@@ -253,6 +323,61 @@ List<Location> Game::availableMovesForFigure(int row, int column) {
 	});
 
 	return result;
+}
+
+
+bool Game::fieldIsInConflict(ChessFigureColor opponentColor)
+{
+	ChessFigureColor currentPlayerColor = opponentColor == ChessFigureColor::White ? ChessFigureColor::Black : ChessFigureColor::White;
+	Figure* king = board.getKing(currentPlayerColor);
+	Field* kingField = board.getField(king);
+	List<Figure*> opponentFigures = board.remainingFigures(opponentColor);
+	for (int i{ 0 }; i < opponentFigures.size(); i++)
+	{
+
+		Figure* currentFigure = opponentFigures[i];
+		Field* currentFigureField = board.getField(currentFigure);
+		List<Location> moves = filteredMoves(currentFigureField->getLocation().row,
+											 currentFigureField->getLocation().column);
+		
+		for (int j{ 0 }; j < moves.size(); j++)
+		{
+			Location currentLocation = moves[j];
+			if (kingField->getLocation().row == currentLocation.row &&
+				kingField->getLocation().column == currentLocation.column)
+				return true;
+		}
+	}
+	return false;
+}
+
+List<Location> Game::filteredConflictMoves(List<Location> availableMoves, int row, int column)
+{
+	Location givenLocation = Location(row, column);
+	Field* startingField = board.getFieldAt(givenLocation);
+	Figure* figure = board.figureAt(givenLocation);
+	ChessFigureColor opponentColor = figure->getColor() == ChessFigureColor::White ? ChessFigureColor::Black : ChessFigureColor::White;
+	
+	if (startingField != nullptr) {
+		startingField->setFigure(nullptr);
+	}
+	List<Location> allowedMoves = availableMoves.filter([&](Location currentLocation) {
+
+		Field* newField = board.getFieldAt(currentLocation);
+		Figure* oldFigure = newField->getFigure();
+		newField->setFigure(figure);
+		bool isConflict = fieldIsInConflict(opponentColor);
+		newField->setFigure(oldFigure);
+		return !isConflict;
+		
+	});
+	startingField->setFigure(figure);
+	return allowedMoves;
+}
+
+List<Location> Game::availableMovesForFigure(int row, int column) {
+	List<Location> initialFiltering = filteredMoves(row, column);
+	return filteredConflictMoves(initialFiltering, row, column);
 }
 
 void Game::removeFigureAt(int row, int col)
