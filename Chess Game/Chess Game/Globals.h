@@ -28,6 +28,7 @@ static const int RookTopRightCol = 7;
 static const int LongCastlingDistance = 3;
 static const int ShortCastlingDistance = 2;
 
+enum class State { Draw, WhiteWins, BlackWins, InProgress };
 enum class ChessFigureColor { Black, White };
 enum class ChessBoardLayout { LeadingBlacks, LeadingWhites };
 enum class ChessFigureDirection { Up, Down };

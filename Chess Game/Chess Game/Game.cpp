@@ -18,11 +18,41 @@ ChessFigureColor returnOpponentColor(ChessFigureColor color)
 Game::Game() {
 }
 
+
 Game::Game(ChessBoardLayout layout)
 {
 	graphicsEngine = SFMLGraphicsEngine(this);
 	board = Board(layout, this);
 	figuresTurn = ChessFigureColor::White;
+}
+
+State Game::checkState() 
+{
+	List<Figure*> currentPlayerPossibleMoves = board.remainingFigures(figuresTurn);
+	for (int i{ 0 }; i < currentPlayerPossibleMoves.size(); i++)
+	{
+		Figure* currentFigure = currentPlayerPossibleMoves[i];
+		Field* field = board.getField(currentFigure);
+		Location location = field->getLocation();
+		if (availableMovesForFigure(location.row, location.column).size() > 0)
+		{
+			return State::InProgress;
+		}
+	}
+	ChessFigureColor opponentColor = returnOpponentColor(figuresTurn);
+	bool conflict = fieldIsInConflict(opponentColor);
+	if (conflict)
+	{
+		switch (opponentColor)
+		{
+		case ChessFigureColor::Black: 
+			return State::BlackWins; 
+		case ChessFigureColor::White:
+			return State::WhiteWins;
+		}
+	}
+	return State::Draw;
+
 }
 
 void Game::switchTurn()
@@ -179,6 +209,7 @@ void Game::didMove(int fromRow, int fromColumn, int toRow, int toColumn) {
 	castlingPossible(fromRow, fromColumn);
 	board.updateMove(oldLocation, newLocation);
 
+	cout << "state: " << static_cast<int>(checkState()) << endl;
 	cout << "move from - row: " << fromRow << ", column: " << fromColumn << ". To - row: ";
 	cout << toRow << ", column: " << toColumn << endl;
 }
@@ -375,9 +406,45 @@ List<Location> Game::filteredConflictMoves(List<Location> availableMoves, int ro
 	return allowedMoves;
 }
 
+List<Location> Game::removeKingGapLocation(List<Location> location, int row, int column) {
+	if ((row != KingRowBottom || column != KingColumn) && (row != KingRowTop || column != KingColumn))
+		return location;
+
+	Figure* figure = board.figureAt(Location(row, column));
+	
+	if (figure == nullptr || typeid(*figure) != typeid(King))
+	{
+		return location;
+	}
+
+	bool leftFieldIsValid = location.contains([&](Location loc) {
+		return loc.column == column - 1 && loc.row == row;
+	});
+	bool rightFieldIsValid = location.contains([&](Location loc) {
+		return loc.column == column + 1 && loc.row == row;
+	});
+
+	bool conflict = fieldIsInConflict(returnOpponentColor(figure->getColor()));
+
+	if(!leftFieldIsValid || conflict)
+	{ 
+		location = location.filter([&](Location loc) {
+			return loc.column != column - 2;
+		});
+	}
+	if (!rightFieldIsValid || conflict)
+	{
+		location = location.filter([&](Location loc) {
+			return loc.column != column + 2;
+		});
+	}
+	return location;
+}
+
 List<Location> Game::availableMovesForFigure(int row, int column) {
 	List<Location> initialFiltering = filteredMoves(row, column);
-	return filteredConflictMoves(initialFiltering, row, column);
+	List<Location> secondaryFilter = filteredConflictMoves(initialFiltering, row, column);
+	return removeKingGapLocation(secondaryFilter, row, column);
 }
 
 void Game::removeFigureAt(int row, int col)
