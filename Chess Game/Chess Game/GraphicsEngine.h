@@ -19,4 +19,5 @@ class GraphicsEngine {
 	virtual bool removeFigure(int row, int column) = 0;
 	virtual void addPossibleMoveSquare(int row, int column) = 0;
 	virtual void removePossibleMoves() = 0;
+	virtual void removeAllFigures() = 0; 
 };

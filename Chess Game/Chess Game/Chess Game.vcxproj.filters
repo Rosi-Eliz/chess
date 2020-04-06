@@ -72,6 +72,9 @@
     <ClCompile Include="Field.cpp">
       <Filter>Source Files\Board</Filter>
     </ClCompile>
+    <ClCompile Include="Move.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -121,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="GraphicsEngineProvider.h">
       <Filter>Header Files\GraphicsEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Move.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

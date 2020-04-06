@@ -32,4 +32,5 @@ public:
 	bool removeFigure(int row, int column);
 	void addPossibleMoveSquare(int row, int column);
 	void removePossibleMoves();
+	void removeAllFigures();
 };

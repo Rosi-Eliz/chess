@@ -23,7 +23,7 @@ public:
     void insert(const T& value, int index);
     bool isEmpty() const;
     int size() const;
-    Element<T>* elementAt(int index);
+    Element<T>* elementAt(int index) const;
     void initialPush(const T& value);
     void pushFront(const T& value);
     void pushRear(const T& value);
@@ -32,7 +32,7 @@ public:
     void print() const;
     void rangeDestructor(int from, int to);
     void operator= (const List& list);
-    T& operator[] (int index);
+    T& operator[] (int index) const;
     void operator += (const List& list);
     void swap(int first, int second);
     void sort();
@@ -205,7 +205,7 @@ bool List<T>::isEmpty() const {
 }
 
 template <typename T>
-Element<T>* List<T>::elementAt(int index) {
+Element<T>* List<T>::elementAt(int index) const {
     if (isEmpty() || index >= size() || index < 0)
     {
         return nullptr;
@@ -221,7 +221,7 @@ Element<T>* List<T>::elementAt(int index) {
 }
 
 template <typename T>
-T& List<T>::operator[] (int index)
+T& List<T>::operator[] (int index) const
 {
     if (elementAt(index) != nullptr)
         return elementAt(index)->value;

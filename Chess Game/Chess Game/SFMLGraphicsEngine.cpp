@@ -327,6 +327,11 @@ bool SFMLGraphicsEngine::removeFigure(int row, int column) {
 	return removeFigure(figureReference);
 }
 
+void SFMLGraphicsEngine::removeAllFigures()
+{
+	figures = vector<FigureSprite>();
+}
+
 Vector2f SFMLGraphicsEngine::getCoordinates(int row, int column) {
 	int x = column * figureBoxSize;
 	int y = (FIGURES_IN_ROW - 1 - row) * figureBoxSize;

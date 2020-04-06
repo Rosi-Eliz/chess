@@ -22,17 +22,64 @@ Game::Game() {
 Game::Game(ChessBoardLayout layout)
 {
 	graphicsEngine = SFMLGraphicsEngine(this);
-	board = Board(layout, this);
+	board = new Board(layout, this);
 	figuresTurn = ChessFigureColor::White;
+}
+
+Game& Game::operator=(const Game& game)
+{
+	if (this == &game)
+	{
+		return *this;
+	}
+
+	for (int i{ 0 }; i < completedMoves.size(); i++)
+	{
+		delete completedMoves[i];
+	}
+	delete board;
+
+	*this = Game(game);
+	return *this;
+}
+
+Game::Game(const Game& game)
+{
+	if (this == &game)
+		return;
+	graphicsEngine = SFMLGraphicsEngine(this);
+	figuresTurn = game.figuresTurn;
+
+	for (int i{ 0 }; i < game.completedMoves.size(); i++)
+	{
+		Move* newMove = game.completedMoves[i];
+		completedMoves.pushFront(newMove);
+	}
+
+	bottomRightCaslingIsPossible = game.bottomRightCaslingIsPossible;
+	bottomLeftCaslingIsPossible = game.bottomLeftCaslingIsPossible;
+	topRightCaslingIsPossible = game.topRightCaslingIsPossible;
+	topLeftCaslingIsPossible = game.topLeftCaslingIsPossible;
+
+	board = new Board(*game.board);
+}
+
+Game::~Game()
+{
+	for (int i{ 0 }; i < completedMoves.size(); i++)
+	{
+		delete completedMoves[i];
+	}
+	delete board;
 }
 
 State Game::checkState() 
 {
-	List<Figure*> currentPlayerPossibleMoves = board.remainingFigures(figuresTurn);
+	List<Figure*> currentPlayerPossibleMoves = board->remainingFigures(figuresTurn);
 	for (int i{ 0 }; i < currentPlayerPossibleMoves.size(); i++)
 	{
 		Figure* currentFigure = currentPlayerPossibleMoves[i];
-		Field* field = board.getField(currentFigure);
+		Field* field = board->getField(currentFigure);
 		Location location = field->getLocation();
 		if (availableMovesForFigure(location.row, location.column).size() > 0)
 		{
@@ -63,13 +110,13 @@ void Game::switchTurn()
 
 void Game::initiateGame()
 {
-	BoardLayout boardLayout = board.getLayout() == ChessBoardLayout::LeadingBlacks ?
+	BoardLayout boardLayout = board->getLayout() == ChessBoardLayout::LeadingBlacks ?
 		BoardLayout::LeadingBlacks : BoardLayout::LeadingWhites;
 
 	populateFigures();
 
 	/*
-	List<Figure*> blackFigures = board.remainingFigures(ChessFigureColor::Black);
+	List<Figure*> blackFigures = board->remainingFigures(ChessFigureColor::Black);
 
 	auto print = [](Figure* figure) {
 		cout << figure->getName() << " " << figure->getColorString() << endl;
@@ -80,9 +127,22 @@ void Game::initiateGame()
 	graphicsEngine.initiateRender(boardLayout);
 }
 
+void Game::restart(ChessBoardLayout layout)
+{
+	for (int i{ 0 }; i < completedMoves.size(); i++)
+	{
+		delete completedMoves[i];
+	}
+	completedMoves = List<Move*>();
+	board = new Board(layout, this);
+	figuresTurn = ChessFigureColor::White;
+	graphicsEngine.removeAllFigures();
+	initiateGame();
+}
+
 void Game::populateFigures()
 {
-	List<Field*> fields = board.getFields(); 
+	List<Field*> fields = board->getFields(); 
 	for (int i{ 0 }; i < fields.size(); i++)
 	{
 		Field* currentField = fields[i];
@@ -173,7 +233,7 @@ void Game::castlingPossible(int fromRow, int fromColumn)
 void Game::moveRookInCastling(int fromRow, int fromColumn, int toRow, int toColumn) {
 	Location oldLocation = Location(fromRow, fromColumn);
 	Location newLocation = Location(toRow, toColumn);
-	Field* field = board.getFieldAt(oldLocation);
+	Field* field = board->getFieldAt(oldLocation);
 	if (field == nullptr)
 		throw runtime_error("no such field");
 
@@ -187,27 +247,40 @@ void Game::moveRookInCastling(int fromRow, int fromColumn, int toRow, int toColu
 	{
 		Location initialRookLocation = Location(toRow, RookBottomRightCol);
 		Location finalRookLocation = Location(toRow, RookBottomRightCol - ShortCastlingDistance);
-		board.updateMove(initialRookLocation, finalRookLocation);
+		board->updateMove(initialRookLocation, finalRookLocation);
 		graphicsEngine.move(toRow, RookBottomRightCol, toRow, RookBottomRightCol - ShortCastlingDistance);
 	}
 	else if (directionOfMovement == -2)
 	{
 		Location initialRookLocation = Location(toRow, RookBottomLeftCol);
 		Location finalRookLocation = Location(toRow, RookBottomLeftCol + LongCastlingDistance);
-		board.updateMove(initialRookLocation, finalRookLocation);
+		board->updateMove(initialRookLocation, finalRookLocation);
 		graphicsEngine.move(toRow, RookBottomLeftCol, toRow, RookBottomLeftCol + LongCastlingDistance);
 	}
+}
+
+void Game::createMoveLog(Location from, Location to)
+{
+	Field* fromField = board->getFieldAt(from);
+	Field* toField = board->getFieldAt(from);
+	if (fromField == nullptr || toField == nullptr)
+		return;
+	Figure* figureMoved = fromField->getFigure();
+	if (figureMoved == nullptr)
+		return;
+	Move* newMove = new Move(from, to, figureMoved->getColor(), figureMoved->getDirection(), toField->getFigure());
+	completedMoves.pushFront(newMove);
 }
 
 void Game::didMove(int fromRow, int fromColumn, int toRow, int toColumn) {
 	switchTurn();
 	Location oldLocation = Location(fromRow, fromColumn);
 	Location newLocation = Location(toRow, toColumn);
-
+	createMoveLog(oldLocation, newLocation);
 	//if(typeid(movedFigure) == typeid(Rook))
 	moveRookInCastling(fromRow, fromColumn, toRow, toColumn);
 	castlingPossible(fromRow, fromColumn);
-	board.updateMove(oldLocation, newLocation);
+	board->updateMove(oldLocation, newLocation);
 
 	cout << "state: " << static_cast<int>(checkState()) << endl;
 	cout << "move from - row: " << fromRow << ", column: " << fromColumn << ". To - row: ";
@@ -228,8 +301,8 @@ List<List<Location>> Game::pawnDiagonalPossibleMoves(Figure* pawn, Location& loc
 	int diagonalRow = pow(-1, direction);
 	Location leftD = Location(diagonalRow + location.row, location.column - 1);
 	Location rightD = Location(diagonalRow + location.row, location.column + 1);
-	Field* f1 = board.getFieldAt(leftD);
-	Field* f2 = board.getFieldAt(rightD);
+	Field* f1 = board->getFieldAt(leftD);
+	Field* f2 = board->getFieldAt(rightD);
 	
 	bool leftDiagonalRowOpponent = f1 != nullptr && f1->getFigure() != nullptr && f1->getFigure()->getColor() != currentColor;
 	bool rightDiagonalRowOpponent = f2 != nullptr && f2->getFigure() != nullptr && f2->getFigure()->getColor() != currentColor;
@@ -256,7 +329,7 @@ List<List<Location>> Game::pawnDiagonalPossibleMoves(Figure* pawn, Location& loc
 bool Game::movementIsPossibleInCastling(int fromRow, int fromCol, int toRow, int toCol)
 {
 	Location oldLocation(fromRow, fromCol);
-	Field* field = board.getFieldAt(oldLocation);
+	Field* field = board->getFieldAt(oldLocation);
 	if (field == nullptr)
 	{
 		return false;
@@ -268,7 +341,7 @@ bool Game::movementIsPossibleInCastling(int fromRow, int fromCol, int toRow, int
 	}
 
 	Location newLocation(toRow, toCol);
-	Field* newField = board.getFieldAt(newLocation);
+	Field* newField = board->getFieldAt(newLocation);
 	if (newField == nullptr)
 	{
 		return false;
@@ -312,7 +385,7 @@ List<Location> Game::filteredMoves(int row, int column)
 	List<List<Location>> locations;
 
 	Location givenLocation = Location(row, column);
-	Figure* figure = board.figureAt(givenLocation);
+	Figure* figure = board->figureAt(givenLocation);
 	List<List<Location>> moves = figure->possibleMoves(givenLocation);
 	if (typeid(*figure) == typeid(Pawn))
 	{
@@ -332,7 +405,7 @@ List<Location> Game::filteredMoves(int row, int column)
 		for (int j{ 0 }; j < list.size(); j++)
 		{
 			Location location = list[j];
-			Field* f = board.getFieldAt(location);
+			Field* f = board->getFieldAt(location);
 			if (f->getFigure() == nullptr)
 			{
 				result.pushFront(location);
@@ -360,14 +433,14 @@ List<Location> Game::filteredMoves(int row, int column)
 bool Game::fieldIsInConflict(ChessFigureColor opponentColor)
 {
 	ChessFigureColor currentPlayerColor = opponentColor == ChessFigureColor::White ? ChessFigureColor::Black : ChessFigureColor::White;
-	Figure* king = board.getKing(currentPlayerColor);
-	Field* kingField = board.getField(king);
-	List<Figure*> opponentFigures = board.remainingFigures(opponentColor);
+	Figure* king = board->getKing(currentPlayerColor);
+	Field* kingField = board->getField(king);
+	List<Figure*> opponentFigures = board->remainingFigures(opponentColor);
 	for (int i{ 0 }; i < opponentFigures.size(); i++)
 	{
 
 		Figure* currentFigure = opponentFigures[i];
-		Field* currentFigureField = board.getField(currentFigure);
+		Field* currentFigureField = board->getField(currentFigure);
 		List<Location> moves = filteredMoves(currentFigureField->getLocation().row,
 											 currentFigureField->getLocation().column);
 		
@@ -385,8 +458,8 @@ bool Game::fieldIsInConflict(ChessFigureColor opponentColor)
 List<Location> Game::filteredConflictMoves(List<Location> availableMoves, int row, int column)
 {
 	Location givenLocation = Location(row, column);
-	Field* startingField = board.getFieldAt(givenLocation);
-	Figure* figure = board.figureAt(givenLocation);
+	Field* startingField = board->getFieldAt(givenLocation);
+	Figure* figure = board->figureAt(givenLocation);
 	ChessFigureColor opponentColor = figure->getColor() == ChessFigureColor::White ? ChessFigureColor::Black : ChessFigureColor::White;
 	
 	if (startingField != nullptr) {
@@ -394,7 +467,7 @@ List<Location> Game::filteredConflictMoves(List<Location> availableMoves, int ro
 	}
 	List<Location> allowedMoves = availableMoves.filter([&](Location currentLocation) {
 
-		Field* newField = board.getFieldAt(currentLocation);
+		Field* newField = board->getFieldAt(currentLocation);
 		Figure* oldFigure = newField->getFigure();
 		newField->setFigure(figure);
 		bool isConflict = fieldIsInConflict(opponentColor);
@@ -410,7 +483,7 @@ List<Location> Game::removeKingGapLocation(List<Location> location, int row, int
 	if ((row != KingRowBottom || column != KingColumn) && (row != KingRowTop || column != KingColumn))
 		return location;
 
-	Figure* figure = board.figureAt(Location(row, column));
+	Figure* figure = board->figureAt(Location(row, column));
 	
 	if (figure == nullptr || typeid(*figure) != typeid(King))
 	{
@@ -454,6 +527,6 @@ void Game::removeFigureAt(int row, int col)
 void Game::addFigureAt(int row, int col)
 {
 	Location location(row, col);
-	Figure* figure = board.figureAt(location);
+	Figure* figure = board->figureAt(location);
 	renderNewFigure(figure, row, col);
 }

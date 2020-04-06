@@ -24,6 +24,9 @@ class Board {
 public: 
 	Board(ChessBoardLayout layout, GameInteraction* gameInteraction);
 	Board();
+	Board(const Board& board);
+	Board& operator=(const Board& board);
+	~Board();
 	void updateMove(const Location& oldLocation,const Location& newLocation);
 	ChessBoardLayout getLayout() const;
 	Figure* figureAt(const Location& location);

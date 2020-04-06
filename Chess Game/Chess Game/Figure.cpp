@@ -12,6 +12,7 @@ Figure::Figure() {}
 Figure::Figure(const Figure& figure) {
 	color = figure.color;
 	direction = figure.direction;
+	name = figure.name;
 }
 
 ChessFigureColor Figure::getColor() const

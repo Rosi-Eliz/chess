@@ -18,6 +18,87 @@ Board::Board(ChessBoardLayout layout, GameInteraction* gameInteraction) : layout
 Board::Board() {
 }
 
+Board& Board::operator=(const Board& board)
+{
+	if (this == &board)
+		return *this;
+
+	for (int i{ 0 }; i < figures.size(); i++)
+	{
+		delete figures[i];
+	}
+	figures = List<Figure*>();
+	for (int i{ 0 }; i < fields.size(); i++)
+	{
+		delete fields[i];
+	}
+	fields = List<Field*>();
+
+	*this = Board(board);
+	return *this;
+}
+
+Board::Board(const Board& board)
+{
+	if (this == &board)
+		return;
+
+	for (int i{ 0 }; i < board.fields.size(); i++)
+	{
+		Field* copyField = board.fields[i];
+		Field* newField = new Field(*copyField);
+
+		if (copyField->getFigure() != nullptr)
+		{
+			Figure* figure = copyField->getFigure();
+			Figure* newFigure = nullptr;
+			if (typeid(*figure) == typeid(Pawn))
+			{
+				newFigure = new Pawn(figure->getColor(), figure->getDirection());
+			}
+			else if (typeid(*figure) == typeid(King))
+			{
+				newFigure = new King(figure->getColor(), figure->getDirection());
+			}
+			else if (typeid(*figure) == typeid(Queen))
+			{
+				newFigure = new Queen(figure->getColor(), figure->getDirection());
+			}
+			else if (typeid(*figure) == typeid(Knight))
+			{
+				newFigure = new Knight(figure->getColor(), figure->getDirection());
+			}
+			else if (typeid(*figure) == typeid(Bishop))
+			{
+				newFigure = new Bishop(figure->getColor(), figure->getDirection());
+			}
+			else if (typeid(*figure) == typeid(Rook))
+			{
+				newFigure = new Rook(figure->getColor(), figure->getDirection());
+			}
+			newField->setFigure(newFigure);
+			figures.pushFront(newFigure);
+		}
+
+		fields.pushFront(newField);
+	}
+	layout = board.layout;
+	gameInteraction = board.gameInteraction;
+}
+
+Board::~Board() {
+	for (int i{ 0 }; i < figures.size(); i++)
+	{
+		delete figures[i];
+	}
+	figures = List<Figure*>();
+	for (int i{ 0 }; i < fields.size(); i++)
+	{
+		delete fields[i];
+	}
+	fields = List<Field*>();
+}
+
 void Board::initialiseFields()
 {
 	for (int row{ 0 }; row < ChessBoardRows; row++)
