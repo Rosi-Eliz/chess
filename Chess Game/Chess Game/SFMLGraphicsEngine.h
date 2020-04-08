@@ -40,6 +40,6 @@ public:
 	void addLastMoveSquare(int row, int column);
 	void removePossibleMoves();
 	void removeAllFigures();
-	void showGameOverLayout();
+	void showGameOverLayout(string message);
 	void hideGameOverLayout();
 };

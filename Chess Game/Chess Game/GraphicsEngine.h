@@ -21,6 +21,6 @@ class GraphicsEngine {
 	virtual void addLastMoveSquare(int row, int column) = 0;
 	virtual void removePossibleMoves() = 0;
 	virtual void removeAllFigures() = 0; 
-	virtual void showGameOverLayout() = 0;
+	virtual void showGameOverLayout(string message) = 0;
 	virtual void hideGameOverLayout() = 0;
 };

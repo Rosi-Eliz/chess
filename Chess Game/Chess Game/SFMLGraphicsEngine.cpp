@@ -13,7 +13,8 @@ using namespace sf;
 
 #define FIELD_SELECTION_OUTLINE 0
 #define FIELD_SELECTION_COLOR Color(46,114,153,178) //178 alpha corresponding to 0.7 in a [0,1] range
-#define FIELD_PREVIOUS_MOVE_COLOR Color(13,163,152,100) //178 alpha corresponding to 0.7 in a [0,1] range
+#define FIELD_PREVIOUS_MOVE_COLOR Color(13,163,152,100)
+#define DARK_GRAY_COLOR Color(108,108,108,255)
 #define FIELD_SELECTION_OUTLINE_COLOR Color(26,116,158)
 
 const double boardSize = 900;
@@ -25,6 +26,9 @@ Texture boardTexture, figuresTexture, endGameTexture;
 
 Sprite boardSprite;
 Sprite endGameSprite;
+
+Font textFont;
+Text messageText;
 
 SFMLGraphicsEngine::SFMLGraphicsEngine() {}
 
@@ -71,6 +75,13 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 	lastMoveNewPositionRow = -1;
 	lastMoveNewPositionColumn = -1;
 	shouldRenderEndGameLayout = false;
+
+	textFont.loadFromFile("Fonts/Candara.ttf");
+
+	messageText.setFont(textFont);
+	messageText.setFillColor(DARK_GRAY_COLOR);
+	messageText.setCharacterSize(22);
+	messageText.setPosition(257, 416);
 
 	boardTexture.loadFromFile(boardLayout == LeadingWhites ? "Textures/chessBoard.png" : "Textures/chessBoardInverted.png");
 	endGameTexture.loadFromFile("Textures/gameOverLayout.png");
@@ -186,14 +197,14 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 				if (event.key.code == Keyboard::Space) {
 					//std::cout << "now";
 					//removeFigure(1,1);      
-					move(1, 1, 3, 3);
+					//move(1, 1, 3, 3);
 					//addPossibleMoveSquare(4, 4);
 				}
 				if (event.key.code == Keyboard::T) {
-					showGameOverLayout();
+					showGameOverLayout("sadasdaasdasdasdasdasdasdasdsasd\nyjthdthdhdr\nhjyfhdhjdfhkui");
 					//addPossibleMoveSquare(4, 5);
 				}
-				if (event.key.code == Keyboard::BackSpace) {
+				if (event.key.code == Keyboard::Enter) {
 					hideGameOverLayout();
 					//removePossibleMoves();
 				}
@@ -211,12 +222,19 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 	}
 }
 
-void SFMLGraphicsEngine::showGameOverLayout()
+void SFMLGraphicsEngine::showGameOverLayout(string message)
 {
 	if (shouldRenderEndGameLayout)
 	{
 		return;
 	}
+
+	messageText.setString(message);
+	FloatRect textRect = messageText.getLocalBounds();
+	messageText.setOrigin(textRect.left + textRect.width / 2.0f,
+		textRect.top + textRect.height / 2.0f);
+	messageText.setPosition(Vector2f(440, 450));
+
 	shouldRenderEndGameLayout = true;
 	double animationSeconds = ANIMATION_DURTATION_SECONDS;
 	double frameSplit = animationSeconds / ANIMATION_COMPLEXITY;
@@ -233,6 +251,7 @@ void SFMLGraphicsEngine::showGameOverLayout()
 
 			currentAlpha = (1.0 / ( animationSeconds / clockTotal.getElapsedTime().asSeconds())) * 255;
 			endGameSprite.setColor(Color(255, 255, 255, currentAlpha));
+			messageText.setFillColor(Color(108, 108, 108, currentAlpha));
 			redrawBoard();
 			currentAlpha += alphaSplit;
 			clock.restart();
@@ -240,6 +259,7 @@ void SFMLGraphicsEngine::showGameOverLayout()
 		}
 	}
 	endGameSprite.setColor(Color(255, 255, 255, 255));
+	messageText.setFillColor(Color(108, 108, 108, 255));
 }
 
 void SFMLGraphicsEngine::hideGameOverLayout()
@@ -263,6 +283,7 @@ void SFMLGraphicsEngine::hideGameOverLayout()
 
 			currentAlpha = (1.0 / (animationSeconds / clockTotal.getElapsedTime().asSeconds())) * 255;
 			endGameSprite.setColor(Color(255, 255, 255, 255 - currentAlpha));
+			messageText.setFillColor(Color(108, 108, 108, 255 - currentAlpha));
 			redrawBoard();
 			currentAlpha += alphaSplit;
 			clock.restart();
@@ -471,6 +492,7 @@ void SFMLGraphicsEngine::redrawBoard(int indexForZElevation) {
 	if (shouldRenderEndGameLayout)
 	{
 		window.draw(endGameSprite);
+		window.draw(messageText);
 	}
 
 	window.display();
