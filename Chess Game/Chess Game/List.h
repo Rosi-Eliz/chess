@@ -13,7 +13,7 @@ struct Element {
 
 template <typename T>
 class List {
-
+   
     Element<T>* front;
     Element<T>* rear;
 public:

@@ -18,12 +18,12 @@ ChessFigureColor returnOpponentColor(ChessFigureColor color)
 Game::Game() {
 }
 
-
 Game::Game(ChessBoardLayout layout)
 {
 	graphicsEngine = SFMLGraphicsEngine(this);
 	board = new Board(layout, this);
 	figuresTurn = ChessFigureColor::White;
+	startTime = time(0);
 }
 
 Game& Game::operator=(const Game& game)
@@ -137,6 +137,7 @@ void Game::restart(ChessBoardLayout layout)
 	board = new Board(layout, this);
 	figuresTurn = ChessFigureColor::White;
 	graphicsEngine.removeAllFigures();
+	startTime = time(0);
 	initiateGame();
 }
 
@@ -270,7 +271,9 @@ void Game::createMoveLog(Location from, Location to)
 		return;
 	Move* newMove = new Move(from, to, figureMoved->getColor(), figureMoved->getDirection(), toField->getFigure());
 	completedMoves.pushFront(newMove);
-}
+	//std::cout << newMove->getDurationSince(startTime)<<endl;
+
+ }
 
 void Game::didMove(int fromRow, int fromColumn, int toRow, int toColumn) {
 	switchTurn();
@@ -281,6 +284,31 @@ void Game::didMove(int fromRow, int fromColumn, int toRow, int toColumn) {
 	moveRookInCastling(fromRow, fromColumn, toRow, toColumn);
 	castlingPossible(fromRow, fromColumn);
 	board->updateMove(oldLocation, newLocation);
+	
+	State currentState = checkState();
+	if (currentState != State::InProgress)
+	{
+		string gameMessage;
+		switch (currentState)
+		{
+		case State::WhiteWins : 
+			gameMessage = "Victory for the white player";
+			break;
+		case State::BlackWins :
+			gameMessage = "Victory for the black player";
+			break;
+		case State::Draw :
+			gameMessage = "Tie";
+			break;
+		}
+
+		string movesMessage = "Completed moves: " + to_string(completedMoves.size());
+		string duration = "Total game duration: " + completedMoves[completedMoves.size() - 1]->getDurationSince(startTime);
+
+		string result = gameMessage + "\n" + movesMessage + "\n" + duration;
+		graphicsEngine.showGameOverLayout(result);
+
+	}
 
 	cout << "state: " << static_cast<int>(checkState()) << endl;
 	cout << "move from - row: " << fromRow << ", column: " << fromColumn << ". To - row: ";
@@ -529,4 +557,9 @@ void Game::addFigureAt(int row, int col)
 	Location location(row, col);
 	Figure* figure = board->figureAt(location);
 	renderNewFigure(figure, row, col);
+}
+
+void Game::didRestartGame()
+{
+	restart(board->getLayout());
 }

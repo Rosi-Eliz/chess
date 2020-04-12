@@ -18,6 +18,9 @@ class GraphicsEngine {
 	virtual bool move(int fromRow, int fromColumn, int toRow, int toColumn, bool shouldAnimate) = 0;
 	virtual bool removeFigure(int row, int column) = 0;
 	virtual void addPossibleMoveSquare(int row, int column) = 0;
+	virtual void addLastMoveSquare(int row, int column) = 0;
 	virtual void removePossibleMoves() = 0;
 	virtual void removeAllFigures() = 0; 
+	virtual void showGameOverLayout(string message) = 0;
+	virtual void hideGameOverLayout() = 0;
 };

@@ -13,6 +13,8 @@ using namespace sf;
 
 #define FIELD_SELECTION_OUTLINE 0
 #define FIELD_SELECTION_COLOR Color(46,114,153,178) //178 alpha corresponding to 0.7 in a [0,1] range
+#define FIELD_PREVIOUS_MOVE_COLOR Color(13,163,152,100)
+#define DARK_GRAY_COLOR Color(108,108,108,255)
 #define FIELD_SELECTION_OUTLINE_COLOR Color(26,116,158)
 
 const double boardSize = 900;
@@ -20,9 +22,13 @@ const double offsetSize = boardSize * 0.033;
 Vector2f offset(offsetSize, offsetSize);
 RenderWindow window(VideoMode(boardSize, boardSize), "Chess", Style::Close | Style::Titlebar);
 
-Texture boardTexture, figuresTexture;
+Texture boardTexture, figuresTexture, endGameTexture;
 
 Sprite boardSprite;
+Sprite endGameSprite;
+
+Font textFont;
+Text messageText;
 
 SFMLGraphicsEngine::SFMLGraphicsEngine() {}
 
@@ -32,6 +38,7 @@ SFMLGraphicsEngine::SFMLGraphicsEngine(GraphicsEngineProvider* graphicsEnginePro
 	window.setIcon(32, 32, icon.getPixelsPtr());
 
 	figuresTexture.loadFromFile("Textures/chessPieces.png");
+
 	figureBoxSize = figuresTexture.getSize().y / 2;
 }
 
@@ -63,11 +70,28 @@ void SFMLGraphicsEngine::addFigure(FigureDesignation figure, FigureType figureTy
 }
 
 void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
+	lastMoveOldPositionRow = -1;
+	lastMoveOldPositionColumn = -1;
+	lastMoveNewPositionRow = -1;
+	lastMoveNewPositionColumn = -1;
+	shouldRenderEndGameLayout = false;
+
+	textFont.loadFromFile("Fonts/Candara.ttf");
+
+	messageText.setFont(textFont);
+	messageText.setFillColor(DARK_GRAY_COLOR);
+	messageText.setCharacterSize(22);
+	messageText.setPosition(257, 416);
 
 	boardTexture.loadFromFile(boardLayout == LeadingWhites ? "Textures/chessBoard.png" : "Textures/chessBoardInverted.png");
+	endGameTexture.loadFromFile("Textures/gameOverLayout.png");
 
 	boardSprite = Sprite(boardTexture);
 	boardSprite.setScale(boardSize / boardSprite.getLocalBounds().width, boardSize / boardSprite.getLocalBounds().height);
+
+	endGameSprite = Sprite(endGameTexture);
+	endGameSprite.setScale(boardSize / boardSprite.getLocalBounds().width, boardSize / boardSprite.getLocalBounds().height);
+
 
 	//populateFigures(boardLayout);
 
@@ -89,7 +113,7 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 			case Event::MouseButtonPressed:
 				if (event.key.code == Mouse::Left)
 				{
-					if (isMove) {
+					if (isMove || shouldRenderEndGameLayout) {
 						continue;
 					}
 					if (graphicsEngineProvider == nullptr) {
@@ -159,6 +183,11 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 						move(selectedFigureIndex, newPosition, ANIMATION_COMPLEXITY);
 						removeFigureIgnoringSelection(newPosition, selectedFigureIndex);
 						graphicsEngineProvider->didMove(oRow, oColumn, nRow, nColumn);
+
+						lastMoveOldPositionRow = oRow;
+						lastMoveOldPositionColumn = oColumn;
+						lastMoveNewPositionRow = nRow;
+						lastMoveNewPositionColumn = nColumn;
 					}
 					selectedFigureIndex = -1;
 				}
@@ -168,13 +197,19 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 				if (event.key.code == Keyboard::Space) {
 					//std::cout << "now";
 					//removeFigure(1,1);      
-					move(1, 1, 3, 3);
+					//move(1, 1, 3, 3);
 					//addPossibleMoveSquare(4, 4);
 				}
 				if (event.key.code == Keyboard::T) {
 					//addPossibleMoveSquare(4, 5);
 				}
-				if (event.key.code == Keyboard::BackSpace) {
+				if (event.key.code == Keyboard::Enter) {
+					if (shouldRenderEndGameLayout)
+					{
+						hideGameOverLayout();
+						graphicsEngineProvider->didRestartGame();
+					}
+
 					//removePossibleMoves();
 				}
 				break;
@@ -189,6 +224,77 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 
 		redrawBoard(selectedFigureIndex);
 	}
+}
+
+void SFMLGraphicsEngine::showGameOverLayout(string message)
+{
+	if (shouldRenderEndGameLayout)
+	{
+		return;
+	}
+
+	messageText.setString(message);
+	FloatRect textRect = messageText.getLocalBounds();
+	messageText.setOrigin(textRect.left + textRect.width / 2.0f,
+		textRect.top + textRect.height / 2.0f);
+	messageText.setPosition(Vector2f(440, 450));
+
+	shouldRenderEndGameLayout = true;
+	double animationSeconds = ANIMATION_DURTATION_SECONDS;
+	double frameSplit = animationSeconds / ANIMATION_COMPLEXITY;
+
+	Clock clockElapsed;
+	Clock clockTotal;
+
+	double alphaSplit = double(255) / ANIMATION_COMPLEXITY;
+	double currentAlpha = 0;
+
+	while (clockTotal.getElapsedTime().asSeconds() <= animationSeconds) {
+		if (clockElapsed.getElapsedTime().asSeconds() >= frameSplit) {
+			Clock clock;
+
+			currentAlpha = (1.0 / ( animationSeconds / clockTotal.getElapsedTime().asSeconds())) * 255;
+			endGameSprite.setColor(Color(255, 255, 255, currentAlpha));
+			messageText.setFillColor(Color(108, 108, 108, currentAlpha));
+			redrawBoard();
+			currentAlpha += alphaSplit;
+			clock.restart();
+			clockElapsed.restart();
+		}
+	}
+	endGameSprite.setColor(Color(255, 255, 255, 255));
+	messageText.setFillColor(Color(108, 108, 108, 255));
+}
+
+void SFMLGraphicsEngine::hideGameOverLayout()
+{
+	if (!shouldRenderEndGameLayout)
+	{
+		return;
+	}
+	double animationSeconds = ANIMATION_DURTATION_SECONDS;
+	double frameSplit = animationSeconds / ANIMATION_COMPLEXITY;
+
+	Clock clockElapsed;
+	Clock clockTotal;
+
+	double alphaSplit = double(255) / ANIMATION_COMPLEXITY;
+	double currentAlpha = 0;
+
+	while (clockTotal.getElapsedTime().asSeconds() <= animationSeconds) {
+		if (clockElapsed.getElapsedTime().asSeconds() >= frameSplit) {
+			Clock clock;
+
+			currentAlpha = (1.0 / (animationSeconds / clockTotal.getElapsedTime().asSeconds())) * 255;
+			endGameSprite.setColor(Color(255, 255, 255, 255 - currentAlpha));
+			messageText.setFillColor(Color(108, 108, 108, 255 - currentAlpha));
+			redrawBoard();
+			currentAlpha += alphaSplit;
+			clock.restart();
+			clockElapsed.restart();
+		}
+	}
+	shouldRenderEndGameLayout = false;
 }
 
 void SFMLGraphicsEngine::populateFigures(BoardLayout boardLayout)
@@ -329,6 +435,10 @@ bool SFMLGraphicsEngine::removeFigure(int row, int column) {
 
 void SFMLGraphicsEngine::removeAllFigures()
 {
+	lastMoveOldPositionRow = -1;
+	lastMoveOldPositionColumn = -1;
+	lastMoveNewPositionRow = -1;
+	lastMoveNewPositionColumn = -1;
 	figures = vector<FigureSprite>();
 }
 
@@ -363,6 +473,16 @@ Sprite* SFMLGraphicsEngine::figureForLocation(int x, int y, bool selectCenter) {
 void SFMLGraphicsEngine::redrawBoard(int indexForZElevation) {
 	window.clear();
 	window.draw(boardSprite);
+
+	if (lastMoveOldPositionRow != -1 &&
+		lastMoveOldPositionColumn != -1 &&
+		lastMoveNewPositionRow != -1 &&
+		lastMoveNewPositionColumn != -1)
+	{
+		addLastMoveSquare(lastMoveOldPositionRow, lastMoveOldPositionColumn);
+		addLastMoveSquare(lastMoveNewPositionRow, lastMoveNewPositionColumn);
+	}
+
 	for (size_t i{ 0 }; i < possibleMoves.size(); i++) {
 		window.draw(possibleMoves[i]);
 	}
@@ -372,6 +492,13 @@ void SFMLGraphicsEngine::redrawBoard(int indexForZElevation) {
 	if (indexForZElevation >= 0 && indexForZElevation < figures.size()) {
 		window.draw(figures[indexForZElevation].sprite);
 	}
+
+	if (shouldRenderEndGameLayout)
+	{
+		window.draw(endGameSprite);
+		window.draw(messageText);
+	}
+
 	window.display();
 }
 
@@ -393,6 +520,24 @@ void SFMLGraphicsEngine::addPossibleMoveSquare(int row, int column) {
 	possibleMoves.push_back(rectangle);
 }
 
+void SFMLGraphicsEngine::addLastMoveSquare(int row, int column) {
+	Vector2f coordinates = getCoordinates(row, column);
+	coordinates.x += FIELD_SELECTION_OUTLINE;
+	coordinates.y += FIELD_SELECTION_OUTLINE;
+
+	RectangleShape rectangle(coordinates);
+	rectangle.setPosition(coordinates);
+
+	rectangle.setFillColor(FIELD_PREVIOUS_MOVE_COLOR);
+
+	rectangle.setOutlineThickness(FIELD_SELECTION_OUTLINE);
+	rectangle.setOutlineColor(FIELD_PREVIOUS_MOVE_COLOR);
+
+	rectangle.setSize(Vector2f(figureBoxSize - 2 * FIELD_SELECTION_OUTLINE,
+		figureBoxSize - 2 * FIELD_SELECTION_OUTLINE));
+	window.draw(rectangle);
+}
+
 void SFMLGraphicsEngine::removePossibleMoves() {
-	possibleMoves = {};
+	possibleMoves =		{};
 }

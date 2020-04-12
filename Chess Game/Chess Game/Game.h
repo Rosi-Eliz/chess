@@ -3,7 +3,7 @@
 #include "SFMLGraphicsEngine.h"
 #include "GameInteraction.h"
 #include "Move.h"
-
+#include <time.h>
 
 class Game : public GameInteraction, public GraphicsEngineProvider 
 {
@@ -23,6 +23,7 @@ class Game : public GameInteraction, public GraphicsEngineProvider
 
 	Board *board;
 	State checkState();
+	time_t startTime;
 	void createMoveLog(Location from, Location to);
 	void didRemoveFigure(int row, int column) override;
 	bool isMoveValid(int fromRow, int fromColumn, int toRow, int toColumn) override;
@@ -52,4 +53,5 @@ public:
 	void populateFigures();
 	void removeFigureAt(int row, int col) override;
 	void addFigureAt(int row, int col) override;
+	void didRestartGame() override;
 };

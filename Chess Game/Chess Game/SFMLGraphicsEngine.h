@@ -10,6 +10,12 @@ struct FigureSprite {
 
 class SFMLGraphicsEngine : public GraphicsEngine
 {
+	int lastMoveOldPositionRow;
+	int lastMoveOldPositionColumn;
+	int lastMoveNewPositionRow;
+	int lastMoveNewPositionColumn;
+
+	bool shouldRenderEndGameLayout;
 	double figureBoxSize;
 	void populateFigures(BoardLayout boardLayout);
 	void redrawBoard(int indexForZElevation = -1);
@@ -31,6 +37,9 @@ public:
 	bool move(int fromRow, int fromColumn, int toRow, int toColumn, bool shouldAnimate = true);
 	bool removeFigure(int row, int column);
 	void addPossibleMoveSquare(int row, int column);
+	void addLastMoveSquare(int row, int column);
 	void removePossibleMoves();
 	void removeAllFigures();
+	void showGameOverLayout(string message);
+	void hideGameOverLayout();
 };
