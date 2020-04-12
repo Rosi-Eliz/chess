@@ -201,11 +201,15 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 					//addPossibleMoveSquare(4, 4);
 				}
 				if (event.key.code == Keyboard::T) {
-					showGameOverLayout("sadasdaasdasdasdasdasdasdasdsasd\nyjthdthdhdr\nhjyfhdhjdfhkui");
 					//addPossibleMoveSquare(4, 5);
 				}
 				if (event.key.code == Keyboard::Enter) {
-					hideGameOverLayout();
+					if (shouldRenderEndGameLayout)
+					{
+						hideGameOverLayout();
+						graphicsEngineProvider->didRestartGame();
+					}
+
 					//removePossibleMoves();
 				}
 				break;
@@ -535,5 +539,5 @@ void SFMLGraphicsEngine::addLastMoveSquare(int row, int column) {
 }
 
 void SFMLGraphicsEngine::removePossibleMoves() {
-	possibleMoves = {};
+	possibleMoves =		{};
 }
