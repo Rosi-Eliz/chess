@@ -157,6 +157,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AIEngine.cpp" />
     <ClCompile Include="Bishop.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="Field.cpp" />
@@ -172,6 +173,8 @@
     <ClCompile Include="SFMLGraphicsEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AIEngine.h" />
+    <ClInclude Include="AIUpdateProvider.h" />
     <ClInclude Include="Bishop.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="Field.h" />

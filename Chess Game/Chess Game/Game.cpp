@@ -24,6 +24,7 @@ Game::Game(ChessBoardLayout layout)
 	board = new Board(layout, this);
 	figuresTurn = ChessFigureColor::White;
 	startTime = time(0);
+	artificialIntelligenceEngine = AIEngine(Difficulty::Beginner, ChessFigureColor::Black, this);
 }
 
 Game& Game::operator=(const Game& game)
@@ -562,4 +563,9 @@ void Game::addFigureAt(int row, int col)
 void Game::didRestartGame()
 {
 	restart(board->getLayout());
+}
+
+void Game::didChooseBestMove(int fromRow, int fromCol, int toRow, int toCol)
+{
+
 }
