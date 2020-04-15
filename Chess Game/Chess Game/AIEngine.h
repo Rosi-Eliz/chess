@@ -1,7 +1,5 @@
 #pragma once
-#include "Game.h"
 #include "Board.h"
-#include "Globals.h"
 #include "AIUpdateProvider.h"
 
 enum class Difficulty {Beginner, Intermediate, Advanced, Expert};

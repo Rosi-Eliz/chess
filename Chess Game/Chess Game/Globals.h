@@ -59,3 +59,9 @@ struct Location {
 		}
 	}
 };
+
+static ChessFigureColor returnOpponentColor(ChessFigureColor color)
+{
+	ChessFigureColor oppositePlayerColor = color == ChessFigureColor::White ? ChessFigureColor::Black : ChessFigureColor::White;
+	return oppositePlayerColor;
+}

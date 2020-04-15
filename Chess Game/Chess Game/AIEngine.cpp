@@ -13,5 +13,9 @@ AIEngine::AIEngine(Difficulty difficulty, ChessFigureColor color, AIUpdateProvid
 
 void AIEngine::findBestMoveIn(Board board)
 {
-
+	List<Figure*> figures = board.remainingFigures(color);
+	List<Figure*> moreThanOne = figures.filter([&](Figure* figure) {
+		//return figure->possibleMoves(board.get).size() > 0;
+		return true;
+	});
 }

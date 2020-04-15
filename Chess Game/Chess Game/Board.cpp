@@ -82,6 +82,12 @@ Board::Board(const Board& board)
 
 		fields.pushFront(newField);
 	}
+
+	bottomRightCaslingIsPossible = board.bottomRightCaslingIsPossible;
+	bottomLeftCaslingIsPossible = board.bottomLeftCaslingIsPossible;
+	topRightCaslingIsPossible = board.topRightCaslingIsPossible;
+	topLeftCaslingIsPossible = board.topLeftCaslingIsPossible;
+
 	layout = board.layout;
 	gameInteraction = board.gameInteraction;
 }
@@ -307,4 +313,289 @@ List<Figure*> Board::remainingFigures(const ChessFigureColor& color)
 	//List<Figure*> figures = list.transformMap<Figure*>(mutator);
 
 	return fields.filter(condition).transformMap<Figure*>(mutator);
+}
+
+List<List<Location>> Board::pawnDiagonalPossibleMoves(Figure* pawn, Location& location, List<List<Location>>& allMoves)
+{
+	List<List<Location>> filteredLocations;
+	ChessFigureColor currentColor = pawn->getColor();
+	int direction = static_cast<int>(pawn->getDirection());
+	int diagonalRow = pow(-1, direction);
+	Location leftD = Location(diagonalRow + location.row, location.column - 1);
+	Location rightD = Location(diagonalRow + location.row, location.column + 1);
+	Field* f1 = getFieldAt(leftD);
+	Field* f2 = getFieldAt(rightD);
+
+	bool leftDiagonalRowOpponent = f1 != nullptr && f1->getFigure() != nullptr && f1->getFigure()->getColor() != currentColor;
+	bool rightDiagonalRowOpponent = f2 != nullptr && f2->getFigure() != nullptr && f2->getFigure()->getColor() != currentColor;
+	auto pawnFilter = [leftDiagonalRowOpponent, rightDiagonalRowOpponent, leftD, rightD](List<Location> locations)
+	{
+		for (size_t i{ 0 }; i < locations.size(); i++) {
+			Location currentLocation = locations[i];
+			if (currentLocation.column == leftD.column)
+			{
+				return leftDiagonalRowOpponent;
+			}
+			else if (currentLocation.column == rightD.column)
+			{
+				return rightDiagonalRowOpponent;
+			}
+
+		}
+		return true;
+	};
+
+	return allMoves.filter(pawnFilter);
+}
+
+bool Board::movementIsPossibleInCastling(int fromRow, int fromCol, int toRow, int toCol)
+{
+	Location oldLocation(fromRow, fromCol);
+	Field* field = getFieldAt(oldLocation);
+	if (field == nullptr)
+	{
+		return false;
+	}
+	Figure* movedFigure = field->getFigure();
+	if (movedFigure == nullptr)
+	{
+		return false;
+	}
+
+	Location newLocation(toRow, toCol);
+	Field* newField = getFieldAt(newLocation);
+	if (newField == nullptr)
+	{
+		return false;
+	}
+	Figure* otherFigure = newField->getFigure();
+
+	if (field == nullptr || movedFigure || newField == nullptr)
+
+		newField->setFigure(movedFigure);
+	field->setFigure(nullptr);
+
+	bool isInConflict = fieldIsInConflict(returnOpponentColor(movedFigure->getColor()));
+	newField->setFigure(otherFigure);
+	field->setFigure(movedFigure);
+	return !isInConflict;
+}
+
+List<List<Location>> Board::filteredKingCastlingMoves(int row, int column, List<List<Location>>& allMoves)
+{
+	List<List<Location>> result;
+
+	allMoves.forEach([&](List<Location> list) {
+		List<Location> subLocations = list.filter([&](Location location) {
+			if (location.column - column == -2 && row == SupplementaryRowUpDirection)
+				return bottomLeftCaslingIsPossible;
+			if (location.column - column == 2 && row == SupplementaryRowUpDirection)
+				return bottomRightCaslingIsPossible;
+			if (location.column - column == 2 && row == SupplementaryRowDownDirection)
+				return topRightCaslingIsPossible;
+			if (location.column - column == -2 && row == SupplementaryRowDownDirection)
+				return topLeftCaslingIsPossible;
+			return true;
+		});
+		result.pushFront(subLocations);
+	});
+	return result;
+}
+
+List<Location> Board::filteredMoves(int row, int column)
+{
+	List<List<Location>> locations;
+
+	Location givenLocation = Location(row, column);
+	Figure* figure = figureAt(givenLocation);
+	List<List<Location>> moves = figure->possibleMoves(givenLocation);
+	if (typeid(*figure) == typeid(Pawn))
+	{
+		locations = pawnDiagonalPossibleMoves(figure, givenLocation, moves);
+	}
+	else if (typeid(*figure) == typeid(King))
+	{
+		locations = filteredKingCastlingMoves(row, column, moves);
+	}
+	else
+	{
+		locations = moves;
+	}
+
+	List<Location> result;
+	locations.forEach([&](List<Location> list) {
+		for (int j{ 0 }; j < list.size(); j++)
+		{
+			Location location = list[j];
+			Field* f = getFieldAt(location);
+			if (f->getFigure() == nullptr)
+			{
+				result.pushFront(location);
+			}
+			else if (f->getFigure()->getColor() != figure->getColor())
+			{
+				//forbid forward pawn moves in case of opponent figure in front 
+				if (typeid(Pawn) != typeid(*figure) || location.column != givenLocation.column)
+				{
+					result.pushFront(location);
+				}
+				break;
+			}
+			else
+			{
+				break;
+			}
+		}
+	});
+
+	return result;
+}
+
+bool Board::fieldIsInConflict(ChessFigureColor opponentColor)
+{
+	ChessFigureColor currentPlayerColor = opponentColor == ChessFigureColor::White ? ChessFigureColor::Black : ChessFigureColor::White;
+	Figure* king = getKing(currentPlayerColor);
+	Field* kingField = getField(king);
+	List<Figure*> opponentFigures = remainingFigures(opponentColor);
+	for (int i{ 0 }; i < opponentFigures.size(); i++)
+	{
+
+		Figure* currentFigure = opponentFigures[i];
+		Field* currentFigureField = getField(currentFigure);
+		List<Location> moves = filteredMoves(currentFigureField->getLocation().row,
+			currentFigureField->getLocation().column);
+
+		for (int j{ 0 }; j < moves.size(); j++)
+		{
+			Location currentLocation = moves[j];
+			if (kingField->getLocation().row == currentLocation.row &&
+				kingField->getLocation().column == currentLocation.column)
+				return true;
+		}
+	}
+	return false;
+}
+
+List<Location> Board::filteredConflictMoves(List<Location> availableMoves, int row, int column)
+{
+	Location givenLocation = Location(row, column);
+	Field* startingField = getFieldAt(givenLocation);
+	Figure* figure = figureAt(givenLocation);
+	ChessFigureColor opponentColor = figure->getColor() == ChessFigureColor::White ? ChessFigureColor::Black : ChessFigureColor::White;
+
+	if (startingField != nullptr) {
+		startingField->setFigure(nullptr);
+	}
+	List<Location> allowedMoves = availableMoves.filter([&](Location currentLocation) {
+
+		Field* newField = getFieldAt(currentLocation);
+		Figure* oldFigure = newField->getFigure();
+		newField->setFigure(figure);
+		bool isConflict = fieldIsInConflict(opponentColor);
+		newField->setFigure(oldFigure);
+		return !isConflict;
+
+	});
+	startingField->setFigure(figure);
+	return allowedMoves;
+}
+
+List<Location> Board::removeKingGapLocation(List<Location> location, int row, int column) {
+	if ((row != KingRowBottom || column != KingColumn) && (row != KingRowTop || column != KingColumn))
+		return location;
+
+	Figure* figure = figureAt(Location(row, column));
+
+	if (figure == nullptr || typeid(*figure) != typeid(King))
+	{
+		return location;
+	}
+
+	bool leftFieldIsValid = location.contains([&](Location loc) {
+		return loc.column == column - 1 && loc.row == row;
+	});
+	bool rightFieldIsValid = location.contains([&](Location loc) {
+		return loc.column == column + 1 && loc.row == row;
+	});
+
+	bool conflict = fieldIsInConflict(returnOpponentColor(figure->getColor()));
+
+	if (!leftFieldIsValid || conflict)
+	{
+		location = location.filter([&](Location loc) {
+			return loc.column != column - 2;
+		});
+	}
+	if (!rightFieldIsValid || conflict)
+	{
+		location = location.filter([&](Location loc) {
+			return loc.column != column + 2;
+		});
+	}
+	return location;
+}
+
+void Board::castlingPossible(int fromRow, int fromColumn)
+{
+	if (fromRow == RookBottomLeftRow && fromColumn == RookBottomLeftCol)
+	{
+		bottomLeftCaslingIsPossible = false;
+	}
+	else if (fromRow == RookBottomRightRow && fromColumn == RookBottomRightCol)
+	{
+		bottomRightCaslingIsPossible = false;
+	}
+	else if (fromRow == RookTopLeftRow && fromColumn == RookTopLeftCol)
+	{
+		topLeftCaslingIsPossible = false;
+	}
+	else if (fromRow == RookTopRightRow && fromColumn == RookTopRightCol)
+	{
+		topRightCaslingIsPossible = false;
+	}
+	else if (fromRow == KingRowBottom && fromColumn == KingColumn)
+	{
+		bottomLeftCaslingIsPossible = false;
+		bottomRightCaslingIsPossible = false;
+	}
+	else if (fromRow == KingRowTop && fromColumn == KingColumn)
+	{
+		topRightCaslingIsPossible = false;
+		topLeftCaslingIsPossible = false;
+	}
+}
+
+void Board::moveRookInCastling(int fromRow, int fromColumn, int toRow, int toColumn) {
+	Location oldLocation = Location(fromRow, fromColumn);
+	Location newLocation = Location(toRow, toColumn);
+	Field* field = getFieldAt(oldLocation);
+	if (field == nullptr)
+		throw runtime_error("no such field");
+
+	Figure* figure = field->getFigure();
+
+	if (typeid(*figure) != typeid(King))
+		return;
+
+	int directionOfMovement = toColumn - fromColumn;
+	if (directionOfMovement == 2)
+	{
+		Location initialRookLocation = Location(toRow, RookBottomRightCol);
+		Location finalRookLocation = Location(toRow, RookBottomRightCol - ShortCastlingDistance);
+		updateMove(initialRookLocation, finalRookLocation);
+		gameInteraction->move(toRow, RookBottomRightCol, toRow, RookBottomRightCol - ShortCastlingDistance);
+	}
+	else if (directionOfMovement == -2)
+	{
+		Location initialRookLocation = Location(toRow, RookBottomLeftCol);
+		Location finalRookLocation = Location(toRow, RookBottomLeftCol + LongCastlingDistance);
+		updateMove(initialRookLocation, finalRookLocation);
+		gameInteraction->move(toRow, RookBottomLeftCol, toRow, RookBottomLeftCol + LongCastlingDistance);
+	}
+}
+
+List<Location> Board::availableMovesForFigure(int row, int column) {
+	List<Location> initialFiltering = filteredMoves(row, column);
+	List<Location> secondaryFilter = filteredConflictMoves(initialFiltering, row, column);
+	return removeKingGapLocation(secondaryFilter, row, column);
 }
