@@ -49,6 +49,7 @@ public:
 	Figure* getKing(ChessFigureColor color) const;
 	Field* getField(Figure* figure) const;
 	List<Location>availableMovesForFigure(int row, int column);
+	List<Location> availableMovesForFigure(Figure* figure);
 	void castlingPossible(int fromRow, int fromColumn);
 	void moveRookInCastling(int fromRow, int fromColumn, int toRow, int toColumn);
 };

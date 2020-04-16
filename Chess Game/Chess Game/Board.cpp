@@ -599,3 +599,14 @@ List<Location> Board::availableMovesForFigure(int row, int column) {
 	List<Location> secondaryFilter = filteredConflictMoves(initialFiltering, row, column);
 	return removeKingGapLocation(secondaryFilter, row, column);
 }
+
+List<Location> Board::availableMovesForFigure(Figure* figure)
+{
+
+	Field* currentField = getField(figure);
+	if (currentField->getFigure() == nullptr)
+		return List<Location>();
+
+	Location currentLocation = currentField->getLocation();
+	return availableMovesForFigure(currentLocation.row, currentLocation.column);
+}
