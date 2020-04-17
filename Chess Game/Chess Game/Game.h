@@ -43,5 +43,5 @@ public:
 	void addFigureAt(int row, int col) override;
 	void didRestartGame() override;
 	void didChooseBestMove(int fromRow, int fromCol, int toRow, int toCol) override;
-	void move(int fromRow, int fromCol, int toRow, int toCol) override;
+	void move(int fromRow, int fromCol, int toRow, int toCol, bool shouldNotifyReceiver = true) override;
 };

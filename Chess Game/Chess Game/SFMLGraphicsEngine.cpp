@@ -180,14 +180,7 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 						move(selectedFigureIndex, oldPosition, ANIMATION_COMPLEXITY);
 					}
 					else {
-						move(selectedFigureIndex, newPosition, ANIMATION_COMPLEXITY);
-						removeFigureIgnoringSelection(newPosition, selectedFigureIndex);
-						graphicsEngineProvider->didMove(oRow, oColumn, nRow, nColumn);
-
-						lastMoveOldPositionRow = oRow;
-						lastMoveOldPositionColumn = oColumn;
-						lastMoveNewPositionRow = nRow;
-						lastMoveNewPositionColumn = nColumn;
+						performMoveProcesses(oRow, oColumn, nRow, nColumn, selectedFigureIndex, ANIMATION_COMPLEXITY, true);
 					}
 					selectedFigureIndex = -1;
 				}
@@ -380,8 +373,7 @@ void SFMLGraphicsEngine::move(int selectedIndex, Vector2f toCoordinates, int ani
 	figures[selectedIndex].sprite.setPosition(toCoordinates.x, toCoordinates.y);
 }
 
-bool SFMLGraphicsEngine::move(int fromRow, int fromColumn, int toRow, int toColumn, bool shouldAnimate) {
-	Vector2f toCoordinates = getCoordinates(toRow, toColumn);
+bool SFMLGraphicsEngine::move(int fromRow, int fromColumn, int toRow, int toColumn, bool shouldAnimate, bool shouldNotifyReceiver) {
 	int animationComplexity = shouldAnimate ? ANIMATION_COMPLEXITY : 0;
 
 	for (size_t i = 0; i < figures.size(); i++)
@@ -391,11 +383,28 @@ bool SFMLGraphicsEngine::move(int fromRow, int fromColumn, int toRow, int toColu
 		if (figures[i].sprite.getGlobalBounds().contains(fromCoordinates.x + figureBoxSize / 2,
 			fromCoordinates.y + figureBoxSize / 2))
 		{
-			move(i, toCoordinates, animationComplexity);
+			performMoveProcesses(fromRow, fromColumn, toRow, toColumn, i, animationComplexity, shouldNotifyReceiver);
 			return true;
 		}
 	}
 	return false;
+}
+
+void SFMLGraphicsEngine::performMoveProcesses(int fromRow, int fromColumn, int toRow, int toColumn, int index, int animationComplexity, bool shouldNotifyReceiver)
+{
+	Vector2f toCoordinates = getCoordinates(toRow, toColumn);
+
+	lastMoveOldPositionRow = fromRow;
+	lastMoveOldPositionColumn = fromColumn;
+	lastMoveNewPositionRow = toRow;
+	lastMoveNewPositionColumn = toColumn;
+
+	move(index, toCoordinates, animationComplexity);
+	removeFigureIgnoringSelection(toCoordinates, index);
+	if (shouldNotifyReceiver)
+	{
+		graphicsEngineProvider->didMove(fromRow, fromColumn, toRow, toColumn);
+	}
 }
 
 bool SFMLGraphicsEngine::removeFigureIgnoringSelection(Vector2f coordinates, int selectedIndex) {

@@ -282,10 +282,9 @@ void Game::didRestartGame()
 void Game::didChooseBestMove(int fromRow, int fromCol, int toRow, int toCol)
 {
 	graphicsEngine.move(fromRow, fromCol, toRow, toCol);
-	didMove(fromRow, fromCol, toRow, toCol);
 }
 
-void Game::move(int fromRow, int fromCol, int toRow, int toCol)
+void Game::move(int fromRow, int fromCol, int toRow, int toCol, bool shouldNotifyReceiver)
 {
-	graphicsEngine.move(fromRow, fromCol, toRow, toCol);  
+	graphicsEngine.move(fromRow, fromCol, toRow, toCol, true, shouldNotifyReceiver);  
 }

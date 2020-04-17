@@ -583,14 +583,14 @@ void Board::moveRookInCastling(int fromRow, int fromColumn, int toRow, int toCol
 		Location initialRookLocation = Location(toRow, RookBottomRightCol);
 		Location finalRookLocation = Location(toRow, RookBottomRightCol - ShortCastlingDistance);
 		updateMove(initialRookLocation, finalRookLocation);
-		gameInteraction->move(toRow, RookBottomRightCol, toRow, RookBottomRightCol - ShortCastlingDistance);
+		gameInteraction->move(toRow, RookBottomRightCol, toRow, RookBottomRightCol - ShortCastlingDistance, false);
 	}
 	else if (directionOfMovement == -2)
 	{
 		Location initialRookLocation = Location(toRow, RookBottomLeftCol);
 		Location finalRookLocation = Location(toRow, RookBottomLeftCol + LongCastlingDistance);
 		updateMove(initialRookLocation, finalRookLocation);
-		gameInteraction->move(toRow, RookBottomLeftCol, toRow, RookBottomLeftCol + LongCastlingDistance);
+		gameInteraction->move(toRow, RookBottomLeftCol, toRow, RookBottomLeftCol + LongCastlingDistance, false);
 	}
 }
 
