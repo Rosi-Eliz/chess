@@ -1,6 +1,17 @@
 #include "Rook.h"
 using namespace std;
 
+static const double VALUE = 50;
+
+static double valueAdditives[8][8] =
+{ 
+  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+  0.5,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  0.5,
+ -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5,
+ -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5,
+ -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5, 
+ -0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5,
+  0.0,  0.0,  0.0,  0.5,  0.5,  0.0,  0.0,  0.0 };
 
 Rook::Rook(ChessFigureColor color, ChessFigureDirection direction) : Figure(color, direction, "Rook") {}
 
@@ -33,4 +44,24 @@ List<List<Location>> Rook::possibleMoves(const Location& location)
 	result.pushFront(filteredLocations(list));
 
 	return result;
+}
+
+double Rook::getValueForPosition(Location location)
+{
+	double value = VALUE;
+	if (direction == ChessFigureDirection::Up)
+	{
+		value += valueAdditives[location.row][location.column];
+	}
+	else
+	{
+		double** newAdditives = reversedMatrix(valueAdditives);
+		value += newAdditives[location.row][location.column];
+		for (int i{ 0 }; i < 8; i++)
+		{
+			delete[] newAdditives[i];
+		}
+		delete[] newAdditives;
+	}
+	return value;
 }

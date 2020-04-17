@@ -6,4 +6,5 @@ public:
 
 	King(ChessFigureColor color, ChessFigureDirection direction);
 	List<List<Location>> possibleMoves(const Location& location) override;
+	double getValueForPosition(Location location) override;
 };

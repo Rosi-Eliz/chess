@@ -1,1 +1,8 @@
-﻿  Chess Game.vcxproj -> D:\Programming\Git repositories\Chess Game\Debug\Chess Game.exe
+﻿  Bishop.cpp
+  King.cpp
+  Knight.cpp
+  Pawn.cpp
+  Queen.cpp
+  Rook.cpp
+  Generating Code...
+  Chess Game.vcxproj -> D:\Programming\Git repositories\Chess Game\Debug\Chess Game.exe
