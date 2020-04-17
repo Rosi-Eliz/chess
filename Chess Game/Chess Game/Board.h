@@ -5,10 +5,47 @@
 #include "Figure.h"
 #include "GameInteraction.h"
 
+struct Pair {
+
+	Location from;
+	Location to;
+	Pair(Location from, Location to) : from(from), to(to) {}
+	Pair(const Pair& pair) { *this = pair; }
+	Pair& operator=(const Pair& pair) {
+		if (this == &pair)
+			return *this;
+
+		from = pair.from; 
+		to = pair.to; 
+		return *this;
+	}
+};
+
+struct LastMoveDescriptor {
+
+	List<Pair*> moves;
+	List<bool*> changedCastlingFlags;
+	void clear() {
+		moves.forEach([&](Pair* pair) {
+			delete pair;
+		});
+		moves = List<Pair*>();
+		changedCastlingFlags = List<bool*>();
+	};
+
+	~LastMoveDescriptor()
+	{
+		moves.forEach([&](Pair* pair) {
+			delete pair;
+		});
+	}
+};
+
 class Board {
 	List<Field*> fields;
 	ChessBoardLayout layout;
 	List<Figure*> figures;
+	LastMoveDescriptor lastMoveDescriptor;
 
 	bool bottomRightCaslingIsPossible = true;
 	bool bottomLeftCaslingIsPossible = true;
@@ -52,4 +89,5 @@ public:
 	List<Location> availableMovesForFigure(Figure* figure);
 	void castlingPossible(int fromRow, int fromColumn);
 	void moveRookInCastling(int fromRow, int fromColumn, int toRow, int toColumn);
+	void revertLastMove(bool shouldRenderChanges);
 };

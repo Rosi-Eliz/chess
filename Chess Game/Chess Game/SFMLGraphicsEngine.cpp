@@ -193,8 +193,8 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 					//move(1, 1, 3, 3);
 					//addPossibleMoveSquare(4, 4);
 				}
-				if (event.key.code == Keyboard::T) {
-					//addPossibleMoveSquare(4, 5);
+				if (event.key.code == Keyboard::BackSpace) {
+					graphicsEngineProvider->revertLastMove();
 				}
 				if (event.key.code == Keyboard::Enter) {
 					if (shouldRenderEndGameLayout)
@@ -401,6 +401,7 @@ void SFMLGraphicsEngine::performMoveProcesses(int fromRow, int fromColumn, int t
 
 	move(index, toCoordinates, animationComplexity);
 	removeFigureIgnoringSelection(toCoordinates, index);
+
 	if (shouldNotifyReceiver)
 	{
 		graphicsEngineProvider->didMove(fromRow, fromColumn, toRow, toColumn);

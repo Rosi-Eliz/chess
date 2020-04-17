@@ -213,8 +213,6 @@ void Game::didMove(int fromRow, int fromColumn, int toRow, int toColumn) {
 	Location newLocation = Location(toRow, toColumn);
 	createMoveLog(oldLocation, newLocation);
 	//if(typeid(movedFigure) == typeid(Rook))
-	board->moveRookInCastling(fromRow, fromColumn, toRow, toColumn);
-	board->castlingPossible(fromRow, fromColumn);
 	board->updateMove(oldLocation, newLocation);
 	
 	State currentState = checkState();
@@ -245,7 +243,7 @@ void Game::didMove(int fromRow, int fromColumn, int toRow, int toColumn) {
 	//TODO: Remove hardcoded logic 
 	if (figuresTurn == ChessFigureColor::Black)
 	{
-		artificialIntelligenceEngine.findBestMoveIn(*board);
+		//artificialIntelligenceEngine.findBestMoveIn(*board);
 	}
 
 	cout << "state: " << static_cast<int>(checkState()) << endl;
@@ -287,4 +285,9 @@ void Game::didChooseBestMove(int fromRow, int fromCol, int toRow, int toCol)
 void Game::move(int fromRow, int fromCol, int toRow, int toCol, bool shouldNotifyReceiver)
 {
 	graphicsEngine.move(fromRow, fromCol, toRow, toCol, true, shouldNotifyReceiver);  
+}
+
+void Game::revertLastMove()
+{
+	board->revertLastMove(true);
 }

@@ -1,8 +1,4 @@
-﻿  Bishop.cpp
-  King.cpp
-  Knight.cpp
-  Pawn.cpp
-  Queen.cpp
-  Rook.cpp
-  Generating Code...
+﻿  Board.cpp
+D:\Programming\Git repositories\Chess Game\Chess Game\Board.cpp(333,18): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+D:\Programming\Git repositories\Chess Game\Chess Game\Board.cpp(343,25): warning C4018: '<': signed/unsigned mismatch
   Chess Game.vcxproj -> D:\Programming\Git repositories\Chess Game\Debug\Chess Game.exe
