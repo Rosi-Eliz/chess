@@ -4,42 +4,7 @@
 #include "Globals.h"
 #include "Figure.h"
 #include "GameInteraction.h"
-
-struct Pair {
-
-	Location from;
-	Location to;
-	Pair(Location from, Location to) : from(from), to(to) {}
-	Pair(const Pair& pair) { *this = pair; }
-	Pair& operator=(const Pair& pair) {
-		if (this == &pair)
-			return *this;
-
-		from = pair.from; 
-		to = pair.to; 
-		return *this;
-	}
-};
-
-struct LastMoveDescriptor {
-
-	List<Pair*> moves;
-	List<bool*> changedCastlingFlags;
-	void clear() {
-		moves.forEach([&](Pair* pair) {
-			delete pair;
-		});
-		moves = List<Pair*>();
-		changedCastlingFlags = List<bool*>();
-	};
-
-	~LastMoveDescriptor()
-	{
-		moves.forEach([&](Pair* pair) {
-			delete pair;
-		});
-	}
-};
+#include "LastMoveDescriptor.h"
 
 class Board {
 	List<Field*> fields;
@@ -68,6 +33,7 @@ class Board {
 	void initialiseFields();
 	void initialiseFigures();
 	void assignFigureToField(Location& location, Figure* figiure);
+	void revertUpdate(const Location& oldLocation, const Location& newLocation);
 	GameInteraction* gameInteraction;
 
 public: 

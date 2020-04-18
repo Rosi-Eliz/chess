@@ -260,7 +260,7 @@ void Board::updateMove(const Location& oldLocation, const Location& newLocation)
 	moveRookInCastling(oldLocation.row, oldLocation.column, newLocation.row, newLocation.column);
 	castlingPossible(oldLocation.row, oldLocation.column);
 
-	Pair* lastMove = new Pair(oldLocation, newLocation);
+	MoveDescriptor* lastMove = new MoveDescriptor(oldLocation, newLocation);
 	lastMoveDescriptor.moves.pushFront(lastMove);
 
 	Field* oldField = getFieldAt(oldLocation);
@@ -283,14 +283,29 @@ void Board::updateMove(const Location& oldLocation, const Location& newLocation)
 		gameInteraction->addFigureAt(newLocation.row, newLocation.column);
 			
 		figures.removeFirstWhere([&](Figure* figureToDelete) {
-			return movedFigure == figureToDelete;
+			return oldField->getFigure() == figureToDelete;
 		});
+		delete oldField->getFigure();
+		lastMoveDescriptor.didSpawnNewFigure = true;
 	}
 
 	oldField->setFigure(nullptr);
 	newField->setFigure(movedFigure);
 }
 
+void Board::revertUpdate(const Location& oldLocation, const Location& newLocation)
+{
+	Field* oldField = getFieldAt(oldLocation);
+	Field* newField = getFieldAt(newLocation);
+	if (oldField == nullptr || newField == nullptr)
+	{
+		return;
+	}
+	Figure* movedFigure = oldField->getFigure();
+
+	oldField->setFigure(nullptr);
+	newField->setFigure(movedFigure);
+}
 
 Figure* Board::getKing(ChessFigureColor color) const
 {
@@ -550,36 +565,36 @@ void Board::castlingPossible(int fromRow, int fromColumn)
 	if (fromRow == RookBottomLeftRow && fromColumn == RookBottomLeftCol)
 	{
 		bottomLeftCaslingIsPossible = false;
-		lastMoveDescriptor.changedCastlingFlags.pushFront(&bottomLeftCaslingIsPossible);
+		lastMoveDescriptor.addFlag(&bottomLeftCaslingIsPossible);
 	}
 	else if (fromRow == RookBottomRightRow && fromColumn == RookBottomRightCol)
 	{
 		bottomRightCaslingIsPossible = false;
-		lastMoveDescriptor.changedCastlingFlags.pushFront(&bottomRightCaslingIsPossible);
+		lastMoveDescriptor.addFlag(&bottomRightCaslingIsPossible);
 	}
 	else if (fromRow == RookTopLeftRow && fromColumn == RookTopLeftCol)
 	{
 		topLeftCaslingIsPossible = false;
-		lastMoveDescriptor.changedCastlingFlags.pushFront(&topLeftCaslingIsPossible);
+		lastMoveDescriptor.addFlag(&topLeftCaslingIsPossible);
 	}
 	else if (fromRow == RookTopRightRow && fromColumn == RookTopRightCol)
 	{
 		topRightCaslingIsPossible = false;
-		lastMoveDescriptor.changedCastlingFlags.pushFront(&topRightCaslingIsPossible);
+		lastMoveDescriptor.addFlag(&topRightCaslingIsPossible);
 	}
 	else if (fromRow == KingRowBottom && fromColumn == KingColumn)
 	{
 		bottomLeftCaslingIsPossible = false;
 		bottomRightCaslingIsPossible = false;
-		lastMoveDescriptor.changedCastlingFlags.pushFront(&bottomRightCaslingIsPossible);
-		lastMoveDescriptor.changedCastlingFlags.pushFront(&bottomLeftCaslingIsPossible);
+		lastMoveDescriptor.addFlag(&bottomRightCaslingIsPossible);
+		lastMoveDescriptor.addFlag(&bottomLeftCaslingIsPossible);
 	}
 	else if (fromRow == KingRowTop && fromColumn == KingColumn)
 	{
 		topRightCaslingIsPossible = false;
 		topLeftCaslingIsPossible = false;
-		lastMoveDescriptor.changedCastlingFlags.pushFront(&topRightCaslingIsPossible);
-		lastMoveDescriptor.changedCastlingFlags.pushFront(&topLeftCaslingIsPossible);
+		lastMoveDescriptor.addFlag(&topRightCaslingIsPossible);
+		lastMoveDescriptor.addFlag(&topLeftCaslingIsPossible);
 	}
 }
 
@@ -601,8 +616,7 @@ void Board::moveRookInCastling(int fromRow, int fromColumn, int toRow, int toCol
 		Location initialRookLocation = Location(toRow, RookBottomRightCol);
 		Location finalRookLocation = Location(toRow, RookBottomRightCol - ShortCastlingDistance);
 		updateMove(initialRookLocation, finalRookLocation);
-		Pair* castlingMove = new Pair(initialRookLocation, finalRookLocation);
-		lastMoveDescriptor.moves.pushFront(castlingMove);
+		MoveDescriptor* castlingMove = new MoveDescriptor(initialRookLocation, finalRookLocation);
 		gameInteraction->move(toRow, RookBottomRightCol, toRow, RookBottomRightCol - ShortCastlingDistance, false);
 	}
 	else if (directionOfMovement == -2)
@@ -610,8 +624,7 @@ void Board::moveRookInCastling(int fromRow, int fromColumn, int toRow, int toCol
 		Location initialRookLocation = Location(toRow, RookBottomLeftCol);
 		Location finalRookLocation = Location(toRow, RookBottomLeftCol + LongCastlingDistance);
 		updateMove(initialRookLocation, finalRookLocation);
-		Pair* castlingMove = new Pair(initialRookLocation, finalRookLocation);
-		lastMoveDescriptor.moves.pushFront(castlingMove);
+		MoveDescriptor* castlingMove = new MoveDescriptor(initialRookLocation, finalRookLocation);
 		gameInteraction->move(toRow, RookBottomLeftCol, toRow, RookBottomLeftCol + LongCastlingDistance, false);
 	}
 }
@@ -635,15 +648,45 @@ List<Location> Board::availableMovesForFigure(Figure* figure)
 
 void Board::revertLastMove(bool shouldRenderChanges)
 {
-	List<Pair*> moves = lastMoveDescriptor.moves;
+	List<MoveDescriptor*> moves = lastMoveDescriptor.moves;
 	List<bool*> flags = lastMoveDescriptor.changedCastlingFlags;
+
+	if (lastMoveDescriptor.didSpawnNewFigure && moves.size() == 1)
+	{
+		MoveDescriptor* move = moves[0];
+		if (move != nullptr && figureAt(move->to) != nullptr)
+		{
+			Location newLocation = move->to;
+			Figure* oldFigure = figureAt(newLocation);
+			ChessFigureColor color = oldFigure->getColor();
+			ChessFigureDirection direction = oldFigure->getDirection();
+			figures.removeFirstWhere([&](Figure* figureToDelete) {
+				return oldFigure == figureToDelete;
+			});
+			delete oldFigure;
+
+			if (shouldRenderChanges)
+			{
+				gameInteraction->removeFigureAt(newLocation.row, newLocation.column);
+			}
+
+			pawnFactory(newLocation.row, newLocation.column, color, direction);
+
+			if (shouldRenderChanges)
+			{
+				gameInteraction->addFigureAt(newLocation.row, newLocation.column);
+			}
+			lastMoveDescriptor.didSpawnNewFigure = false;
+		}
+	}
+
 	for (int i{ 0 }; i < moves.size(); i++)
 	{
-		Pair* currentPair = moves[i];
+		MoveDescriptor* currentPair = moves[i];
 		Location toLocation = currentPair->to;
 		Location fromLocation = currentPair->from;
 
-		updateMove(toLocation, fromLocation);
+		revertUpdate(toLocation, fromLocation);
 		if (shouldRenderChanges)
 		{
 			gameInteraction->move(toLocation.row, toLocation.column, fromLocation.row, fromLocation.column, false);

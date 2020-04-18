@@ -186,8 +186,10 @@
     <ClInclude Include="GraphicsEngineProvider.h" />
     <ClInclude Include="King.h" />
     <ClInclude Include="Knight.h" />
+    <ClInclude Include="LastMoveDescriptor.h" />
     <ClInclude Include="List.h" />
     <ClInclude Include="Move.h" />
+    <ClInclude Include="MoveDescriptor.h" />
     <ClInclude Include="Pawn.h" />
     <ClInclude Include="Queen.h" />
     <ClInclude Include="Rook.h" />
