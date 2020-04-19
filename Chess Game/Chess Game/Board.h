@@ -42,7 +42,7 @@ public:
 	Board(const Board& board);
 	Board& operator=(const Board& board);
 	~Board();
-	void updateMove(const Location& oldLocation,const Location& newLocation);
+	void updateMove(const Location& oldLocation,const Location& newLocation, bool didPerformCastling = false);
 	bool fieldIsInConflict(ChessFigureColor opponentColor);
 	ChessBoardLayout getLayout() const;
 	Figure* figureAt(const Location& location);

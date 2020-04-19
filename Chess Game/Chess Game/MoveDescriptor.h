@@ -4,7 +4,7 @@ struct MoveDescriptor {
 
 	Location from;
 	Location to;
-	MoveDescriptor();
+	MoveDescriptor() {};
 	MoveDescriptor(Location from, Location to) : from(from), to(to) {}
 	MoveDescriptor(const MoveDescriptor& pair) { *this = pair; }
 	MoveDescriptor& operator=(const MoveDescriptor& pair) {

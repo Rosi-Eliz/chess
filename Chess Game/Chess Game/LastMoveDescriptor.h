@@ -4,15 +4,59 @@
 #include "MoveDescriptor.h"
 
 struct LastMoveDescriptor {
+private:
+	List<List<MoveDescriptor>> moveRecords;
+public:
 
-	List<MoveDescriptor*> moves;
 	List<bool*> changedCastlingFlags;
 	bool didSpawnNewFigure = false;
-	void clear() {
-		moves.forEach([&](MoveDescriptor* pair) {
-			delete pair;
+
+	void addMoveNewRecord(MoveDescriptor moveDescriptor)
+	{
+		List<MoveDescriptor> list;
+		list.pushFront(moveDescriptor);
+		moveRecords.pushFront(list);
+		//list.pushFront(moveDescriptor);
+	}
+
+	void addMoveExistingRecord(MoveDescriptor moveDescriptor)
+	{
+		if (!moveRecords.isEmpty())
+		{
+			moveRecords[moveRecords.size() - 1].pushFront(moveDescriptor);
+		}
+		else
+		{
+			addMoveNewRecord(moveDescriptor);
+		}
+	}
+
+	List<MoveDescriptor> popLastMoveDescriptors()
+	{
+		if (moveRecords.isEmpty())
+		{
+			throw runtime_error("No records left");
+		}
+		int lastIndex = moveRecords.size() - 1;
+		List<MoveDescriptor> poppedElements = moveRecords[lastIndex];
+		moveRecords.removeAt(lastIndex);
+
+		return poppedElements;
+	}
+
+	/*
+	void deleteMoves()
+	{
+		moves.forEach([&](List<MoveDescriptor*> pair) {
+			pair.forEach([&](MoveDescriptor* moveDescriptor) {
+				delete moveDescriptor;
+				});
 			});
-		moves = List<MoveDescriptor*>();
+	}
+	*/
+	void clear() {
+		//deleteMoves();
+		moveRecords = List<List<MoveDescriptor>>();
 		changedCastlingFlags = List<bool*>();
 		didSpawnNewFigure = false;
 	};
@@ -25,12 +69,5 @@ struct LastMoveDescriptor {
 		{
 			changedCastlingFlags.pushFront(flag);
 		}
-	}
-
-	~LastMoveDescriptor()
-	{
-		moves.forEach([&](MoveDescriptor* pair) {
-			delete pair;
-			});
 	}
 };

@@ -253,15 +253,22 @@ Field* Board::getFieldAt(const Location& location)
 	return nullptr;
 }
 
-void Board::updateMove(const Location& oldLocation, const Location& newLocation)
+void Board::updateMove(const Location& oldLocation, const Location& newLocation, bool didPerformCastling)
 {
-	lastMoveDescriptor.clear();
+	MoveDescriptor moveDescriptor = MoveDescriptor(oldLocation, newLocation);
+	if (didPerformCastling)
+	{
+		lastMoveDescriptor.addMoveExistingRecord(moveDescriptor);
+	}
+	else
+	{
+		lastMoveDescriptor.addMoveNewRecord(moveDescriptor);
+	}
 
 	moveRookInCastling(oldLocation.row, oldLocation.column, newLocation.row, newLocation.column);
 	castlingPossible(oldLocation.row, oldLocation.column);
 
 	MoveDescriptor* lastMove = new MoveDescriptor(oldLocation, newLocation);
-	lastMoveDescriptor.moves.pushFront(lastMove);
 
 	Field* oldField = getFieldAt(oldLocation);
 	Field* newField = getFieldAt(newLocation);
@@ -615,16 +622,14 @@ void Board::moveRookInCastling(int fromRow, int fromColumn, int toRow, int toCol
 	{
 		Location initialRookLocation = Location(toRow, RookBottomRightCol);
 		Location finalRookLocation = Location(toRow, RookBottomRightCol - ShortCastlingDistance);
-		updateMove(initialRookLocation, finalRookLocation);
-		MoveDescriptor* castlingMove = new MoveDescriptor(initialRookLocation, finalRookLocation);
+		updateMove(initialRookLocation, finalRookLocation, true);
 		gameInteraction->move(toRow, RookBottomRightCol, toRow, RookBottomRightCol - ShortCastlingDistance, false);
 	}
 	else if (directionOfMovement == -2)
 	{
 		Location initialRookLocation = Location(toRow, RookBottomLeftCol);
 		Location finalRookLocation = Location(toRow, RookBottomLeftCol + LongCastlingDistance);
-		updateMove(initialRookLocation, finalRookLocation);
-		MoveDescriptor* castlingMove = new MoveDescriptor(initialRookLocation, finalRookLocation);
+		updateMove(initialRookLocation, finalRookLocation, true);
 		gameInteraction->move(toRow, RookBottomLeftCol, toRow, RookBottomLeftCol + LongCastlingDistance, false);
 	}
 }
@@ -648,15 +653,25 @@ List<Location> Board::availableMovesForFigure(Figure* figure)
 
 void Board::revertLastMove(bool shouldRenderChanges)
 {
-	List<MoveDescriptor*> moves = lastMoveDescriptor.moves;
+	List<MoveDescriptor> moves;
+	try
+	{
+		moves = lastMoveDescriptor.popLastMoveDescriptors();
+	}
+	catch(exception e)
+	{
+		std::cout << "revertLastMove not possible, reason: " << e.what() << endl;
+		return;
+	}
+
 	List<bool*> flags = lastMoveDescriptor.changedCastlingFlags;
 
 	if (lastMoveDescriptor.didSpawnNewFigure && moves.size() == 1)
 	{
-		MoveDescriptor* move = moves[0];
-		if (move != nullptr && figureAt(move->to) != nullptr)
+		MoveDescriptor move = moves[0];
+		if (figureAt(move.to) != nullptr)
 		{
-			Location newLocation = move->to;
+			Location newLocation = move.to;
 			Figure* oldFigure = figureAt(newLocation);
 			ChessFigureColor color = oldFigure->getColor();
 			ChessFigureDirection direction = oldFigure->getDirection();
@@ -682,9 +697,9 @@ void Board::revertLastMove(bool shouldRenderChanges)
 
 	for (int i{ 0 }; i < moves.size(); i++)
 	{
-		MoveDescriptor* currentPair = moves[i];
-		Location toLocation = currentPair->to;
-		Location fromLocation = currentPair->from;
+		MoveDescriptor currentPair = moves[i];
+		Location toLocation = currentPair.to;
+		Location fromLocation = currentPair.from;
 
 		revertUpdate(toLocation, fromLocation);
 		if (shouldRenderChanges)
