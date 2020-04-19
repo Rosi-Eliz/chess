@@ -36,6 +36,7 @@ class Board {
 	void revertUpdate(const Location& oldLocation, const Location& newLocation);
 	GameInteraction* gameInteraction;
 
+	bool lastMoveWasCastling = false;
 public: 
 	Board(ChessBoardLayout layout, GameInteraction* gameInteraction);
 	Board();
@@ -55,5 +56,8 @@ public:
 	List<Location> availableMovesForFigure(Figure* figure);
 	void castlingPossible(int fromRow, int fromColumn);
 	void moveRookInCastling(int fromRow, int fromColumn, int toRow, int toColumn);
+	bool getLastMoveWasCastling() const;
 	void revertLastMove(bool shouldRenderChanges);
+
+	List<MoveDescriptor> possibleMovesForColor(ChessFigureColor color);
 };

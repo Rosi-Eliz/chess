@@ -209,6 +209,7 @@ void Game::createMoveLog(Location from, Location to)
 
 void Game::didMove(int fromRow, int fromColumn, int toRow, int toColumn) {
 	switchTurn();
+
 	Location oldLocation = Location(fromRow, fromColumn);
 	Location newLocation = Location(toRow, toColumn);
 	createMoveLog(oldLocation, newLocation);
@@ -249,6 +250,8 @@ void Game::didMove(int fromRow, int fromColumn, int toRow, int toColumn) {
 	cout << "state: " << static_cast<int>(checkState()) << endl;
 	cout << "move from - row: " << fromRow << ", column: " << fromColumn << ". To - row: ";
 	cout << toRow << ", column: " << toColumn << endl;
+	cout << "VALUE IS: " << artificialIntelligenceEngine.evaluateBoard(board, figuresTurn, true);
+
 }
 
 bool Game::isPlayerActive(FigureType figureType) {

@@ -255,6 +255,8 @@ Field* Board::getFieldAt(const Location& location)
 
 void Board::updateMove(const Location& oldLocation, const Location& newLocation, bool didPerformCastling)
 {
+
+	lastMoveWasCastling = didPerformCastling;
 	MoveDescriptor moveDescriptor = MoveDescriptor(oldLocation, newLocation);
 	if (didPerformCastling)
 	{
@@ -572,36 +574,36 @@ void Board::castlingPossible(int fromRow, int fromColumn)
 	if (fromRow == RookBottomLeftRow && fromColumn == RookBottomLeftCol)
 	{
 		bottomLeftCaslingIsPossible = false;
-		lastMoveDescriptor.addFlag(&bottomLeftCaslingIsPossible);
+		lastMoveDescriptor.addFlagNewRecord(&bottomLeftCaslingIsPossible);
 	}
 	else if (fromRow == RookBottomRightRow && fromColumn == RookBottomRightCol)
 	{
 		bottomRightCaslingIsPossible = false;
-		lastMoveDescriptor.addFlag(&bottomRightCaslingIsPossible);
+		lastMoveDescriptor.addFlagNewRecord(&bottomRightCaslingIsPossible);
 	}
 	else if (fromRow == RookTopLeftRow && fromColumn == RookTopLeftCol)
 	{
 		topLeftCaslingIsPossible = false;
-		lastMoveDescriptor.addFlag(&topLeftCaslingIsPossible);
+		lastMoveDescriptor.addFlagNewRecord(&topLeftCaslingIsPossible);
 	}
 	else if (fromRow == RookTopRightRow && fromColumn == RookTopRightCol)
 	{
 		topRightCaslingIsPossible = false;
-		lastMoveDescriptor.addFlag(&topRightCaslingIsPossible);
+		lastMoveDescriptor.addFlagNewRecord(&topRightCaslingIsPossible);
 	}
 	else if (fromRow == KingRowBottom && fromColumn == KingColumn)
 	{
 		bottomLeftCaslingIsPossible = false;
 		bottomRightCaslingIsPossible = false;
-		lastMoveDescriptor.addFlag(&bottomRightCaslingIsPossible);
-		lastMoveDescriptor.addFlag(&bottomLeftCaslingIsPossible);
+		lastMoveDescriptor.addFlagExistingRecord(&bottomRightCaslingIsPossible);
+		lastMoveDescriptor.addFlagExistingRecord(&bottomLeftCaslingIsPossible);
 	}
 	else if (fromRow == KingRowTop && fromColumn == KingColumn)
 	{
 		topRightCaslingIsPossible = false;
 		topLeftCaslingIsPossible = false;
-		lastMoveDescriptor.addFlag(&topRightCaslingIsPossible);
-		lastMoveDescriptor.addFlag(&topLeftCaslingIsPossible);
+		lastMoveDescriptor.addFlagExistingRecord(&topRightCaslingIsPossible);
+		lastMoveDescriptor.addFlagExistingRecord(&topLeftCaslingIsPossible);
 	}
 }
 
@@ -664,8 +666,6 @@ void Board::revertLastMove(bool shouldRenderChanges)
 		return;
 	}
 
-	List<bool*> flags = lastMoveDescriptor.changedCastlingFlags;
-
 	if (lastMoveDescriptor.didSpawnNewFigure && moves.size() == 1)
 	{
 		MoveDescriptor move = moves[0];
@@ -707,10 +707,38 @@ void Board::revertLastMove(bool shouldRenderChanges)
 			gameInteraction->move(toLocation.row, toLocation.column, fromLocation.row, fromLocation.column, false);
 		}
 	}
+
+	/*
+	List<bool*> flags = lastMoveDescriptor.popLastFlags();
+
 	for (int i{ 0 }; i < flags.size(); i++)
 	{
 		bool* currentFlag = flags[i];
 		*currentFlag = !(*currentFlag);
-	}
-	
+	}*/
+
+}
+
+bool Board::getLastMoveWasCastling() const
+{
+	return lastMoveWasCastling;
+}
+
+List<MoveDescriptor> Board::possibleMovesForColor(ChessFigureColor color)
+{
+	List<MoveDescriptor> result;
+	List<Figure*> figures = remainingFigures(color);
+
+	figures.forEach([&](Figure* figure) {
+
+		Location figureLocation = getField(figure)->getLocation();
+		List<Location> availableMoves = availableMovesForFigure(figure);
+		availableMoves.forEach([&](Location location) {
+
+			MoveDescriptor newMoveDescriptor(figureLocation, location);
+			result.pushFront(newMoveDescriptor);
+
+		});
+	});
+	return result;
 }

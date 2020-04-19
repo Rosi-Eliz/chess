@@ -14,6 +14,8 @@ public:
 	AIEngine();
 	AIEngine(Difficulty difficulty, ChessFigureColor color, AIUpdateProvider* updateProvider);
 	void findBestMoveIn(Board board);
+
+	double evaluateBoard(Board* board, ChessFigureColor color, bool isMaxPlayer);
 };
 
 

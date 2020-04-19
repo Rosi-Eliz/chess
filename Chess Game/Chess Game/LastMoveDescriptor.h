@@ -6,9 +6,10 @@
 struct LastMoveDescriptor {
 private:
 	List<List<MoveDescriptor>> moveRecords;
+	List<List<bool*>> changedCastlingFlags;
 public:
 
-	List<bool*> changedCastlingFlags;
+	
 	bool didSpawnNewFigure = false;
 
 	void addMoveNewRecord(MoveDescriptor moveDescriptor)
@@ -54,20 +55,47 @@ public:
 			});
 	}
 	*/
+
+	void addFlagNewRecord(bool* flag)
+	{
+		List<bool*> flagList;
+		flagList.pushFront(flag);
+		changedCastlingFlags.pushFront(flagList);
+
+	}
+
+	void addFlagExistingRecord(bool* flag)
+	{
+		if (changedCastlingFlags.isEmpty())
+			addFlagNewRecord(flag);
+		else
+		{
+			//if no such flag exists already
+			if (!changedCastlingFlags[changedCastlingFlags.size() - 1].contains([&](bool* storedFlag) {
+				return storedFlag == flag;
+			}))
+			{
+				changedCastlingFlags[changedCastlingFlags.size() - 1].pushFront(flag);
+			}
+		}
+	}
+
+	List<bool*> popLastFlags()
+	{
+		if (changedCastlingFlags.isEmpty())
+			throw runtime_error("Flag list is empty!");
+
+		int lastIndex = changedCastlingFlags.size() - 1;
+		List<bool*> poppedElements = changedCastlingFlags[lastIndex];
+		changedCastlingFlags.removeAt(lastIndex);
+
+		return poppedElements;
+	}
+
 	void clear() {
 		//deleteMoves();
 		moveRecords = List<List<MoveDescriptor>>();
-		changedCastlingFlags = List<bool*>();
+		changedCastlingFlags = List<List<bool*>>();
 		didSpawnNewFigure = false;
 	};
-
-	void addFlag(bool* flag)
-	{
-		if (!changedCastlingFlags.contains([&](bool* storedFlag) {
-			return storedFlag == flag;
-			}))
-		{
-			changedCastlingFlags.pushFront(flag);
-		}
-	}
 };

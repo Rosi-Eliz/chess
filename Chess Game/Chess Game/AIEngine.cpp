@@ -31,3 +31,37 @@ void AIEngine::findBestMoveIn(Board board)
 	updateProvider->didChooseBestMove(figureLocation.row, figureLocation.column, location.row, location.column);
 
 }
+
+double AIEngine::evaluateBoard(Board* board, ChessFigureColor color, bool isMaxPlayer)
+{
+	double points{ 0 };
+
+	List<Figure*> figures = board->remainingFigures(color);
+	for (int i{0}; i < figures.size(); i ++)
+	{
+		Location location = board->getField(figures[i])->getLocation();
+		points += figures[i]->getValueForPosition(location);
+	}
+
+	if (board->getLastMoveWasCastling())
+		points += 4;
+
+	int opponentMoves = board->possibleMovesForColor(returnOpponentColor(color)).size();
+	int ourMoves = board->possibleMovesForColor(color).size();
+
+	if (opponentMoves == 0 && ourMoves == 0)
+		points = 0;
+
+	else if (board->fieldIsInConflict(returnOpponentColor(color)))
+	{
+
+		if (opponentMoves == 0)
+			points = INFINITY;
+
+		else
+			points += 2; //Declared check 
+	
+	}
+
+	return isMaxPlayer ? points : -points;
+}
