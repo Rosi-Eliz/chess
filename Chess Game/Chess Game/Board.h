@@ -57,7 +57,7 @@ public:
 	void castlingPossible(int fromRow, int fromColumn);
 	void moveRookInCastling(int fromRow, int fromColumn, int toRow, int toColumn);
 	bool getLastMoveWasCastling() const;
-	void revertLastMove(bool shouldRenderChanges);
+	void revertLastMove();
 
 	List<MoveDescriptor> possibleMovesForColor(ChessFigureColor color);
 };

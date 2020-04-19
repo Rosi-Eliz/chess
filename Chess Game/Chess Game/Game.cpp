@@ -292,5 +292,5 @@ void Game::move(int fromRow, int fromCol, int toRow, int toCol, bool shouldNotif
 
 void Game::revertLastMove()
 {
-	board->revertLastMove(true);
+	board->revertLastMove();
 }

@@ -2,14 +2,15 @@
 #include "List.h"
 #include "Globals.h"
 #include "MoveDescriptor.h"
+#include "Figure.h"
 
 struct LastMoveDescriptor {
 private:
 	List<List<MoveDescriptor>> moveRecords;
 	List<List<bool*>> changedCastlingFlags;
+	List<Figure*> removedFigures;
 public:
 
-	
 	bool didSpawnNewFigure = false;
 
 	void addMoveNewRecord(MoveDescriptor moveDescriptor)
@@ -17,7 +18,10 @@ public:
 		List<MoveDescriptor> list;
 		list.pushFront(moveDescriptor);
 		moveRecords.pushFront(list);
-		//list.pushFront(moveDescriptor);
+		
+		List<bool*> flags;
+		changedCastlingFlags.pushFront(flags);
+		removedFigures.pushFront(nullptr);
 	}
 
 	void addMoveExistingRecord(MoveDescriptor moveDescriptor)
@@ -46,16 +50,6 @@ public:
 	}
 
 	/*
-	void deleteMoves()
-	{
-		moves.forEach([&](List<MoveDescriptor*> pair) {
-			pair.forEach([&](MoveDescriptor* moveDescriptor) {
-				delete moveDescriptor;
-				});
-			});
-	}
-	*/
-
 	void addFlagNewRecord(bool* flag)
 	{
 		List<bool*> flagList;
@@ -63,21 +57,45 @@ public:
 		changedCastlingFlags.pushFront(flagList);
 
 	}
+    */
 
 	void addFlagExistingRecord(bool* flag)
 	{
 		if (changedCastlingFlags.isEmpty())
-			addFlagNewRecord(flag);
+			throw runtime_error("flags should not be empty");
 		else
 		{
+			List<bool*>& flags = changedCastlingFlags[changedCastlingFlags.size() - 1];
+
 			//if no such flag exists already
-			if (!changedCastlingFlags[changedCastlingFlags.size() - 1].contains([&](bool* storedFlag) {
+			if (!flags.contains([&](bool* storedFlag) {
 				return storedFlag == flag;
 			}))
 			{
-				changedCastlingFlags[changedCastlingFlags.size() - 1].pushFront(flag);
+				flags.pushFront(flag);
 			}
 		}
+	}
+
+	void addRemovedFigure(Figure* figure)
+	{
+		if (removedFigures.isEmpty())
+		{
+			throw runtime_error("removed figures should not be empty");
+		}
+		removedFigures[removedFigures.size() - 1] = figure;
+	}
+
+	Figure* popLastRemovedFigure()
+	{
+		if (removedFigures.isEmpty())
+		{
+			throw runtime_error("removed figures list is empty!");
+		}
+
+		Figure* lastRemovedFigure = removedFigures[removedFigures.size() - 1];
+		removedFigures.removeAt(removedFigures.size() - 1);
+		return lastRemovedFigure;
 	}
 
 	List<bool*> popLastFlags()

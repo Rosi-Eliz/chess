@@ -5,12 +5,18 @@ double** Figure::reversedMatrix(double matrix[8][8])
 {
 	double** result = new double* [8];
 	for (int i = 0; i < 8; ++i)
+	{
 		result[i] = new double[8];
+	}
 
 	for (int row{ 0 }; row < 8; row++)
 	{
-		result[row] = matrix[8 - row - 1];
+		for (int col{ 0 }; col < 8; col++)
+		{
+			result[row][col] = matrix[8 - row - 1][col];
+		}
 	}
+
 	return result;
 }
 

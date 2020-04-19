@@ -285,17 +285,26 @@ void Board::updateMove(const Location& oldLocation, const Location& newLocation,
 			newLocation.row == SupplementaryRowUpDirection))
 	{
 		
-		gameInteraction->removeFigureAt(newLocation.row, newLocation.column);
-
+		if (gameInteraction != nullptr)
+		{
+			gameInteraction->removeFigureAt(newLocation.row, newLocation.column);
+		}
 		queenFactory(newLocation.row, newLocation.column, movedFigure->getColor(), movedFigure->getDirection());
 		movedFigure = figureAt(newLocation);
-		gameInteraction->addFigureAt(newLocation.row, newLocation.column);
-			
+
+		if (gameInteraction != nullptr)
+		{
+			gameInteraction->addFigureAt(newLocation.row, newLocation.column);
+		}
 		figures.removeFirstWhere([&](Figure* figureToDelete) {
 			return oldField->getFigure() == figureToDelete;
 		});
 		delete oldField->getFigure();
 		lastMoveDescriptor.didSpawnNewFigure = true;
+	}
+	else
+	{
+		lastMoveDescriptor.addRemovedFigure(newField->getFigure());
 	}
 
 	oldField->setFigure(nullptr);
@@ -574,22 +583,22 @@ void Board::castlingPossible(int fromRow, int fromColumn)
 	if (fromRow == RookBottomLeftRow && fromColumn == RookBottomLeftCol)
 	{
 		bottomLeftCaslingIsPossible = false;
-		lastMoveDescriptor.addFlagNewRecord(&bottomLeftCaslingIsPossible);
+		lastMoveDescriptor.addFlagExistingRecord(&bottomLeftCaslingIsPossible);
 	}
 	else if (fromRow == RookBottomRightRow && fromColumn == RookBottomRightCol)
 	{
 		bottomRightCaslingIsPossible = false;
-		lastMoveDescriptor.addFlagNewRecord(&bottomRightCaslingIsPossible);
+		lastMoveDescriptor.addFlagExistingRecord(&bottomRightCaslingIsPossible);
 	}
 	else if (fromRow == RookTopLeftRow && fromColumn == RookTopLeftCol)
 	{
 		topLeftCaslingIsPossible = false;
-		lastMoveDescriptor.addFlagNewRecord(&topLeftCaslingIsPossible);
+		lastMoveDescriptor.addFlagExistingRecord(&topLeftCaslingIsPossible);
 	}
 	else if (fromRow == RookTopRightRow && fromColumn == RookTopRightCol)
 	{
 		topRightCaslingIsPossible = false;
-		lastMoveDescriptor.addFlagNewRecord(&topRightCaslingIsPossible);
+		lastMoveDescriptor.addFlagExistingRecord(&topRightCaslingIsPossible);
 	}
 	else if (fromRow == KingRowBottom && fromColumn == KingColumn)
 	{
@@ -625,14 +634,20 @@ void Board::moveRookInCastling(int fromRow, int fromColumn, int toRow, int toCol
 		Location initialRookLocation = Location(toRow, RookBottomRightCol);
 		Location finalRookLocation = Location(toRow, RookBottomRightCol - ShortCastlingDistance);
 		updateMove(initialRookLocation, finalRookLocation, true);
-		gameInteraction->move(toRow, RookBottomRightCol, toRow, RookBottomRightCol - ShortCastlingDistance, false);
+		if (gameInteraction != nullptr)
+		{
+			gameInteraction->move(toRow, RookBottomRightCol, toRow, RookBottomRightCol - ShortCastlingDistance, false);
+		}
 	}
 	else if (directionOfMovement == -2)
 	{
 		Location initialRookLocation = Location(toRow, RookBottomLeftCol);
 		Location finalRookLocation = Location(toRow, RookBottomLeftCol + LongCastlingDistance);
 		updateMove(initialRookLocation, finalRookLocation, true);
-		gameInteraction->move(toRow, RookBottomLeftCol, toRow, RookBottomLeftCol + LongCastlingDistance, false);
+		if (gameInteraction != nullptr)
+		{
+			gameInteraction->move(toRow, RookBottomLeftCol, toRow, RookBottomLeftCol + LongCastlingDistance, false);
+		}
 	}
 }
 
@@ -653,7 +668,7 @@ List<Location> Board::availableMovesForFigure(Figure* figure)
 	return availableMovesForFigure(currentLocation.row, currentLocation.column);
 }
 
-void Board::revertLastMove(bool shouldRenderChanges)
+void Board::revertLastMove()
 {
 	List<MoveDescriptor> moves;
 	try
@@ -680,14 +695,14 @@ void Board::revertLastMove(bool shouldRenderChanges)
 			});
 			delete oldFigure;
 
-			if (shouldRenderChanges)
+			if (gameInteraction != nullptr)
 			{
 				gameInteraction->removeFigureAt(newLocation.row, newLocation.column);
 			}
 
 			pawnFactory(newLocation.row, newLocation.column, color, direction);
 
-			if (shouldRenderChanges)
+			if (gameInteraction != nullptr)
 			{
 				gameInteraction->addFigureAt(newLocation.row, newLocation.column);
 			}
@@ -702,21 +717,31 @@ void Board::revertLastMove(bool shouldRenderChanges)
 		Location fromLocation = currentPair.from;
 
 		revertUpdate(toLocation, fromLocation);
-		if (shouldRenderChanges)
+		if (gameInteraction != nullptr)
 		{
 			gameInteraction->move(toLocation.row, toLocation.column, fromLocation.row, fromLocation.column, false);
 		}
 	}
 
-	/*
 	List<bool*> flags = lastMoveDescriptor.popLastFlags();
 
 	for (int i{ 0 }; i < flags.size(); i++)
 	{
 		bool* currentFlag = flags[i];
 		*currentFlag = !(*currentFlag);
-	}*/
+	}
 
+	Figure* lastRemovedFigure = lastMoveDescriptor.popLastRemovedFigure();
+
+	if (moves.size() == 1 && lastRemovedFigure != nullptr)
+	{
+		Field* field = getFieldAt(moves[0].to);
+		field->setFigure(lastRemovedFigure);
+		if (gameInteraction != nullptr)
+		{
+			gameInteraction->addFigureAt(field->getLocation().row, field->getLocation().column);
+		}
+	}
 }
 
 bool Board::getLastMoveWasCastling() const
