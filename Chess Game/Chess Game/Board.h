@@ -1,4 +1,5 @@
 #pragma once
+#include <unordered_map>
 #include "List.h"
 #include "Field.h"
 #include "Globals.h"
@@ -6,12 +7,15 @@
 #include "GameInteraction.h"
 #include "LastMoveDescriptor.h"
 
+
+
 class Board {
 	List<Field*> fields;
 	ChessBoardLayout layout;
 	List<Figure*> figures;
 	LastMoveDescriptor lastMoveDescriptor;
-
+	std::unordered_map<int, Field*> fieldsMap;
+	std::unordered_map<Figure*, Field*> figuresMap;
 	bool bottomRightCaslingIsPossible = true;
 	bool bottomLeftCaslingIsPossible = true;
 	bool topRightCaslingIsPossible = true;
@@ -44,6 +48,7 @@ public:
 	Board& operator=(const Board& board);
 	~Board();
 	void updateMove(const Location& oldLocation,const Location& newLocation, bool didPerformCastling = false);
+	
 	bool fieldIsInConflict(ChessFigureColor opponentColor);
 	ChessBoardLayout getLayout() const;
 	Figure* figureAt(const Location& location);
@@ -51,7 +56,7 @@ public:
 	List<Field*> getFields() const;
 	List<Figure*> remainingFigures(const ChessFigureColor& color);
 	Figure* getKing(ChessFigureColor color) const;
-	Field* getField(Figure* figure) const;
+	Field* getField(Figure* figure);
 	List<Location>availableMovesForFigure(int row, int column);
 	List<Location> availableMovesForFigure(Figure* figure);
 	void castlingPossible(int fromRow, int fromColumn);

@@ -33,6 +33,8 @@ enum class ChessFigureColor { Black, White };
 enum class ChessBoardLayout { LeadingBlacks, LeadingWhites };
 enum class ChessFigureDirection { Up, Down };
 
+
+
 struct Location {
 	int row;
 	int column;
@@ -64,4 +66,15 @@ static ChessFigureColor returnOpponentColor(ChessFigureColor color)
 {
 	ChessFigureColor oppositePlayerColor = color == ChessFigureColor::White ? ChessFigureColor::Black : ChessFigureColor::White;
 	return oppositePlayerColor;
+}
+
+static int getKeyForLocation(int row, int col)
+{
+	return 10 * row + col;
+}
+
+static Location getLocationForKey(int key)
+{
+	Location location = Location(key / 10, key % 10);
+	return location;
 }

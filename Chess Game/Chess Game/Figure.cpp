@@ -3,6 +3,7 @@
 
 double** Figure::reversedMatrix(double matrix[8][8])
 {
+
 	double** result = new double* [8];
 	for (int i = 0; i < 8; ++i)
 	{

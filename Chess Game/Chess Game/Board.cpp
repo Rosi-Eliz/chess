@@ -8,7 +8,7 @@
 #include "King.h"
 #include "Knight.h"
 #include <functional>
-
+#include <unordered_map>
 
 
 Board::Board(ChessBoardLayout layout, GameInteraction* gameInteraction) : layout(layout), gameInteraction(gameInteraction)
@@ -79,6 +79,7 @@ Board::Board(const Board& board)
 				newFigure = new Rook(figure->getColor(), figure->getDirection());
 			}
 			newField->setFigure(newFigure);
+			figuresMap[newFigure] = newField;
 			figures.pushFront(newFigure);
 		}
 
@@ -116,6 +117,8 @@ void Board::initialiseFields()
 			Location currentLocation(row, col);
 			Field* field = new Field(currentLocation);
 			fields.pushFront(field);
+			int key = getKeyForLocation(row, col);
+			fieldsMap[key] = field;
 		}
 	}
 
@@ -220,15 +223,12 @@ void Board::initialiseFigures()
 
 Figure* Board::figureAt(const Location& location) 
 {
-	for (int i{ 0 }; i < fields.size(); i++)
-	{
-		if (fields[i]->getLocation().row == location.row && 
-			fields[i]->getLocation().column == location.column)
-		{
-			return fields[i]->getFigure();
-		}
-	}
-	return nullptr;
+	int key = getKeyForLocation(location.row, location.column);
+	Field* field = fieldsMap[key];
+		if (field == nullptr)
+			return nullptr;
+
+		return field->getFigure();
 }
 
 void Board::assignFigureToField(Location& location, Figure* figure)
@@ -237,20 +237,14 @@ void Board::assignFigureToField(Location& location, Figure* figure)
 	if (field != nullptr)
 	{
 		field->setFigure(figure);
+		figuresMap[figure] = field;
 	}
 }
 
 Field* Board::getFieldAt(const Location& location)
 {
-	for (int i{ 0 }; i < fields.size(); i++)
-	{
-		if (fields[i]->getLocation().row == location.row && 
-			fields[i]->getLocation().column == location.column)
-		{
-			return fields[i];
-		}
-	}
-	return nullptr;
+	int key = getKeyForLocation(location.row, location.column);
+	return fieldsMap[key];
 }
 
 void Board::updateMove(const Location& oldLocation, const Location& newLocation, bool didPerformCastling)
@@ -299,6 +293,8 @@ void Board::updateMove(const Location& oldLocation, const Location& newLocation,
 		figures.removeFirstWhere([&](Figure* figureToDelete) {
 			return oldField->getFigure() == figureToDelete;
 		});
+		figuresMap[oldField->getFigure()] = nullptr;
+
 		delete oldField->getFigure();
 		lastMoveDescriptor.didSpawnNewFigure = true;
 	}
@@ -309,6 +305,7 @@ void Board::updateMove(const Location& oldLocation, const Location& newLocation,
 
 	oldField->setFigure(nullptr);
 	newField->setFigure(movedFigure);
+	figuresMap[movedFigure] = newField;
 }
 
 void Board::revertUpdate(const Location& oldLocation, const Location& newLocation)
@@ -322,6 +319,7 @@ void Board::revertUpdate(const Location& oldLocation, const Location& newLocatio
 	Figure* movedFigure = oldField->getFigure();
 
 	oldField->setFigure(nullptr);
+	figuresMap[movedFigure] = newField;
 	newField->setFigure(movedFigure);
 }
 
@@ -332,11 +330,9 @@ Figure* Board::getKing(ChessFigureColor color) const
 	});
 }
 
-Field* Board::getField(Figure* figure) const
+Field* Board::getField(Figure* figure) 
 {
-	return fields.first([&](Field* currentField) {
-		return currentField->getFigure() == figure;
-	});
+	return figuresMap[figure];
 }
 
 List<Figure*> Board::remainingFigures(const ChessFigureColor& color) 
@@ -414,13 +410,18 @@ bool Board::movementIsPossibleInCastling(int fromRow, int fromCol, int toRow, in
 	Figure* otherFigure = newField->getFigure();
 
 	if (field == nullptr || movedFigure || newField == nullptr)
-
+	{
 		newField->setFigure(movedFigure);
-	field->setFigure(nullptr);
+		figuresMap[movedFigure] = newField;
+	}
 
+	field->setFigure(nullptr);
+	
 	bool isInConflict = fieldIsInConflict(returnOpponentColor(movedFigure->getColor()));
 	newField->setFigure(otherFigure);
+	figuresMap[otherFigure] = newField;
 	field->setFigure(movedFigure);
+	figuresMap[movedFigure] = field;
 	return !isInConflict;
 }
 
@@ -534,12 +535,15 @@ List<Location> Board::filteredConflictMoves(List<Location> availableMoves, int r
 		Field* newField = getFieldAt(currentLocation);
 		Figure* oldFigure = newField->getFigure();
 		newField->setFigure(figure);
+		figuresMap[figure] = newField;
 		bool isConflict = fieldIsInConflict(opponentColor);
 		newField->setFigure(oldFigure);
+		figuresMap[oldFigure] = newField;
 		return !isConflict;
 
 	});
 	startingField->setFigure(figure);
+	figuresMap[figure] = startingField;
 	return allowedMoves;
 }
 
@@ -701,6 +705,10 @@ void Board::revertLastMove()
 			}
 
 			pawnFactory(newLocation.row, newLocation.column, color, direction);
+			int key = getKeyForLocation(newLocation.row, newLocation.column);
+			Field* field = fieldsMap[key];
+			if (field != nullptr)
+				figuresMap[field->getFigure()] = field;
 
 			if (gameInteraction != nullptr)
 			{
@@ -737,6 +745,7 @@ void Board::revertLastMove()
 	{
 		Field* field = getFieldAt(moves[0].to);
 		field->setFigure(lastRemovedFigure);
+		figuresMap[lastRemovedFigure] = field;
 		if (gameInteraction != nullptr)
 		{
 			gameInteraction->addFigureAt(field->getLocation().row, field->getLocation().column);

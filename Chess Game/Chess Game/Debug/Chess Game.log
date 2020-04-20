@@ -1,4 +1,6 @@
-﻿  Game.cpp
-  main.cpp
+﻿  Board.cpp
+D:\Programming\Git repositories\Chess Game\Chess Game\Board.cpp(362,18): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+D:\Programming\Git repositories\Chess Game\Chess Game\Board.cpp(372,25): warning C4018: '<': signed/unsigned mismatch
+  Field.cpp
   Generating Code...
-  Chess Game.vcxproj -> D:\Projects\C++\Chess\Chess Game\Debug\Chess Game.exe
+  Chess Game.vcxproj -> D:\Programming\Git repositories\Chess Game\Debug\Chess Game.exe
