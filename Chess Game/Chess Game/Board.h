@@ -15,7 +15,6 @@ class Board {
 	List<Figure*> figures;
 	LastMoveDescriptor lastMoveDescriptor;
 	std::unordered_map<int, Field*> fieldsMap;
-	std::unordered_map<Figure*, Field*> figuresMap;
 	bool bottomRightCaslingIsPossible = true;
 	bool bottomLeftCaslingIsPossible = true;
 	bool topRightCaslingIsPossible = true;
