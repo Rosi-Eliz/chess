@@ -15,7 +15,7 @@ class GraphicsEngine {
 
 	virtual void addFigure(FigureDesignation figure, FigureType figureType, int row, int column) = 0;
 	virtual void initiateRender(BoardLayout boardLayout) = 0;
-	virtual bool move(int fromRow, int fromColumn, int toRow, int toColumn, bool shouldAnimate) = 0;
+	virtual bool move(int fromRow, int fromColumn, int toRow, int toColumn, bool shouldAnimate, bool shouldNotifyReceiver) = 0;
 	virtual bool removeFigure(int row, int column) = 0;
 	virtual void addPossibleMoveSquare(int row, int column) = 0;
 	virtual void addLastMoveSquare(int row, int column) = 0;

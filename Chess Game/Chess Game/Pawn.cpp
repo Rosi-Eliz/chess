@@ -1,6 +1,18 @@
 #include "Pawn.h"
 #include <algorithm>
 
+static const double VALUE = 10;
+
+static double valueAdditives[8][8] =
+{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+  5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0,
+  1.0, 1.0, 2.0, 3.0, 3.0, 2.0, 1.0, 1.0,
+  0.5, 0.5, 1.0, 2.7, 2.7, 1.0, 0.5, 0.5,
+  0.0, 0.0, 0.0, 2.5, 2.5, 0.0, 0.0, 0.0,
+  0.5, -0.5,-1.0, 0.0, 0.0,-1.0,-0.5, 0.5,
+  0.5, 1.0, 1.0,-2.5,-2.5, 1.0, 1.0, 0.5,
+  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
+
 Pawn::Pawn(ChessFigureColor color, ChessFigureDirection direction) : Figure(color, direction, "Pawn") {}
 
 List<List<Location>> Pawn::possibleMoves(const Location& location) 
@@ -43,4 +55,26 @@ List<List<Location>> Pawn::possibleMoves(const Location& location)
 	}
 	list.pushFront(forwardSteps);
 	return list;
+}
+
+double Pawn::getValueForPosition(Location location)
+{
+	double value = VALUE;
+	if (direction == ChessFigureDirection::Down)
+	{
+		value += valueAdditives[location.row][location.column];
+	}
+
+	else
+	{
+		double** newAdditives = reversedMatrix(valueAdditives);
+
+		value += newAdditives[location.row][location.column];
+		for (int i{ 0 }; i < 8; i++)
+		{
+			delete[] newAdditives[i];
+		}
+		delete[] newAdditives;
+	}
+	return value;
 }

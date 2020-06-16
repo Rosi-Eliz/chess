@@ -5,4 +5,5 @@ class Bishop : public Figure{
 public:
 	Bishop(ChessFigureColor color, ChessFigureDirection direction);
 	List<List<Location>> possibleMoves(const Location& location);
+	double getValueForPosition(Location location) override;
 };

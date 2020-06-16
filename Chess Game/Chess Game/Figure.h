@@ -10,6 +10,8 @@ protected:
 	string name;
 	ChessFigureDirection direction;
 	List<Location> filteredLocations(List<Location>& unfiltered) const;
+	double** reversedMatrix(double matrix[8][8]);
+
 public:
 	Figure();
 	Figure(ChessFigureColor color, ChessFigureDirection direction, string name);
@@ -19,4 +21,5 @@ public:
 	ChessFigureColor getColor() const;
 	string getColorString() const;
 	ChessFigureDirection getDirection() const;
+	virtual double getValueForPosition(Location location);
 };

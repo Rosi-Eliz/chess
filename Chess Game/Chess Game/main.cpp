@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Globals.h"
 #include "Game.h"
+#include "King.h"
 
 int main()
 {

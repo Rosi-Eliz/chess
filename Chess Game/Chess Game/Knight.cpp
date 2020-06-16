@@ -2,6 +2,18 @@
 
 #define maxDeviation 2
 
+static const double VALUE = 30;
+
+static double valueAdditives[8][8] =
+{ -5.0,-4.0,-3.0,-3.0,-3.0,-3.0,-4.0,-5.0,
+  -4.0,-2.0, 0.0, 0.0, 0.0, 0.0,-2.0,-4.0,
+  -3.0, 0.0, 1.0, 1.5, 1.5, 1.0, 0.0,-3.0,
+  -3.0, 0.5, 1.5, 2.0, 2.0, 1.5, 0.5,-3.0,
+  -3.0, 0.0, 1.5, 2.0, 2.0, 1.5, 0.0,-3.0,
+  -3.0, 0.5, 1.0, 1.5, 1.5, 1.0, 0.5,-3.0,
+  -4.0,-2.0, 0.0, 0.5, 0.5, 0.0,-2.0,-4.0,
+  -5.0,-4.0,-2.0,-3.0,-3.0,-2.0,-4.0,-5.0, };
+
 Knight::Knight(ChessFigureColor color, ChessFigureDirection direction) : Figure(color, direction, "Knight") {}
 
 
@@ -35,4 +47,24 @@ List<List<Location>> Knight::possibleMoves(const Location& location)
 		resultPositions.pushFront(newList);
 	}
 	return resultPositions;
+}
+
+double Knight::getValueForPosition(Location location)
+{
+	double value = VALUE;
+	if (direction == ChessFigureDirection::Up)
+	{
+		value += valueAdditives[location.row][location.column];
+	}
+	else
+	{
+		double** newAdditives = reversedMatrix(valueAdditives);
+		value += newAdditives[location.row][location.column];
+		for (int i{ 0 }; i < 8; i++)
+		{
+			delete[] newAdditives[i];
+		}
+		delete[] newAdditives;
+	}
+	return value;
 }

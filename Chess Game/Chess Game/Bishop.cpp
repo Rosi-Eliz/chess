@@ -1,5 +1,16 @@
 #include "Bishop.h"
 
+static const double VALUE = 30;
+
+static double valueAdditives[8][8] =
+{ -2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0,
+  -1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,-1.0,
+  -1.0, 0.0, 0.5, 1.0, 1.0, 0.5, 0.0,-1.0,
+  -1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 0.0,-1.0,
+  -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,-1.0,
+  -1.0,-2.0,-2.0,-2.0,-2.0,-2.0,-2.0,-1.0,
+  -1.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.5,-1.0,
+  -2.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-2.0 };
 
 Bishop::Bishop(ChessFigureColor color, ChessFigureDirection direction) : Figure(color, direction, "Bishop") {}
 
@@ -39,4 +50,24 @@ List<List<Location>> Bishop::possibleMoves(const Location& location)
 	resultMoves.pushFront(filtered);
 
 	return resultMoves;
+}
+
+double Bishop::getValueForPosition(Location location)
+{
+	double value = VALUE;
+	if (direction == ChessFigureDirection::Up)
+	{
+		value += valueAdditives[location.row][location.column];
+	}
+	else
+	{
+		double** newAdditives = reversedMatrix(valueAdditives);
+		value += newAdditives[location.row][location.column];
+		for (int i{ 0 }; i < 8; i++)
+		{
+			delete[] newAdditives[i];
+		}
+		delete[] newAdditives;
+	}
+	return value;
 }

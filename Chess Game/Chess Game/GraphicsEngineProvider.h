@@ -15,4 +15,5 @@ public:
 	virtual void didMove(int fromRow, int fromColumn, int toRow, int toColumn) = 0;
 	virtual bool isPlayerActive(FigureType figureType) = 0;
 	virtual void didRestartGame() = 0;
+	virtual void revertLastMove() = 0;
 };

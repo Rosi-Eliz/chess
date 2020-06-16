@@ -1,6 +1,19 @@
 #include "King.h"
 #include "Globals.h"
 
+static const double VALUE = 900;
+
+static double valueAdditives[8][8] =
+{ -3.0,-4.0,-4.0,-5.0,-5.0,-4.0,-4.0,-3.0,
+  -3.0,-4.0,-4.0,-5.0,-5.0,-4.0,-4.0,-3.0,
+  -3.0,-4.0,-4.0,-5.0,-5.0,-4.0,-4.0,-3.0,
+  -3.0,-4.0,-4.0,-5.0,-5.0,-4.0,-4.0,-3.0, 
+  -2.0,-3.0,-3.0,-4.0,-4.0,-3.0,-3.0,-2.0, 
+  -1.0,-2.0,-2.0,-2.0,-2.0,-2.0,-2.0,-1.0, 
+   2.0, 2.0, 0.0, 0.0, 0.0, 0.0, 2.0, 2.0, 
+   2.0, 3.0, 1.0, 0.0, 0.0, 1.0, 3.0, 2.0};
+
+
 King::King(ChessFigureColor color, ChessFigureDirection direction) : Figure(color, direction, "King") {}
 
 List<Location> kingMoves(const Location& location, int horizontalScale, int verticalScale, bool shouldCheckForCastling = false)
@@ -51,4 +64,24 @@ List<List<Location>> King::possibleMoves(const Location& location)
 	
 
 	return result;
+}
+
+double King::getValueForPosition(Location location)
+{
+	double value = VALUE;
+	if (direction == ChessFigureDirection::Up)
+	{
+		value += valueAdditives[location.row][location.column];
+	}
+	else 
+	{
+		double** newAdditives = reversedMatrix(valueAdditives);
+		value += newAdditives[location.row][location.column];
+		for (int i{ 0 }; i < 8; i++)
+		{
+			delete[] newAdditives[i];
+		}
+		delete[] newAdditives;
+	}
+	return value;
 }

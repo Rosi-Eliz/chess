@@ -335,8 +335,8 @@ void List<T>::removeAt(int index)
     }
     if (index == 0)
     {
-        rear = elementToRemove->next;//dob
-        elementToRemove->next->previous = nullptr;
+		rear = nullptr;
+		front = nullptr;
         delete elementToRemove;
     }
     else if (index == (size() - 1))
