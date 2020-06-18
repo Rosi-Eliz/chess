@@ -7,15 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E44514B249C2CE200D436BD /* Queen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E44513F249C2CE200D436BD /* Queen.cpp */; };
+		4E44514C249C2CE200D436BD /* Figure.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E445140249C2CE200D436BD /* Figure.cpp */; };
+		4E44514D249C2CE200D436BD /* Pawn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E445141249C2CE200D436BD /* Pawn.cpp */; };
+		4E44514E249C2CE200D436BD /* King.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E445142249C2CE200D436BD /* King.cpp */; };
+		4E44514F249C2CE200D436BD /* Rook.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E445143249C2CE200D436BD /* Rook.cpp */; };
+		4E445150249C2CE200D436BD /* Knight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E445145249C2CE200D436BD /* Knight.cpp */; };
+		4E445151249C2CE200D436BD /* Bishop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4E445147249C2CE200D436BD /* Bishop.cpp */; };
 		8007C660249A294700F79402 /* ResourcePath.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8007C65F249A294700F79402 /* ResourcePath.mm */; };
 		8007C6A9249A2BF100F79402 /* Chess-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8007C6A8249A2BF100F79402 /* Chess-Info.plist */; };
-		8096DF6C249BF288007FC853 /* Queen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8096DF63249BF287007FC853 /* Queen.cpp */; };
-		8096DF6D249BF288007FC853 /* Pawn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8096DF64249BF287007FC853 /* Pawn.cpp */; };
-		8096DF6E249BF288007FC853 /* Figure.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8096DF65249BF287007FC853 /* Figure.cpp */; };
-		8096DF6F249BF288007FC853 /* Rook.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8096DF66249BF287007FC853 /* Rook.cpp */; };
-		8096DF70249BF288007FC853 /* Bishop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8096DF68249BF287007FC853 /* Bishop.cpp */; };
-		8096DF71249BF288007FC853 /* King.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8096DF69249BF287007FC853 /* King.cpp */; };
-		8096DF72249BF288007FC853 /* Knight.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8096DF6A249BF288007FC853 /* Knight.cpp */; };
 		8096DF79249BF2E4007FC853 /* AIEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8096DF78249BF2E4007FC853 /* AIEngine.cpp */; };
 		8096DF82249BF3AC007FC853 /* Board.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8096DF7F249BF3AC007FC853 /* Board.cpp */; };
 		8096DF83249BF3AC007FC853 /* Field.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8096DF80249BF3AC007FC853 /* Field.cpp */; };
@@ -36,6 +36,33 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4E44513D249C2CE200D436BD /* Rook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Rook.h; path = "../../../../Chess Game/Rook.h"; sourceTree = "<group>"; };
+		4E44513E249C2CE200D436BD /* Bishop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bishop.h; path = "../../../../Chess Game/Bishop.h"; sourceTree = "<group>"; };
+		4E44513F249C2CE200D436BD /* Queen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Queen.cpp; path = "../../../../Chess Game/Queen.cpp"; sourceTree = "<group>"; };
+		4E445140249C2CE200D436BD /* Figure.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Figure.cpp; path = "../../../../Chess Game/Figure.cpp"; sourceTree = "<group>"; };
+		4E445141249C2CE200D436BD /* Pawn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Pawn.cpp; path = "../../../../Chess Game/Pawn.cpp"; sourceTree = "<group>"; };
+		4E445142249C2CE200D436BD /* King.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = King.cpp; path = "../../../../Chess Game/King.cpp"; sourceTree = "<group>"; };
+		4E445143249C2CE200D436BD /* Rook.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Rook.cpp; path = "../../../../Chess Game/Rook.cpp"; sourceTree = "<group>"; };
+		4E445144249C2CE200D436BD /* Figure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Figure.h; path = "../../../../Chess Game/Figure.h"; sourceTree = "<group>"; };
+		4E445145249C2CE200D436BD /* Knight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Knight.cpp; path = "../../../../Chess Game/Knight.cpp"; sourceTree = "<group>"; };
+		4E445146249C2CE200D436BD /* Knight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Knight.h; path = "../../../../Chess Game/Knight.h"; sourceTree = "<group>"; };
+		4E445147249C2CE200D436BD /* Bishop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Bishop.cpp; path = "../../../../Chess Game/Bishop.cpp"; sourceTree = "<group>"; };
+		4E445148249C2CE200D436BD /* King.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = King.h; path = "../../../../Chess Game/King.h"; sourceTree = "<group>"; };
+		4E445149249C2CE200D436BD /* Queen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Queen.h; path = "../../../../Chess Game/Queen.h"; sourceTree = "<group>"; };
+		4E44514A249C2CE200D436BD /* Pawn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Pawn.h; path = "../../../../Chess Game/Pawn.h"; sourceTree = "<group>"; };
+		4EB0519C249C1709003D533D /* libsfml-system.2.5.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libsfml-system.2.5.1.dylib"; path = "../../../../../../../Downloads/SFML-2.5.1-macos-clang/lib/libsfml-system.2.5.1.dylib"; sourceTree = "<group>"; };
+		4EB051A0249C1725003D533D /* sfml-system.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-system.framework"; path = "../../../../../../../Downloads/SFML-2.5.1-macos-clang/Frameworks/sfml-system.framework"; sourceTree = "<group>"; };
+		4EBBC457249C1624000DE31C /* libsfml-window.2.5.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libsfml-window.2.5.1.dylib"; path = "../../../../../../../../../usr/local/lib/libsfml-window.2.5.1.dylib"; sourceTree = "<group>"; };
+		4EBBC458249C1624000DE31C /* libsfml-network.2.5.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libsfml-network.2.5.1.dylib"; path = "../../../../../../../../../usr/local/lib/libsfml-network.2.5.1.dylib"; sourceTree = "<group>"; };
+		4EBBC459249C1624000DE31C /* libsfml-system.2.5.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libsfml-system.2.5.1.dylib"; path = "../../../../../../../../../usr/local/lib/libsfml-system.2.5.1.dylib"; sourceTree = "<group>"; };
+		4EBBC45A249C1624000DE31C /* libsfml-graphics.2.5.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libsfml-graphics.2.5.1.dylib"; path = "../../../../../../../../../usr/local/lib/libsfml-graphics.2.5.1.dylib"; sourceTree = "<group>"; };
+		4EBBC45B249C1624000DE31C /* libsfml-audio.2.5.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libsfml-audio.2.5.1.dylib"; path = "../../../../../../../../../usr/local/lib/libsfml-audio.2.5.1.dylib"; sourceTree = "<group>"; };
+		4ED9CBDF249C129A005C9120 /* sfml-system.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-system.framework"; path = "../../../../../../../../../Library/Frameworks/sfml-system.framework"; sourceTree = "<group>"; };
+		4ED9CBE0249C129A005C9120 /* sfml-audio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-audio.framework"; path = "../../../../../../../../../Library/Frameworks/sfml-audio.framework"; sourceTree = "<group>"; };
+		4ED9CBE1249C129A005C9120 /* sfml-window.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-window.framework"; path = "../../../../../../../../../Library/Frameworks/sfml-window.framework"; sourceTree = "<group>"; };
+		4ED9CBE2249C129A005C9120 /* SFML.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SFML.framework; path = ../../../../../../../../../Library/Frameworks/SFML.framework; sourceTree = "<group>"; };
+		4ED9CBE3249C129A005C9120 /* sfml-graphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-graphics.framework"; path = "../../../../../../../../../Library/Frameworks/sfml-graphics.framework"; sourceTree = "<group>"; };
+		4ED9CBE4249C129A005C9120 /* sfml-network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-network.framework"; path = "../../../../../../../../../Library/Frameworks/sfml-network.framework"; sourceTree = "<group>"; };
 		8007C65A249A294700F79402 /* Chess.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Chess.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8007C65F249A294700F79402 /* ResourcePath.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ResourcePath.mm; sourceTree = "<group>"; };
 		8007C661249A294700F79402 /* ResourcePath.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ResourcePath.hpp; sourceTree = "<group>"; };
@@ -54,20 +81,6 @@
 		8007C68C249A2AD500F79402 /* vorbis.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = vorbis.framework; path = "../../../../../Downloads/SFML-2.5.1-macos-clang/extlibs/vorbis.framework"; sourceTree = "<group>"; };
 		8007C6A8249A2BF100F79402 /* Chess-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "Chess-Info.plist"; path = "Chess/Chess-Info.plist"; sourceTree = SOURCE_ROOT; };
 		8007C6C0249A2D0200F79402 /* Chess.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Chess.entitlements; sourceTree = "<group>"; };
-		8096DF5E249BF287007FC853 /* Rook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Rook.h; path = "../../../../Chess Game/Rook.h"; sourceTree = "<group>"; };
-		8096DF5F249BF287007FC853 /* Pawn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Pawn.h; path = "../../../../Chess Game/Pawn.h"; sourceTree = "<group>"; };
-		8096DF60249BF287007FC853 /* Knight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Knight.h; path = "../../../../Chess Game/Knight.h"; sourceTree = "<group>"; };
-		8096DF61249BF287007FC853 /* Queen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Queen.h; path = "../../../../Chess Game/Queen.h"; sourceTree = "<group>"; };
-		8096DF62249BF287007FC853 /* Figure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Figure.h; path = "../../../../Chess Game/Figure.h"; sourceTree = "<group>"; };
-		8096DF63249BF287007FC853 /* Queen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Queen.cpp; path = "../../../../Chess Game/Queen.cpp"; sourceTree = "<group>"; };
-		8096DF64249BF287007FC853 /* Pawn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Pawn.cpp; path = "../../../../Chess Game/Pawn.cpp"; sourceTree = "<group>"; };
-		8096DF65249BF287007FC853 /* Figure.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Figure.cpp; path = "../../../../Chess Game/Figure.cpp"; sourceTree = "<group>"; };
-		8096DF66249BF287007FC853 /* Rook.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Rook.cpp; path = "../../../../Chess Game/Rook.cpp"; sourceTree = "<group>"; };
-		8096DF67249BF287007FC853 /* Bishop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Bishop.h; path = "../../../../Chess Game/Bishop.h"; sourceTree = "<group>"; };
-		8096DF68249BF287007FC853 /* Bishop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Bishop.cpp; path = "../../../../Chess Game/Bishop.cpp"; sourceTree = "<group>"; };
-		8096DF69249BF287007FC853 /* King.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = King.cpp; path = "../../../../Chess Game/King.cpp"; sourceTree = "<group>"; };
-		8096DF6A249BF288007FC853 /* Knight.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Knight.cpp; path = "../../../../Chess Game/Knight.cpp"; sourceTree = "<group>"; };
-		8096DF6B249BF288007FC853 /* King.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = King.h; path = "../../../../Chess Game/King.h"; sourceTree = "<group>"; };
 		8096DF76249BF2E4007FC853 /* AIEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIEngine.h; path = "../../../../Chess Game/AIEngine.h"; sourceTree = "<group>"; };
 		8096DF77249BF2E4007FC853 /* AIUpdateProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIUpdateProvider.h; path = "../../../../Chess Game/AIUpdateProvider.h"; sourceTree = "<group>"; };
 		8096DF78249BF2E4007FC853 /* AIEngine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AIEngine.cpp; path = "../../../../Chess Game/AIEngine.cpp"; sourceTree = "<group>"; };
@@ -169,6 +182,19 @@
 		8007C672249A2AB000F79402 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4EB051A0249C1725003D533D /* sfml-system.framework */,
+				4EB0519C249C1709003D533D /* libsfml-system.2.5.1.dylib */,
+				4EBBC45B249C1624000DE31C /* libsfml-audio.2.5.1.dylib */,
+				4EBBC45A249C1624000DE31C /* libsfml-graphics.2.5.1.dylib */,
+				4EBBC458249C1624000DE31C /* libsfml-network.2.5.1.dylib */,
+				4EBBC459249C1624000DE31C /* libsfml-system.2.5.1.dylib */,
+				4EBBC457249C1624000DE31C /* libsfml-window.2.5.1.dylib */,
+				4ED9CBE0249C129A005C9120 /* sfml-audio.framework */,
+				4ED9CBE3249C129A005C9120 /* sfml-graphics.framework */,
+				4ED9CBE4249C129A005C9120 /* sfml-network.framework */,
+				4ED9CBDF249C129A005C9120 /* sfml-system.framework */,
+				4ED9CBE1249C129A005C9120 /* sfml-window.framework */,
+				4ED9CBE2249C129A005C9120 /* SFML.framework */,
 				8007C68A249A2AD500F79402 /* FLAC.framework */,
 				8007C68B249A2AD500F79402 /* freetype.framework */,
 				8007C689249A2AD500F79402 /* ogg.framework */,
@@ -189,20 +215,20 @@
 		8096DF5D249BF237007FC853 /* Figures */ = {
 			isa = PBXGroup;
 			children = (
-				8096DF68249BF287007FC853 /* Bishop.cpp */,
-				8096DF67249BF287007FC853 /* Bishop.h */,
-				8096DF65249BF287007FC853 /* Figure.cpp */,
-				8096DF62249BF287007FC853 /* Figure.h */,
-				8096DF69249BF287007FC853 /* King.cpp */,
-				8096DF6B249BF288007FC853 /* King.h */,
-				8096DF6A249BF288007FC853 /* Knight.cpp */,
-				8096DF60249BF287007FC853 /* Knight.h */,
-				8096DF64249BF287007FC853 /* Pawn.cpp */,
-				8096DF5F249BF287007FC853 /* Pawn.h */,
-				8096DF63249BF287007FC853 /* Queen.cpp */,
-				8096DF61249BF287007FC853 /* Queen.h */,
-				8096DF66249BF287007FC853 /* Rook.cpp */,
-				8096DF5E249BF287007FC853 /* Rook.h */,
+				4E445147249C2CE200D436BD /* Bishop.cpp */,
+				4E44513E249C2CE200D436BD /* Bishop.h */,
+				4E445140249C2CE200D436BD /* Figure.cpp */,
+				4E445144249C2CE200D436BD /* Figure.h */,
+				4E445142249C2CE200D436BD /* King.cpp */,
+				4E445148249C2CE200D436BD /* King.h */,
+				4E445145249C2CE200D436BD /* Knight.cpp */,
+				4E445146249C2CE200D436BD /* Knight.h */,
+				4E445141249C2CE200D436BD /* Pawn.cpp */,
+				4E44514A249C2CE200D436BD /* Pawn.h */,
+				4E44513F249C2CE200D436BD /* Queen.cpp */,
+				4E445149249C2CE200D436BD /* Queen.h */,
+				4E445143249C2CE200D436BD /* Rook.cpp */,
+				4E44513D249C2CE200D436BD /* Rook.h */,
 			);
 			path = Figures;
 			sourceTree = "<group>";
@@ -396,20 +422,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8096DF72249BF288007FC853 /* Knight.cpp in Sources */,
-				8096DF6D249BF288007FC853 /* Pawn.cpp in Sources */,
-				8096DF6E249BF288007FC853 /* Figure.cpp in Sources */,
 				8096DF87249BF493007FC853 /* Game.cpp in Sources */,
+				4E445151249C2CE200D436BD /* Bishop.cpp in Sources */,
+				4E44514C249C2CE200D436BD /* Figure.cpp in Sources */,
 				8096DFA1249BF5FE007FC853 /* main.cpp in Sources */,
-				8096DF6C249BF288007FC853 /* Queen.cpp in Sources */,
 				8007C660249A294700F79402 /* ResourcePath.mm in Sources */,
+				4E44514D249C2CE200D436BD /* Pawn.cpp in Sources */,
+				4E44514B249C2CE200D436BD /* Queen.cpp in Sources */,
+				4E44514E249C2CE200D436BD /* King.cpp in Sources */,
 				8096DF8D249BF5AC007FC853 /* SFMLGraphicsEngine.cpp in Sources */,
-				8096DF70249BF288007FC853 /* Bishop.cpp in Sources */,
 				8096DFA5249BF61B007FC853 /* Move.cpp in Sources */,
-				8096DF6F249BF288007FC853 /* Rook.cpp in Sources */,
 				8096DF82249BF3AC007FC853 /* Board.cpp in Sources */,
-				8096DF71249BF288007FC853 /* King.cpp in Sources */,
+				4E44514F249C2CE200D436BD /* Rook.cpp in Sources */,
 				8096DF83249BF3AC007FC853 /* Field.cpp in Sources */,
+				4E445150249C2CE200D436BD /* Knight.cpp in Sources */,
 				8096DF79249BF2E4007FC853 /* AIEngine.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -510,14 +536,21 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Chess/Chess.entitlements;
 				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = "PROJECT_DIR=\\\"$(SRCROOT)\\\"";
 				INFOPLIST_FILE = "Chess/Chess-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"@loader_path/../Frameworks",
 					"@executable_path/../Frameworks",
+					/Library/Frameworks,
 				);
+				OTHER_CFLAGS = "-DSRCROOT=\\\"$(SRCROOT)\\\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
@@ -528,14 +561,21 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Chess/Chess.entitlements;
 				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = "PROJECT_DIR=\\\"$(SRCROOT)\\\"";
 				INFOPLIST_FILE = "Chess/Chess-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"@loader_path/../Frameworks",
 					"@executable_path/../Frameworks",
+					/Library/Frameworks,
 				);
+				OTHER_CFLAGS = "-DSRCROOT=\\\"$(SRCROOT)\\\"";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};

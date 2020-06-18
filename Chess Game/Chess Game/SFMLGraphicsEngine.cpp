@@ -32,17 +32,53 @@ Sprite endGameSprite;
 Font textFont;
 Text messageText;
 
+string iconFilePath;
+string chessPiecesFilePath;
+string textFontFilePath;
+string chessBoardFilePath;
+string chessBoardInvertedFilePath;
+string gameOverLayoutFilePath;
+
+
 SFMLGraphicsEngine::SFMLGraphicsEngine() {}
 
 SFMLGraphicsEngine::SFMLGraphicsEngine(GraphicsEngineProvider* graphicsEngineProvider): graphicsEngineProvider(graphicsEngineProvider){
-	Image icon;
-	icon.loadFromFile("/Users/rosie.elize/Programming/chess/Chess Game/Chess Game/Icons/icon.png");
-	window.setIcon(32, 32, icon.getPixelsPtr());
-
-	figuresTexture.loadFromFile("/Users/rosie.elize/Programming/chess/Chess Game/Chess Game/Textures/chessPieces.png");
-
+    Image icon;
+    
+#ifdef PROJECT_DIR
+    iconFilePath = PROJECT_DIR;
+    iconFilePath += "/../../Chess Game/Icons/icon.png";
+    
+    chessPiecesFilePath = PROJECT_DIR;
+    chessPiecesFilePath += "/../../Chess Game/Textures/chessPieces.png";
+    
+    textFontFilePath = PROJECT_DIR;
+    textFontFilePath += "/../../Chess Game/Fonts/Candara.ttf";
+    
+    chessBoardFilePath = PROJECT_DIR;
+    chessBoardFilePath += "/../../Chess Game/Textures/chessBoard.png";
+    
+    chessBoardInvertedFilePath = PROJECT_DIR;
+    chessBoardInvertedFilePath += "/../../Chess Game/Textures/chessBoardInverted.png";
+    
+    gameOverLayoutFilePath = PROJECT_DIR;
+    gameOverLayoutFilePath += "/../../Chess Game/Textures/gameOverLayout.png";
+#elif
+    iconFilePath = "icons/icon.png";
+    chessPiecesFilePath = "Textures/chessPieces.png";
+    textFontFilePath = "Fonts/Candara.ttf";
+    chessBoardFilePath = "Textures/chessBoard.png";
+    chessBoardInvertedFilePath = "Textures/chessBoardInverted.png";
+    gameOverLayoutFilePath = "Textures/gameOverLayout.png";
+#endif
+    
+    icon.loadFromFile(iconFilePath);
+    window.setIcon(32, 32, icon.getPixelsPtr());
+    
+    figuresTexture.loadFromFile(chessPiecesFilePath);
+    
     figureBoxSize = figuresTexture.getSize().y / 2;
-    figureBoxSize *= 1.5;
+    figureBoxSize *= scaleCoefficient;
 }
 
 int board[8][8] =
@@ -80,15 +116,15 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 	lastMoveNewPositionColumn = -1;
 	shouldRenderEndGameLayout = false;
 
-	textFont.loadFromFile("Fonts/Candara.ttf");
+	textFont.loadFromFile(textFontFilePath);
 
 	messageText.setFont(textFont);
 	messageText.setFillColor(DARK_GRAY_COLOR);
 	messageText.setCharacterSize(22);
 	messageText.setPosition(257, 416);
 
-	boardTexture.loadFromFile(boardLayout == LeadingWhites ? "/Users/rosie.elize/Programming/chess/Chess Game/Chess Game/Textures/chessBoard.png" : "/Users/rosie.elize/Programming/chess/Chess Game/Chess Game/Textures/chessBoardInverted.png");
-	endGameTexture.loadFromFile("/Users/rosie.elize/Programming/chess/Chess Game/Chess Game/Textures/gameOverLayout.png");
+	boardTexture.loadFromFile(boardLayout == LeadingWhites ? chessBoardFilePath : chessBoardInvertedFilePath);
+	endGameTexture.loadFromFile(gameOverLayoutFilePath);
 
 	boardSprite = Sprite(boardTexture);
 	boardSprite.setScale(boardSize / boardSprite.getLocalBounds().width, boardSize / boardSprite.getLocalBounds().height);
@@ -461,9 +497,8 @@ Vector2f SFMLGraphicsEngine::getCoordinates(int row, int column) {
 }
 
 void SFMLGraphicsEngine::getLocation(sf::Vector2f coordinates, int& row, int& column) {
-	column = (coordinates.x - offset.x) / figureBoxSize;
-    cout<< coordinates.x << " "<< offset.x << " " << figureBoxSize<< " " << column<< endl;
-	row = FIGURES_IN_ROW - 1 - floor(coordinates.y / figureBoxSize );
+	column = (coordinates.x - offset.x + figureBoxSize/2) / figureBoxSize;
+	row = FIGURES_IN_ROW - 1 - floor((coordinates.y - offset.y + figureBoxSize/2) / figureBoxSize);
 }
 
 Sprite* SFMLGraphicsEngine::figureForPosition(int row, int column) {
