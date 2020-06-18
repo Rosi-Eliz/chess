@@ -17,7 +17,9 @@ using namespace sf;
 #define DARK_GRAY_COLOR Color(108,108,108,255)
 #define FIELD_SELECTION_OUTLINE_COLOR Color(26,116,158)
 
-const double boardSize = 900;
+// 1.5 multiplication coefficient for mac os screens
+const double scaleCoefficient = 1.5;
+const double boardSize = 900 * scaleCoefficient;
 const double offsetSize = boardSize * 0.033;
 Vector2f offset(offsetSize, offsetSize);
 RenderWindow window(VideoMode(boardSize, boardSize), "Chess", Style::Close | Style::Titlebar);
@@ -34,12 +36,13 @@ SFMLGraphicsEngine::SFMLGraphicsEngine() {}
 
 SFMLGraphicsEngine::SFMLGraphicsEngine(GraphicsEngineProvider* graphicsEngineProvider): graphicsEngineProvider(graphicsEngineProvider){
 	Image icon;
-	icon.loadFromFile("icons/icon.png");
+	icon.loadFromFile("/Users/rosie.elize/Programming/chess/Chess Game/Chess Game/Icons/icon.png");
 	window.setIcon(32, 32, icon.getPixelsPtr());
 
-	figuresTexture.loadFromFile("Textures/chessPieces.png");
+	figuresTexture.loadFromFile("/Users/rosie.elize/Programming/chess/Chess Game/Chess Game/Textures/chessPieces.png");
 
-	figureBoxSize = figuresTexture.getSize().y / 2;
+    figureBoxSize = figuresTexture.getSize().y / 2;
+    figureBoxSize *= 1.5;
 }
 
 int board[8][8] =
@@ -60,8 +63,9 @@ void SFMLGraphicsEngine::addFigure(FigureDesignation figure, FigureType figureTy
 
 	Sprite sprite;
 	sprite.setTexture(figuresTexture);
-	sprite.setTextureRect(IntRect(figureBoxSize * horizontalScale, figureBoxSize * verticalScale, figureBoxSize, figureBoxSize));
+    sprite.setTextureRect(IntRect(figureBoxSize/scaleCoefficient * horizontalScale, figureBoxSize/scaleCoefficient * verticalScale, figureBoxSize/scaleCoefficient, figureBoxSize/scaleCoefficient));
 	sprite.setPosition(coordinates);
+    sprite.setScale(scaleCoefficient, scaleCoefficient);
 
 	FigureSprite figureSprite;
 	figureSprite.sprite = sprite;
@@ -83,8 +87,8 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 	messageText.setCharacterSize(22);
 	messageText.setPosition(257, 416);
 
-	boardTexture.loadFromFile(boardLayout == LeadingWhites ? "Textures/chessBoard.png" : "Textures/chessBoardInverted.png");
-	endGameTexture.loadFromFile("Textures/gameOverLayout.png");
+	boardTexture.loadFromFile(boardLayout == LeadingWhites ? "/Users/rosie.elize/Programming/chess/Chess Game/Chess Game/Textures/chessBoard.png" : "/Users/rosie.elize/Programming/chess/Chess Game/Chess Game/Textures/chessBoardInverted.png");
+	endGameTexture.loadFromFile("/Users/rosie.elize/Programming/chess/Chess Game/Chess Game/Textures/gameOverLayout.png");
 
 	boardSprite = Sprite(boardTexture);
 	boardSprite.setScale(boardSize / boardSprite.getLocalBounds().width, boardSize / boardSprite.getLocalBounds().height);
@@ -138,7 +142,6 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 							dx = mousePosition.x - figurePosition.x;
 							dy = mousePosition.y - figurePosition.y;
 							oldPosition = figurePosition;
-
 							int row, column;
 							getLocation(figurePosition, row, column);
 							List<Location> possibleMoves = graphicsEngineProvider->availableMovesForFigure(row, column);
@@ -451,15 +454,15 @@ void SFMLGraphicsEngine::removeAllFigures()
 	lastMoveNewPositionColumn = -1;
 	figures = vector<FigureSprite>();
 }
-
 Vector2f SFMLGraphicsEngine::getCoordinates(int row, int column) {
-	int x = column * figureBoxSize;
-	int y = (FIGURES_IN_ROW - 1 - row) * figureBoxSize;
+    int x = column * figureBoxSize;
+    int y = (FIGURES_IN_ROW - 1 - row) * figureBoxSize;
 	return Vector2f(x + offset.x, y + offset.y);
 }
 
 void SFMLGraphicsEngine::getLocation(sf::Vector2f coordinates, int& row, int& column) {
 	column = (coordinates.x - offset.x) / figureBoxSize;
+    cout<< coordinates.x << " "<< offset.x << " " << figureBoxSize<< " " << column<< endl;
 	row = FIGURES_IN_ROW - 1 - floor(coordinates.y / figureBoxSize );
 }
 
