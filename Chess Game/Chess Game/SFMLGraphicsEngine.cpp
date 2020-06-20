@@ -17,8 +17,13 @@ using namespace sf;
 #define DARK_GRAY_COLOR Color(108,108,108,255)
 #define FIELD_SELECTION_OUTLINE_COLOR Color(26,116,158)
 
-// 1.5 multiplication coefficient for mac os screens
-const double scaleCoefficient = 1.5;
+// 1.8 multiplication coefficient for mac os screens
+#ifdef IS_MAC_OS
+const double scaleCoefficient = 1.8;
+#elif
+const double scaleCoefficient = 1;
+#endif
+
 const double boardSize = 900 * scaleCoefficient;
 const double offsetSize = boardSize * 0.033;
 Vector2f offset(offsetSize, offsetSize);
@@ -50,16 +55,16 @@ SFMLGraphicsEngine::SFMLGraphicsEngine(GraphicsEngineProvider* graphicsEnginePro
     iconFilePath += "/../../Chess Game/Icons/icon.png";
     
     chessPiecesFilePath = PROJECT_DIR;
-    chessPiecesFilePath += "/../../Chess Game/Textures/chessPieces.png";
+    chessPiecesFilePath += "/../../Chess Game/Textures/chessPieces2x.png";
     
     textFontFilePath = PROJECT_DIR;
     textFontFilePath += "/../../Chess Game/Fonts/Candara.ttf";
     
     chessBoardFilePath = PROJECT_DIR;
-    chessBoardFilePath += "/../../Chess Game/Textures/chessBoard.png";
+    chessBoardFilePath += "/../../Chess Game/Textures/chessBoard2x.png";
     
     chessBoardInvertedFilePath = PROJECT_DIR;
-    chessBoardInvertedFilePath += "/../../Chess Game/Textures/chessBoardInverted.png";
+    chessBoardInvertedFilePath += "/../../Chess Game/Textures/chessBoardInverted2x.png";
     
     gameOverLayoutFilePath = PROJECT_DIR;
     gameOverLayoutFilePath += "/../../Chess Game/Textures/gameOverLayout.png";
@@ -76,9 +81,7 @@ SFMLGraphicsEngine::SFMLGraphicsEngine(GraphicsEngineProvider* graphicsEnginePro
     window.setIcon(32, 32, icon.getPixelsPtr());
     
     figuresTexture.loadFromFile(chessPiecesFilePath);
-    
-    figureBoxSize = figuresTexture.getSize().y / 2;
-    figureBoxSize *= scaleCoefficient;
+    figureBoxSize = (boardSize - 2 * offsetSize) / FIGURES_IN_ROW;
 }
 
 int board[8][8] =
@@ -99,9 +102,11 @@ void SFMLGraphicsEngine::addFigure(FigureDesignation figure, FigureType figureTy
 
 	Sprite sprite;
 	sprite.setTexture(figuresTexture);
-    sprite.setTextureRect(IntRect(figureBoxSize/scaleCoefficient * horizontalScale, figureBoxSize/scaleCoefficient * verticalScale, figureBoxSize/scaleCoefficient, figureBoxSize/scaleCoefficient));
+    double textureSize = figuresTexture.getSize().y / 2;
+    sprite.setTextureRect(IntRect(textureSize * horizontalScale, textureSize * verticalScale, textureSize, textureSize));
 	sprite.setPosition(coordinates);
-    sprite.setScale(scaleCoefficient, scaleCoefficient);
+    double spriteScale = figureBoxSize / textureSize;
+    sprite.setScale(spriteScale, spriteScale);
 
 	FigureSprite figureSprite;
 	figureSprite.sprite = sprite;
@@ -120,7 +125,7 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 
 	messageText.setFont(textFont);
 	messageText.setFillColor(DARK_GRAY_COLOR);
-	messageText.setCharacterSize(22);
+	messageText.setCharacterSize(boardSize * 0.024);
 	messageText.setPosition(257, 416);
 
 	boardTexture.loadFromFile(boardLayout == LeadingWhites ? chessBoardFilePath : chessBoardInvertedFilePath);
@@ -130,7 +135,7 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 	boardSprite.setScale(boardSize / boardSprite.getLocalBounds().width, boardSize / boardSprite.getLocalBounds().height);
 
 	endGameSprite = Sprite(endGameTexture);
-	endGameSprite.setScale(boardSize / boardSprite.getLocalBounds().width, boardSize / boardSprite.getLocalBounds().height);
+	endGameSprite.setScale(boardSize / endGameSprite.getLocalBounds().width, boardSize / endGameSprite.getLocalBounds().height);
 
 
 	//populateFigures(boardLayout);
@@ -269,7 +274,7 @@ void SFMLGraphicsEngine::showGameOverLayout(string message)
 	FloatRect textRect = messageText.getLocalBounds();
 	messageText.setOrigin(textRect.left + textRect.width / 2.0f,
 		textRect.top + textRect.height / 2.0f);
-	messageText.setPosition(Vector2f(440, 450));
+	messageText.setPosition(Vector2f(boardSize * 0.48, boardSize * 0.5));
 
 	shouldRenderEndGameLayout = true;
 	double animationSeconds = ANIMATION_DURTATION_SECONDS;

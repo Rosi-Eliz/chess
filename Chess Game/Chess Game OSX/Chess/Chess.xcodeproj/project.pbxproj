@@ -543,7 +543,10 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
-				GCC_PREPROCESSOR_DEFINITIONS = "PROJECT_DIR=\\\"$(SRCROOT)\\\"";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"PROJECT_DIR=\\\"$(SRCROOT)\\\"",
+					"IS_MAC_OS=1",
+				);
 				INFOPLIST_FILE = "Chess/Chess-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"@loader_path/../Frameworks",
@@ -568,7 +571,10 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
-				GCC_PREPROCESSOR_DEFINITIONS = "PROJECT_DIR=\\\"$(SRCROOT)\\\"";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"PROJECT_DIR=\\\"$(SRCROOT)\\\"",
+					"IS_MAC_OS=1",
+				);
 				INFOPLIST_FILE = "Chess/Chess-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"@loader_path/../Frameworks",
