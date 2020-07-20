@@ -1,5 +1,5 @@
 #include "Knight.h"
-
+#include <math.h>
 #define maxDeviation 2
 
 static const double VALUE = 30;

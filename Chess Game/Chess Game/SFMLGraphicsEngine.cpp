@@ -17,7 +17,14 @@ using namespace sf;
 #define DARK_GRAY_COLOR Color(108,108,108,255)
 #define FIELD_SELECTION_OUTLINE_COLOR Color(26,116,158)
 
-const double boardSize = 900;
+// 1.8 multiplication coefficient for mac os screens
+#ifdef IS_MAC_OS
+const double scaleCoefficient = 1.8;
+#elif
+const double scaleCoefficient = 1;
+#endif
+
+const double boardSize = 900 * scaleCoefficient;
 const double offsetSize = boardSize * 0.033;
 Vector2f offset(offsetSize, offsetSize);
 RenderWindow window(VideoMode(boardSize, boardSize), "Chess", Style::Close | Style::Titlebar);
@@ -30,16 +37,51 @@ Sprite endGameSprite;
 Font textFont;
 Text messageText;
 
+string iconFilePath;
+string chessPiecesFilePath;
+string textFontFilePath;
+string chessBoardFilePath;
+string chessBoardInvertedFilePath;
+string gameOverLayoutFilePath;
+
+
 SFMLGraphicsEngine::SFMLGraphicsEngine() {}
 
 SFMLGraphicsEngine::SFMLGraphicsEngine(GraphicsEngineProvider* graphicsEngineProvider): graphicsEngineProvider(graphicsEngineProvider){
-	Image icon;
-	icon.loadFromFile("icons/icon.png");
-	window.setIcon(32, 32, icon.getPixelsPtr());
-
-	figuresTexture.loadFromFile("Textures/chessPieces.png");
-
-	figureBoxSize = figuresTexture.getSize().y / 2;
+    Image icon;
+    
+#ifdef PROJECT_DIR
+    iconFilePath = PROJECT_DIR;
+    iconFilePath += "/../../Chess Game/Icons/icon.png";
+    
+    chessPiecesFilePath = PROJECT_DIR;
+    chessPiecesFilePath += "/../../Chess Game/Textures/chessPieces2x.png";
+    
+    textFontFilePath = PROJECT_DIR;
+    textFontFilePath += "/../../Chess Game/Fonts/Candara.ttf";
+    
+    chessBoardFilePath = PROJECT_DIR;
+    chessBoardFilePath += "/../../Chess Game/Textures/chessBoard2x.png";
+    
+    chessBoardInvertedFilePath = PROJECT_DIR;
+    chessBoardInvertedFilePath += "/../../Chess Game/Textures/chessBoardInverted2x.png";
+    
+    gameOverLayoutFilePath = PROJECT_DIR;
+    gameOverLayoutFilePath += "/../../Chess Game/Textures/gameOverLayout.png";
+#elif
+    iconFilePath = "icons/icon.png";
+    chessPiecesFilePath = "Textures/chessPieces.png";
+    textFontFilePath = "Fonts/Candara.ttf";
+    chessBoardFilePath = "Textures/chessBoard.png";
+    chessBoardInvertedFilePath = "Textures/chessBoardInverted.png";
+    gameOverLayoutFilePath = "Textures/gameOverLayout.png";
+#endif
+    
+    icon.loadFromFile(iconFilePath);
+    window.setIcon(32, 32, icon.getPixelsPtr());
+    
+    figuresTexture.loadFromFile(chessPiecesFilePath);
+    figureBoxSize = (boardSize - 2 * offsetSize) / FIGURES_IN_ROW;
 }
 
 int board[8][8] =
@@ -60,8 +102,11 @@ void SFMLGraphicsEngine::addFigure(FigureDesignation figure, FigureType figureTy
 
 	Sprite sprite;
 	sprite.setTexture(figuresTexture);
-	sprite.setTextureRect(IntRect(figureBoxSize * horizontalScale, figureBoxSize * verticalScale, figureBoxSize, figureBoxSize));
+    double textureSize = figuresTexture.getSize().y / 2;
+    sprite.setTextureRect(IntRect(textureSize * horizontalScale, textureSize * verticalScale, textureSize, textureSize));
 	sprite.setPosition(coordinates);
+    double spriteScale = figureBoxSize / textureSize;
+    sprite.setScale(spriteScale, spriteScale);
 
 	FigureSprite figureSprite;
 	figureSprite.sprite = sprite;
@@ -76,21 +121,21 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 	lastMoveNewPositionColumn = -1;
 	shouldRenderEndGameLayout = false;
 
-	textFont.loadFromFile("Fonts/Candara.ttf");
+	textFont.loadFromFile(textFontFilePath);
 
 	messageText.setFont(textFont);
 	messageText.setFillColor(DARK_GRAY_COLOR);
-	messageText.setCharacterSize(22);
+	messageText.setCharacterSize(boardSize * 0.024);
 	messageText.setPosition(257, 416);
 
-	boardTexture.loadFromFile(boardLayout == LeadingWhites ? "Textures/chessBoard.png" : "Textures/chessBoardInverted.png");
-	endGameTexture.loadFromFile("Textures/gameOverLayout.png");
+	boardTexture.loadFromFile(boardLayout == LeadingWhites ? chessBoardFilePath : chessBoardInvertedFilePath);
+	endGameTexture.loadFromFile(gameOverLayoutFilePath);
 
 	boardSprite = Sprite(boardTexture);
 	boardSprite.setScale(boardSize / boardSprite.getLocalBounds().width, boardSize / boardSprite.getLocalBounds().height);
 
 	endGameSprite = Sprite(endGameTexture);
-	endGameSprite.setScale(boardSize / boardSprite.getLocalBounds().width, boardSize / boardSprite.getLocalBounds().height);
+	endGameSprite.setScale(boardSize / endGameSprite.getLocalBounds().width, boardSize / endGameSprite.getLocalBounds().height);
 
 
 	//populateFigures(boardLayout);
@@ -138,7 +183,6 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 							dx = mousePosition.x - figurePosition.x;
 							dy = mousePosition.y - figurePosition.y;
 							oldPosition = figurePosition;
-
 							int row, column;
 							getLocation(figurePosition, row, column);
 							List<Location> possibleMoves = graphicsEngineProvider->availableMovesForFigure(row, column);
@@ -230,7 +274,7 @@ void SFMLGraphicsEngine::showGameOverLayout(string message)
 	FloatRect textRect = messageText.getLocalBounds();
 	messageText.setOrigin(textRect.left + textRect.width / 2.0f,
 		textRect.top + textRect.height / 2.0f);
-	messageText.setPosition(Vector2f(440, 450));
+	messageText.setPosition(Vector2f(boardSize * 0.48, boardSize * 0.5));
 
 	shouldRenderEndGameLayout = true;
 	double animationSeconds = ANIMATION_DURTATION_SECONDS;
@@ -451,16 +495,15 @@ void SFMLGraphicsEngine::removeAllFigures()
 	lastMoveNewPositionColumn = -1;
 	figures = vector<FigureSprite>();
 }
-
 Vector2f SFMLGraphicsEngine::getCoordinates(int row, int column) {
-	int x = column * figureBoxSize;
-	int y = (FIGURES_IN_ROW - 1 - row) * figureBoxSize;
+    int x = column * figureBoxSize;
+    int y = (FIGURES_IN_ROW - 1 - row) * figureBoxSize;
 	return Vector2f(x + offset.x, y + offset.y);
 }
 
 void SFMLGraphicsEngine::getLocation(sf::Vector2f coordinates, int& row, int& column) {
-	column = (coordinates.x - offset.x) / figureBoxSize;
-	row = FIGURES_IN_ROW - 1 - floor(coordinates.y / figureBoxSize );
+	column = (coordinates.x - offset.x + figureBoxSize/2) / figureBoxSize;
+	row = FIGURES_IN_ROW - 1 - floor((coordinates.y - offset.y + figureBoxSize/2) / figureBoxSize);
 }
 
 Sprite* SFMLGraphicsEngine::figureForPosition(int row, int column) {
