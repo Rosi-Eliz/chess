@@ -8,6 +8,7 @@
 #include "King.h"
 #include "Knight.h"
 #include <functional>
+#include <vector>
 #include <unordered_map>
 
 
@@ -494,24 +495,96 @@ bool Board::fieldIsInConflict(ChessFigureColor opponentColor)
 	ChessFigureColor currentPlayerColor = opponentColor == ChessFigureColor::White ? ChessFigureColor::Black : ChessFigureColor::White;
 	Figure* king = getKing(currentPlayerColor);
 	Field* kingField = getField(king);
-	List<Figure*> opponentFigures = remainingFigures(opponentColor);
-	for (int i{ 0 }; i < opponentFigures.size(); i++)
-	{
+    
+    return fieldIsExposed(kingField->getLocation().row, kingField->getLocation().column, opponentColor);
+}
 
-		Figure* currentFigure = opponentFigures[i];
-		Field* currentFigureField = getField(currentFigure);
-		List<Location> moves = filteredMoves(currentFigureField->getLocation().row,
-			currentFigureField->getLocation().column);
-
-		for (int j{ 0 }; j < moves.size(); j++)
-		{
-			Location currentLocation = moves[j];
-			if (kingField->getLocation().row == currentLocation.row &&
-				kingField->getLocation().column == currentLocation.column)
-				return true;
-		}
-	}
-	return false;
+bool Board::fieldIsExposed(int row, int col, ChessFigureColor color)
+{
+    // Check if the field is exposed by a knight
+    int j {0};
+    for(int i{1}; i <= 4; i++)
+    {
+        
+        int newRow = row + 2 * pow(-1, i);
+        j = i + j;
+        int newCol = col + 1 * pow(-1, j);
+        if(newRow >= ChessBoardRows || newCol >= ChessBoardColumns || newRow < 0 || newCol < 0)
+            continue;
+                    
+        Location givenLocation = Location(newRow, newCol);
+        Location mirroredLocation = Location(newCol, newRow);
+        Figure* figureAtField = figureAt(givenLocation);
+        if(figureAtField != nullptr  && typeid(*figureAtField) == typeid(Knight) && figureAtField->getColor() == color)
+        {
+            return true;
+        }
+        figureAtField = figureAt(mirroredLocation);
+        if(figureAtField != nullptr  && typeid(*figureAtField) == typeid(Knight) && figureAtField->getColor() == color)
+        {
+            return true;
+        }
+    }
+    
+    vector<Location> expansion;
+    expansion.push_back(Location(row + 1, col + 1));
+    expansion.push_back(Location(row - 1, col - 1));
+    expansion.push_back(Location(row + 1, col - 1));
+    expansion.push_back(Location(row - 1, col + 1));
+    
+    expansion.push_back(Location(row + 1, col));
+    expansion.push_back(Location(row - 1, col));
+    expansion.push_back(Location(row, col - 1));
+    expansion.push_back(Location(row, col + 1));
+    
+    bool firstLevelExpansion = true;
+    while(!expansion.empty())
+    {
+        vector<Location> updatedExpansion;
+        for(Location location : expansion)
+        {
+            if(location.row >= ChessBoardRows || location.column >= ChessBoardColumns || location.row < 0 || location.column < 0)
+                continue;
+            Figure* figureAtField = figureAt(location);
+            if(figureAtField == nullptr)
+            {
+                int differenceInRow = location.row - row;
+                int differenceInColumn = location.column - col;
+                differenceInRow = differenceInRow > 1 ? 1 : differenceInRow;
+                differenceInColumn = differenceInColumn > 1 ? 1 : differenceInColumn;
+                
+                differenceInRow = differenceInRow < -1 ? -1 : differenceInRow;
+                differenceInColumn = differenceInColumn < -1 ? -1 : differenceInColumn;
+                updatedExpansion.push_back(Location(location.row + differenceInRow, location.column + differenceInColumn));
+            }
+            else if(figureAtField->getColor() == color)
+            {
+                if(typeid(*figureAtField) == typeid(Pawn))
+                {
+                    int coefficient = figureAtField->getDirection() == ChessFigureDirection::Up ? 1 : -1;
+                    bool initialFieldIsExposed = (location.row + coefficient == row && location.column + 1 == col) ||
+                    (location.row + coefficient == row && location.column - 1 == col);
+                   
+                     if(initialFieldIsExposed)
+                         return true;
+                }
+                else {
+                    bool isTerminalQueen = typeid(*figureAtField) == typeid(Queen);
+                    bool isTerminalBishop = typeid(*figureAtField) == typeid(Bishop) && (location.row != row && location.column != col);
+                    bool isTerminalRook = typeid(*figureAtField) == typeid(Rook) && (location.row == row || location.column == col);
+                    bool isTerminalKing = typeid(*figureAtField) == typeid(King) && firstLevelExpansion;
+                    
+                    if(isTerminalQueen || isTerminalBishop || isTerminalRook || isTerminalKing)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        firstLevelExpansion = false;
+        expansion = updatedExpansion;
+    }
+    return false;
 }
 
 List<Location> Board::filteredConflictMoves(List<Location> availableMoves, int row, int column)

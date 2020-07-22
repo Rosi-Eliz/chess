@@ -49,6 +49,7 @@ public:
 	void updateMove(const Location& oldLocation,const Location& newLocation, bool didPerformCastling = false);
 	
 	bool fieldIsInConflict(ChessFigureColor opponentColor);
+    bool fieldIsExposed(int row, int col, ChessFigureColor color);
 	ChessBoardLayout getLayout() const;
 	Figure* figureAt(const Location& location);
 	Field* getFieldAt(const Location& location);
