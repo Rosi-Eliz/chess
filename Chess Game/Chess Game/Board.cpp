@@ -37,19 +37,11 @@ Board& Board::operator=(const Board& board)
 	}
 	fields = List<Field*>();
 
-	*this = Board(board);
-	return *this;
-}
-
-Board::Board(const Board& board)
-{
-	if (this == &board)
-		return;
-
 	for (int i{ 0 }; i < board.fields.size(); i++)
 	{
 		Field* copyField = board.fields[i];
 		Field* newField = new Field(*copyField);
+		fieldsMap[getKeyForLocation(newField->getLocation().row, newField->getLocation().column)] = newField;
 
 		if (copyField->getFigure() != nullptr)
 		{
@@ -93,6 +85,11 @@ Board::Board(const Board& board)
 
 	layout = board.layout;
 	gameInteraction = board.gameInteraction;
+}
+
+Board::Board(const Board& board)
+{
+	*this = board;
 }
 
 Board::~Board() {
@@ -352,6 +349,21 @@ List<Figure*> Board::remainingFigures(const ChessFigureColor& color)
 	return fields.filter(condition).transformMap<Figure*>(mutator);
 }
 
+List<Figure*> Board::allRemainingFigures()
+{
+	auto condition = [](Field* field)
+	{
+		return field != nullptr &&
+			field->getFigure() != nullptr;
+	};
+	auto mutator = [](Field* field)
+	{
+		return field->getFigure();
+	};
+
+	return fields.filter(condition).transformMap<Figure*>(mutator);
+}
+
 List<List<Location>> Board::pawnDiagonalPossibleMoves(Figure* pawn, Location& location, List<List<Location>>& allMoves)
 {
 	List<List<Location>> filteredLocations;
@@ -503,23 +515,25 @@ bool Board::fieldIsExposed(int row, int col, ChessFigureColor color)
 {
     // Check if the field is exposed by a knight
     int j {0};
-    for(int i{1}; i <= 4; i++)
+	int multiplierRow = 2;
+	int multiplierCol = 1;
+    for(int i{1}; i <= 8; i++)
     {
-        
-        int newRow = row + 2 * pow(-1, i);
+        int newRow = row + multiplierRow * pow(-1, i);
         j = i + j;
-        int newCol = col + 1 * pow(-1, j);
+        int newCol = col + multiplierCol * pow(-1, j);
+
+		if (i == 4) {
+			j = 0;
+			multiplierRow = 1;
+			multiplierCol = 2;
+		}
+
         if(newRow >= ChessBoardRows || newCol >= ChessBoardColumns || newRow < 0 || newCol < 0)
             continue;
                     
         Location givenLocation = Location(newRow, newCol);
-        Location mirroredLocation = Location(newCol, newRow);
         Figure* figureAtField = figureAt(givenLocation);
-        if(figureAtField != nullptr  && typeid(*figureAtField) == typeid(Knight) && figureAtField->getColor() == color)
-        {
-            return true;
-        }
-        figureAtField = figureAt(mirroredLocation);
         if(figureAtField != nullptr  && typeid(*figureAtField) == typeid(Knight) && figureAtField->getColor() == color)
         {
             return true;
@@ -568,7 +582,7 @@ bool Board::fieldIsExposed(int row, int col, ChessFigureColor color)
                      if(initialFieldIsExposed)
                          return true;
                 }
-                else {
+                else if (typeid(*figureAtField) != typeid(Knight)) {
                     bool isTerminalQueen = typeid(*figureAtField) == typeid(Queen);
                     bool isTerminalBishop = typeid(*figureAtField) == typeid(Bishop) && (location.row != row && location.column != col);
                     bool isTerminalRook = typeid(*figureAtField) == typeid(Rook) && (location.row == row || location.column == col);

@@ -20,7 +20,7 @@ using namespace sf;
 // 1.8 multiplication coefficient for mac os screens
 #ifdef IS_MAC_OS
 const double scaleCoefficient = 1.8;
-#elif
+#else
 const double scaleCoefficient = 1;
 #endif
 
@@ -68,7 +68,7 @@ SFMLGraphicsEngine::SFMLGraphicsEngine(GraphicsEngineProvider* graphicsEnginePro
     
     gameOverLayoutFilePath = PROJECT_DIR;
     gameOverLayoutFilePath += "/../../Chess Game/Textures/gameOverLayout.png";
-#elif
+#else
     iconFilePath = "icons/icon.png";
     chessPiecesFilePath = "Textures/chessPieces.png";
     textFontFilePath = "Fonts/Candara.ttf";
