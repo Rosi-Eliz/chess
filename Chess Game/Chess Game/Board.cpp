@@ -40,7 +40,8 @@ Board& Board::operator=(const Board& board)
 	for (int i{ 0 }; i < board.fields.size(); i++)
 	{
 		Field* copyField = board.fields[i];
-		Field* newField = new Field(*copyField);
+        Location location = copyField->getLocation();
+        Field* newField = new Field(location);
 		fieldsMap[getKeyForLocation(newField->getLocation().row, newField->getLocation().column)] = newField;
 
 		if (copyField->getFigure() != nullptr)
@@ -82,9 +83,13 @@ Board& Board::operator=(const Board& board)
 	bottomLeftCaslingIsPossible = board.bottomLeftCaslingIsPossible;
 	topRightCaslingIsPossible = board.topRightCaslingIsPossible;
 	topLeftCaslingIsPossible = board.topLeftCaslingIsPossible;
+    lastMoveWasCastling = board.lastMoveWasCastling;
+    lastMoveDescriptor = board.lastMoveDescriptor;
 
 	layout = board.layout;
 	gameInteraction = board.gameInteraction;
+    
+    return *this;
 }
 
 Board::Board(const Board& board)

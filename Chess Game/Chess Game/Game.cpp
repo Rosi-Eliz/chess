@@ -19,7 +19,7 @@ Game::Game(ChessBoardLayout layout)
 	board = new Board(layout, this);
 	figuresTurn = ChessFigureColor::White;
 	startTime = time(0);
-	artificialIntelligenceEngine = AIEngine(Difficulty::Intermediate, ChessFigureColor::Black, this);
+	artificialIntelligenceEngine = AIEngine(Difficulty::Beginner, ChessFigureColor::Black, this);
 }
 
 Game& Game::operator=(const Game& game)

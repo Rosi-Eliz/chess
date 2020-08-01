@@ -18,9 +18,9 @@ int depthForDifficulty(Difficulty difficulty)
 	switch (difficulty)
 	{
 		case Difficulty::Beginner: return 2;
-		case Difficulty::Intermediate: return 3;
-		case Difficulty::Advanced: return 4;
-		case Difficulty::Expert: return 5;
+		case Difficulty::Intermediate: return 4;
+		case Difficulty::Advanced: return 6;
+		case Difficulty::Expert: return 8;
 	}
 	return 0;
 }
@@ -125,7 +125,7 @@ int AIEngine::minimizer(int depth, int alpha, int beta)
 	List<Figure*> remainingFigures = board.remainingFigures(color);
 	auto t_end = std::chrono::high_resolution_clock::now();
 	double elapsed_time_ms = std::chrono::duration<double, std::milli>(t_end - t_start).count();
-	cout << "rem fig time: " << elapsed_time_ms << endl;
+	//cout << "rem fig time: " << elapsed_time_ms << endl;
     remainingFigures.forEach([&](Figure* figure) {
 
 		t_start = std::chrono::high_resolution_clock::now();
@@ -133,7 +133,7 @@ int AIEngine::minimizer(int depth, int alpha, int beta)
 		List<Location> availableMoves = board.availableMovesForFigure(figure);
 		t_end = std::chrono::high_resolution_clock::now();
 		elapsed_time_ms = std::chrono::duration<double, std::milli>(t_end - t_start).count();
-		cout << "availableMoves time: " << elapsed_time_ms << endl;
+		//cout << "availableMoves time: " << elapsed_time_ms << endl;
 
 		availableMoves.forEach([&](Location toLocation) {
 
