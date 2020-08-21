@@ -245,7 +245,7 @@ void Game::didMove(int fromRow, int fromColumn, int toRow, int toColumn) {
 	cout << "move from - row: " << fromRow << ", column: " << fromColumn << ". To - row: ";
 	cout << toRow << ", column: " << toColumn << endl;
 
-	if (figuresTurn == ChessFigureColor::Black)
+	if (figuresTurn == artificialIntelligenceEngine.initialColor)
 	{
 		artificialIntelligenceEngine.findBestMoveIn(*board);
     }

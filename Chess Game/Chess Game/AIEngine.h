@@ -8,7 +8,6 @@ enum class Difficulty {Beginner, Intermediate, Advanced, Expert};
 class AIEngine {
 	Difficulty difficulty;
 	ChessFigureColor color;
-	ChessFigureColor initialColor;
 
 	AIUpdateProvider* updateProvider;
 	Board board;
@@ -20,6 +19,7 @@ class AIEngine {
 	int minimizer(int depth, int alpha, int beta);
 
 public:
+    ChessFigureColor initialColor;
 	AIEngine();
 	AIEngine(Difficulty difficulty, ChessFigureColor color, AIUpdateProvider* updateProvider);
 	void findBestMoveIn(Board board);
