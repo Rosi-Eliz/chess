@@ -24,7 +24,7 @@ public:
 	AIEngine(Difficulty difficulty, ChessFigureColor color, AIUpdateProvider* updateProvider);
 	void findBestMoveIn(Board board);
 
-	double evaluateBoard(ChessFigureColor color);
+	double evaluateBoard(ChessFigureColor color, bool isMinPlayer);
 };
 
 

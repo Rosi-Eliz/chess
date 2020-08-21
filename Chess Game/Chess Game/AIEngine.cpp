@@ -18,9 +18,9 @@ int depthForDifficulty(Difficulty difficulty)
 	switch (difficulty)
 	{
 		case Difficulty::Beginner: return 2;
-		case Difficulty::Intermediate: return 4;
-		case Difficulty::Advanced: return 6;
-		case Difficulty::Expert: return 8;
+		case Difficulty::Intermediate: return 3;
+		case Difficulty::Advanced: return 4;
+		case Difficulty::Expert: return 5;
 	}
 	return 0;
 }
@@ -37,7 +37,7 @@ void AIEngine::findBestMoveIn(Board board)
 	}
 }
 
-double AIEngine::evaluateBoard(ChessFigureColor color)
+double AIEngine::evaluateBoard(ChessFigureColor color, bool isMinPlayer)
 {
 	double points{ 0 };
 
@@ -76,14 +76,14 @@ double AIEngine::evaluateBoard(ChessFigureColor color)
 			points += 4; //Declared check 
 	
 	}
-	return points;
+	return isMinPlayer ? -points : points;
 }
 
 int AIEngine::maximizer(int depth, int alpha, int beta)
 {
 	if (depth == 0)
 	{
-		return evaluateBoard(color);
+		return evaluateBoard(color, false);
 	}
 
 	board.remainingFigures(color).forEach([&](Figure* figure) {
@@ -118,7 +118,7 @@ int AIEngine::minimizer(int depth, int alpha, int beta)
 {
 	if (depth == 0)
 	{
-		return evaluateBoard(color);
+		return evaluateBoard(color, true);
 	}
 
 	auto t_start = std::chrono::high_resolution_clock::now();

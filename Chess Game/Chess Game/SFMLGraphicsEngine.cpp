@@ -237,9 +237,9 @@ void SFMLGraphicsEngine::initiateRender(BoardLayout boardLayout) {
 					//move(1, 1, 3, 3);
 					//addPossibleMoveSquare(4, 4);
 				}
-				if (event.key.code == Keyboard::BackSpace) {
-					graphicsEngineProvider->revertLastMove();
-				}
+//				if (event.key.code == Keyboard::BackSpace) {
+//					graphicsEngineProvider->revertLastMove();
+//				}
 				if (event.key.code == Keyboard::Enter) {
 					if (shouldRenderEndGameLayout)
 					{
