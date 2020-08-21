@@ -208,7 +208,6 @@ void Game::createMoveLog(Location from, Location to)
  }
 
 void Game::didMove(int fromRow, int fromColumn, int toRow, int toColumn) {
-	cout << "VALUE IS: " << artificialIntelligenceEngine.evaluateBoard(board, figuresTurn, true);
 	switchTurn();
 
 	Location oldLocation = Location(fromRow, fromColumn);
@@ -242,16 +241,14 @@ void Game::didMove(int fromRow, int fromColumn, int toRow, int toColumn) {
 
 	}
 
-	//TODO: Remove hardcoded logic 
-	if (figuresTurn == ChessFigureColor::Black)
-	{
-		//artificialIntelligenceEngine.findBestMoveIn(*board);
-	}
-
 	cout << "state: " << static_cast<int>(checkState()) << endl;
 	cout << "move from - row: " << fromRow << ", column: " << fromColumn << ". To - row: ";
 	cout << toRow << ", column: " << toColumn << endl;
 
+	if (figuresTurn == ChessFigureColor::Black)
+	{
+		artificialIntelligenceEngine.findBestMoveIn(*board);
+    }
 }
 
 bool Game::isPlayerActive(FigureType figureType) {

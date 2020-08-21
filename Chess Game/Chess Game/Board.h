@@ -37,7 +37,6 @@ class Board {
 	void initialiseFigures();
 	void assignFigureToField(Location& location, Figure* figiure);
 	void revertUpdate(const Location& oldLocation, const Location& newLocation);
-	GameInteraction* gameInteraction;
 
 	bool lastMoveWasCastling = false;
 public: 
@@ -49,6 +48,7 @@ public:
 	void updateMove(const Location& oldLocation,const Location& newLocation, bool didPerformCastling = false);
 	
 	bool fieldIsInConflict(ChessFigureColor opponentColor);
+    bool fieldIsExposed(int row, int col, ChessFigureColor color);
 	ChessBoardLayout getLayout() const;
 	Figure* figureAt(const Location& location);
 	Field* getFieldAt(const Location& location);
@@ -62,6 +62,8 @@ public:
 	void moveRookInCastling(int fromRow, int fromColumn, int toRow, int toColumn);
 	bool getLastMoveWasCastling() const;
 	void revertLastMove();
+	GameInteraction* gameInteraction;
+	List<Figure*> allRemainingFigures();
 
 	List<MoveDescriptor> possibleMovesForColor(ChessFigureColor color);
 };

@@ -4,9 +4,9 @@
 static const int ChessBoardRows = 8;
 static const int ChessBoardColumns = 8;
 
-static const int SupplementaryRowDownDirection = 7;//za vsi4ki drygi figyri!!!!!!
+static const int SupplementaryRowDownDirection = 7;
 static const int SupplementaryRowUpDirection = 0;
-static const int InitialRowDownDirection = 6;//za peshkite 
+static const int InitialRowDownDirection = 6;
 static const int InitialRowUpDirection = 1;
 static const int InitialColumn = 0;
 static const int EndColumn = 7;
@@ -60,6 +60,10 @@ struct Location {
 			std::cout << std::endl;
 		}
 	}
+    bool operator==(const Location& location)
+    {
+        return row == location.row && column == location.column;
+    }
 };
 
 static ChessFigureColor returnOpponentColor(ChessFigureColor color)
