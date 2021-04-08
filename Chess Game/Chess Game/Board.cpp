@@ -704,38 +704,52 @@ void Board::castlingPossible(int fromRow, int fromColumn)
 }
 
 void Board::moveRookInCastling(int fromRow, int fromColumn, int toRow, int toColumn) {
-	Location oldLocation = Location(fromRow, fromColumn);
-	Location newLocation = Location(toRow, toColumn);
-	Field* field = getFieldAt(oldLocation);
-	if (field == nullptr || field->getFigure() == nullptr)
-		return;
+    Location oldLocation = Location(fromRow, fromColumn);
+    Location newLocation = Location(toRow, toColumn);
+    Field* field = getFieldAt(oldLocation);
+    if (field == nullptr || field->getFigure() == nullptr)
+        return;
 
-	Figure* figure = field->getFigure();
+    Figure* figure = field->getFigure();
 
-	if (typeid(*figure) != typeid(King))
-		return;
-
-	int directionOfMovement = toColumn - fromColumn;
-	if (directionOfMovement == 2)
-	{
-		Location initialRookLocation = Location(toRow, RookBottomRightCol);
-		Location finalRookLocation = Location(toRow, RookBottomRightCol - ShortCastlingDistance);
-		updateMove(initialRookLocation, finalRookLocation, true);
-		if (gameInteraction != nullptr)
-		{
-			gameInteraction->move(toRow, RookBottomRightCol, toRow, RookBottomRightCol - ShortCastlingDistance, false);
-		}
-	}
-	else if (directionOfMovement == -2)
-	{
-		Location initialRookLocation = Location(toRow, RookBottomLeftCol);
-		Location finalRookLocation = Location(toRow, RookBottomLeftCol + LongCastlingDistance);
-		updateMove(initialRookLocation, finalRookLocation, true);
-		if (gameInteraction != nullptr)
-		{
-			gameInteraction->move(toRow, RookBottomLeftCol, toRow, RookBottomLeftCol + LongCastlingDistance, false);
-		}
-	}
+    if (typeid(*figure) != typeid(King))
+        return;
+    
+    if(fromRow != KingRowTop && fromRow != KingRowBottom)
+        return;
+    
+    if(fromRow == KingRowBottom && bottomLeftCaslingIsPossible == false && bottomRightCaslingIsPossible == false)
+        return;
+    
+    if(fromRow == KingRowTop && topLeftCaslingIsPossible == false && topRightCaslingIsPossible == false)
+        return;
+    
+    int directionOfMovement = toColumn - fromColumn;
+    if (directionOfMovement == 2)
+    {
+        Location initialRookLocation = Location(toRow, RookBottomRightCol);
+        if(getFieldAt(initialRookLocation)->getFigure() == nullptr)
+            return;
+        Location finalRookLocation = Location(toRow, RookBottomRightCol - ShortCastlingDistance);
+        updateMove(initialRookLocation, finalRookLocation, true);
+        
+        if (gameInteraction != nullptr)
+        {
+            gameInteraction->move(toRow, RookBottomRightCol, toRow, RookBottomRightCol - ShortCastlingDistance, false);
+        }
+    }
+    else if (directionOfMovement == -2)
+    {
+        Location initialRookLocation = Location(toRow, RookBottomLeftCol);
+        if(getFieldAt(initialRookLocation)->getFigure() == nullptr)
+            return;
+        Location finalRookLocation = Location(toRow, RookBottomLeftCol + LongCastlingDistance);
+        updateMove(initialRookLocation, finalRookLocation, true);
+        if (gameInteraction != nullptr)
+        {
+            gameInteraction->move(toRow, RookBottomLeftCol, toRow, RookBottomLeftCol + LongCastlingDistance, false);
+        }
+    }
 }
 
 List<Location> Board::availableMovesForFigure(int row, int column) {
